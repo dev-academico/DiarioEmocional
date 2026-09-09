@@ -33,21 +33,6 @@ Acreditamos que os adolescentes universitários vão se sentir melhor mentalment
 
 Link para o backlog em formato de kanban: https://github.com/orgs/dev-academico/projects/3
 
-| Prio | História | Critérios de aceitação | Entrega prevista |
-|---|---|---|---|
-| P1 | Como usuário, quero fazer um relato do dia para registrar como foi minha rotina | Campo de texto livre; data automática; registro salvo localmente | 1 |
-| P1 | Como usuário, quero avaliar os sentimentos do dia para acompanhar meu estado emocional | Seleciona emoção principal + intensidade; salva junto da data | 1 |
-| P1 | Como usuário, quero preencher meu cronograma semanal para me organizar com atividades obrigatórias | Cadastro de atividade com dia/horário; lista semanal visível | 1 |
-| P1 | Como usuário, quero registrar pensamentos disfuncionais em crises para organizar minhas ideias | Formulário com situação, pensamento automático, emoção, resposta alternativa; salva histórico | 2 |
-| P1 | Como usuário, quero marcar pontuação diária por uso para manter constância | Ao completar check-in diário, soma 1 no streak; mantém sequência por dias consecutivos | 2 |
-| P1 | Como usuário, quero registrar higiene do sono para observar hábitos noturnos | Campos de horas dormidas + “usou celular antes de dormir” (sim/não) | 2 |
-| P2 | Como usuário, quero fazer login na minha conta | Login do usuário com username e senha | 3 |
-| P2 | Como usuário, quero visualizar histórico diário para revisar meus registros passados | Lista por data com relato, sentimento e sono | 3 |
-| P3 | Como usuário, quero ver resumo semanal simples para perceber padrões | Exibe quantidade de check-ins, média de humor e dias com sono inadequado | 4 |
-| P3 | Como usuário, quero receber lembretes das atividades para não esquecer compromissos | Notificação local no horário definido; opção de ativar/desativar lembrete | 4 |
-
-> P1 = essencial para o MVP, P2 = importante, P3 = desejável.
-
 ## 4. Plataforma escolhida: Android
 
 Levando em consideração o público-alvo do sistema, nesse caso, estudantes universitários, é necessário considerar o poder aquisitivo e a necessidade desses individuos, os quais geralmente se encontram em uma situação de ascensão social. De acordo com uma pesquisa realizada em 2022, pela Partyou, 56% dos entrevistados afirmaram utilizar Android, enquanto 44% deles utilizam o sistema IOS. Portanto, é possível inferir que a plataforma **Android** torna-se mais proveitosa para os usuários.
