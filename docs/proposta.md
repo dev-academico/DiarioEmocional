@@ -59,6 +59,9 @@ Por fim, as consultas SQL proporcionadas pelo Supabase facilitaria a implementa�
 ## 7. Corte de apresentação: Vídeo
 
 Iremos enviar um vídeo sobre a apresentação, seguindo a estrutura do docs/proposta.md.
-Não iremos integrar o projeto com outra disciplina
+
+Não iremos integrar o projeto com outra disciplina.
+
+Link do vídeo:
 
 ---
