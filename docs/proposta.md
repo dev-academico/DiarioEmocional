@@ -62,6 +62,6 @@ Iremos enviar um vídeo sobre a apresentação, seguindo a estrutura do docs/pro
 
 Não iremos integrar o projeto com outra disciplina.
 
-Link do vídeo:
+Link do vídeo: https://youtu.be/R60TQD8lyOE
 
 ---
