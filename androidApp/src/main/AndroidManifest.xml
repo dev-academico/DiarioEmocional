@@ -13,11 +13,13 @@
             android:name=".MainActivity"
             android:exported="true">
 
+            <!-- Abrir o aplicativo normalmente -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <!-- Deep link para relato individual -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -28,7 +30,8 @@
                     android:scheme="diario"
                     android:host="relato" />
             </intent-filter>
-            >
+
+            <!-- Deep link para pensamento -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

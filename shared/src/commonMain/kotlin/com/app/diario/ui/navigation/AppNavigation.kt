@@ -18,9 +18,12 @@ import HomeRoute
 import PensamentoDisfuncionalIndividualRoute
 import RegistroPensamentoIndividualScreen
 import RegistroPensamentoScreen
+import androidx.annotation.RequiresApi
 import androidx.navigation.navDeepLink
 import com.app.diario.ui.screens.HomeScreen
 import pensamentosDisfuncionaisMock
+import kotlin.time.Clock
+
 
 @Composable
 fun AppNavigation(
@@ -134,7 +137,7 @@ fun AppNavigation(
         composable<CriarRelatoRoute> {
 
             CriarRelatoScreen(
-                dataRegistro = "22/09/2026",
+                dataRegistro = Clock.System.now().toString(),
                 onVoltar = {
                     navController.popBackStack()
                 },
