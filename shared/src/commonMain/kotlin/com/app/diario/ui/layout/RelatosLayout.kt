@@ -1,13 +1,19 @@
 package com.app.diario.ui.layout
 
+import CardSistema
+import RelatoIndividualComponent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -24,55 +30,44 @@ fun RelatosLayoutCelular(
     relatos: List<RelatoMock>,
     modifier: Modifier = Modifier,
     onVoltar: () -> Unit,
+    onRelatoClick: (RelatoMock) -> Unit,
+    onNovoRelatoClick: () -> Unit
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(32.dp)
+            .windowInsetsPadding(WindowInsets.safeDrawing)
     ) {
 
         Cabecalho(
             title = "Relatos",
-            subtitle = "Escreva acontecimentos interessantes do seu dia, como foram as coisas no trabalho, etc."
+            subtitle = "Escreva acontecimentos interessantes do seu dia, como foram as coisas no trabalho, etc.",
+            onVoltar = onVoltar
         )
 
+        Button(
+            onClick = onNovoRelatoClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+        ) {
+            Text("Novo relato")
+        }
+
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(relatos) { relato ->
-
-                Card(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Text(
-                            text = relato.titulo,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-
-                        Text(
-                            text = relato.dataRegistro.toString(),
-                            style = MaterialTheme.typography.bodySmall
-                        )
-
-                        Text(
-                            text = relato.conteudo,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+                CardSistema(
+                    dataRegistro = relato.dataRegistro,
+                    titulo = relato.titulo,
+                    onClick = {
+                        onRelatoClick(relato)
                     }
-                }
+                )
             }
-        }
-        IconButton(
-            onClick =  onVoltar
-        ){
-            Text(
-                text = "←",
-                style = MaterialTheme.typography.headlineSmall
-            )
         }
     }
 }
@@ -83,8 +78,9 @@ fun RelatosLayoutLargo(
     relatos: List<RelatoMock>,
     relatoSelecionado: RelatoMock? = null,
     onRelatoClick: (RelatoMock) -> Unit = {},
-    onVoltar : () -> Unit,
-    modifier: Modifier = Modifier
+    onNovoRelatoClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    onVoltar : () -> Unit
 ) {
     Row(
         modifier = modifier
@@ -93,75 +89,74 @@ fun RelatosLayoutLargo(
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
-        // Lista de relatos
-        LazyColumn(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+        // LADO ESQUERDO
+        Column(
+            modifier = Modifier.weight(1f)
         ) {
-            items(relatos) { relato ->
 
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        onRelatoClick(relato)
-                    }
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp)
+            Cabecalho(
+                title = "Relatos",
+                subtitle = "Escreva acontecimentos interessantes do seu dia.",
+                onVoltar =  onVoltar
+                )
+
+            Button(
+                onClick = onNovoRelatoClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            ) {
+                Text("Novo relato")
+            }
+
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(relatos) { relato ->
+
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+                            onRelatoClick(relato)
+                        }
                     ) {
-                        Text(
-                            text = relato.titulo,
-                            style = MaterialTheme.typography.titleMedium
-                        )
+                        Column(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Text(
+                                text = relato.titulo,
+                                style = MaterialTheme.typography.titleMedium
+                            )
 
-                        Text(
-                            text = relato.dataRegistro.toString(),
-                            style = MaterialTheme.typography.bodySmall
-                        )
+                            Text(
+                                text = relato.dataRegistro,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
                     }
                 }
             }
         }
 
-        // Detalhes do relato selecionado
-        Card(
-            modifier = Modifier.weight(1f)
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
+        // LADO DIREITO
+        if (relatoSelecionado != null) {
+
+            RelatoIndividualComponent(
+                dataRegistro = relatoSelecionado.dataRegistro,
+                titulo = relatoSelecionado.titulo,
+                conteudo = relatoSelecionado.conteudo,
+                modifier = Modifier.weight(1f)
+            )
+
+        } else {
+
+            Card(
+                modifier = Modifier.weight(1f)
             ) {
-
-                if (relatoSelecionado != null) {
-
-                    Text(
-                        text = relatoSelecionado.titulo,
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-
-                    Text(
-                        text = relatoSelecionado.dataRegistro.toString(),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-
-                    Text(
-                        text = relatoSelecionado.conteudo,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-
-                } else {
-
-                    Text(
-                        text = "Selecione um relato",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
-            }
-            IconButton(
-                onClick =  onVoltar
-            ){
                 Text(
-                    text = "←",
-                    style = MaterialTheme.typography.headlineSmall
+                    text = "Selecione um relato",
+                    modifier = Modifier.padding(16.dp),
+                    style = MaterialTheme.typography.bodyLarge
                 )
             }
         }

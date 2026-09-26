@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -25,19 +26,27 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 
 @Suppress("ktlint:standard:function-naming")
-@Composable
 @Preview
+
+
+
+@Composable
 fun App() {
-    var isDarkMode by remember { mutableStateOf(false) }
+    var isDarkMode by remember {
+        mutableStateOf(false)
+    }
 
-    Theme(
-        darkTheme =  isDarkMode
-    ) {
-        AppNavigation(
-            darkTheme = isDarkMode,
-            //modifica o tema geral caso uma tela mudar o tema
-            onDarkThemeChange = {isDarkMode = it}
+    Theme(darkTheme = isDarkMode) {
 
-        )
+        Surface(
+            color = MaterialTheme.colorScheme.background
+        ) {
+            AppNavigation(
+                darkTheme = isDarkMode,
+                onDarkThemeChange = {
+                    isDarkMode = it
+                }
+            )
+        }
     }
 }
