@@ -10,40 +10,43 @@ plugins {
 }
 
 ktlint {
-    version.set("1.2.1") // Versão do motor do Ktlint
+    version.set("1.2.1")
     debug.set(false)
     verbose.set(true)
-    android.set(true) // Habilite se tiver código Android no KMP
+    android.set(true)
     outputToConsole.set(true)
 
     filter {
-        exclude { element -> element.file.path.contains("generated") || element.file.path.contains("build") }
+        exclude { element ->
+            element.file.path.contains("generated") ||
+                    element.file.path.contains("build")
+        }
     }
 }
 
 kotlin {
-    jvm()
+    // Antes: jvm()
+    // Agora o alvo JVM se chama "desktop"
+    jvm("desktop")
 
     android {
         namespace = "com.app.diario.shared"
-        compileSdk =
-            libs.versions.android.compileSdk
-                .get()
-                .toInt()
-        minSdk =
-            libs.versions.android.minSdk
-                .get()
-                .toInt()
+
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
         compilerOptions {
             jvmTarget = JvmTarget.JVM_11
         }
+
         androidResources {
             enable = true
         }
+
         withHostTest {
             isIncludeAndroidResources = true
         }
+
         withDeviceTestBuilder {
             sourceSetTreeName = "test"
         }.configure {
@@ -56,6 +59,7 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.compose.uiTooling)
         }
+
         commonMain.dependencies {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
@@ -68,13 +72,16 @@ kotlin {
             implementation(libs.compose.adaptive)
             implementation(libs.navigation.compose)
         }
+
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation("org.jetbrains.compose.ui:ui-test:1.11.1")
         }
-        val jvmTest by getting {
+
+        val desktopTest by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
+                implementation(compose.desktop.uiTestJUnit4)
             }
         }
     }
