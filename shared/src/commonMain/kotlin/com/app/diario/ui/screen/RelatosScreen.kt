@@ -53,3 +53,24 @@ fun RelatosScreen(
         }
     }
 }
+@Preview
+@Composable
+fun RelatosScreenPreview() {
+    RelatosScreen(
+        relatos = relatosMock,
+        onRelatoIndividual = {},
+        onNovoRelatoClick = {},
+        onVoltar = {}
+    )
+}
+
+@Preview
+@Composable
+fun RelatosScreenEmptyPreview() {
+    RelatosScreen(
+        relatos = emptyList(),
+        onRelatoIndividual = {},
+        onNovoRelatoClick = {},
+        onVoltar = {}
+    )
+}

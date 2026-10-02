@@ -7,15 +7,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.app.diario.ui.mock.relatosMock
 
 @Composable
 fun RegistroPensamentoIndividualScreen(
     dataRegistro: String,
     onVoltar: () -> Unit
 ) {
-    val relato = relatosMock.find {
-        it.dataRegistro == dataRegistro
+    val pensamento = pensamentosDisfuncionaisMock.find {
+        it.dataHora == dataRegistro
     }
 
     Column(
@@ -30,11 +29,13 @@ fun RegistroPensamentoIndividualScreen(
             )
         }
 
-        if (relato != null) {
-            RelatoIndividualComponent(
-                dataRegistro = relato.dataRegistro,
-                titulo = relato.titulo,
-                conteudo = relato.conteudo
+        if (pensamento != null) {
+            PensamentoIndividualComponent(
+                dataHora = pensamento.dataHora,
+                situacao = pensamento.situacao,
+                pensamentosImagens = pensamento.pensamentosImagens,
+                emocoesSentimentos = pensamento.emocoesSentimentos,
+                comportamentosReacoes = pensamento.comportamentosReacoes
             )
         }
     }

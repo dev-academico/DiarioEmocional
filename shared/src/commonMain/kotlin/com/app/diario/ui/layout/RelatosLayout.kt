@@ -113,27 +113,13 @@ fun RelatosLayoutLargo(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(relatos) { relato ->
-
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
+                    CardSistema(
+                        dataRegistro = relato.dataRegistro,
+                        titulo = relato.titulo,
                         onClick = {
                             onRelatoClick(relato)
                         }
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            Text(
-                                text = relato.titulo,
-                                style = MaterialTheme.typography.titleMedium
-                            )
-
-                            Text(
-                                text = relato.dataRegistro,
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-                    }
+                    )
                 }
             }
         }
