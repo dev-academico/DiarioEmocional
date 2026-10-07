@@ -23,7 +23,7 @@ fun Cabecalho(
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxWidth().semantics(mergeDescendants = true){}
     ) {
         IconButton(
             onClick = onVoltar,

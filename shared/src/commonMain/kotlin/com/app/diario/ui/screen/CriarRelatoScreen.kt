@@ -21,6 +21,8 @@ import com.app.diario.ui.components.Cabecalho
 import java.time.LocalDate
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 
 data class CriarRelatoFormState(
     val titulo: String = "",
@@ -81,7 +83,7 @@ fun CriarRelatoScreen(
             onValueChange = {},
             readOnly = true,
             label = {
-                Text("Data")
+                Text("Data",  modifier = Modifier.semantics{ heading() })
             },
             modifier = Modifier.fillMaxWidth()
         )
@@ -92,7 +94,7 @@ fun CriarRelatoScreen(
                 formState = formState.copy(titulo = novoTitulo)
             },
             label = {
-                Text("Título")
+                Text("Título",  modifier = Modifier.semantics{ heading() })
             },
             modifier = Modifier.fillMaxWidth()
         )
@@ -103,7 +105,7 @@ fun CriarRelatoScreen(
                 formState = formState.copy(conteudo = novoConteudo)
             },
             label = {
-                Text("Conteúdo")
+                Text("Conteúdo",  modifier = Modifier.semantics{ heading() })
             },
             minLines = 6,
             modifier = Modifier.fillMaxWidth()

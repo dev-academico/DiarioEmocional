@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -17,7 +18,7 @@ fun CardSistema(
 ) {
     if (onClick != null) {
         Card(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().semantics(mergeDescendants = true){},
             onClick = onClick
         ) {
             Column(
@@ -36,7 +37,7 @@ fun CardSistema(
         }
     } else {
         Card(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().semantics(mergeDescendants = true){}
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)

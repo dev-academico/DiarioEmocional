@@ -24,6 +24,7 @@ fun Theme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        content = content
+        typography = MaterialTheme.typography,
+        content = content,
     )
 }

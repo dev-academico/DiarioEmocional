@@ -18,6 +18,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.app.diario.ui.components.Cabecalho
 
@@ -104,7 +106,7 @@ fun CriarPensamentoDisfuncionalScreen(
                 formState = formState.copy(situacao = novaSituacao)
             },
             label = {
-                Text("Situação")
+                Text("Situação", modifier = Modifier.semantics{ heading() })
             },
             minLines = 2,
             modifier = Modifier.fillMaxWidth()
@@ -116,7 +118,7 @@ fun CriarPensamentoDisfuncionalScreen(
                 formState = formState.copy(pensamentosImagens = novoValor)
             },
             label = {
-                Text("Pensamentos / imagens")
+                Text("Pensamentos / imagens", modifier = Modifier.semantics{ heading() })
             },
             minLines = 3,
             modifier = Modifier.fillMaxWidth()
@@ -128,7 +130,7 @@ fun CriarPensamentoDisfuncionalScreen(
                 formState = formState.copy(emocoesSentimentos = novoValor)
             },
             label = {
-                Text("Emoções / sentimentos")
+                Text("Emoções / sentimentos",  modifier = Modifier.semantics{ heading() })
             },
             minLines = 3,
             modifier = Modifier.fillMaxWidth()
@@ -140,7 +142,7 @@ fun CriarPensamentoDisfuncionalScreen(
                 formState = formState.copy(comportamentosReacoes = novoValor)
             },
             label = {
-                Text("Comportamentos / reações")
+                Text("Comportamentos / reações",  modifier = Modifier.semantics{ heading() })
             },
             minLines = 3,
             modifier = Modifier.fillMaxWidth()

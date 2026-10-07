@@ -32,20 +32,17 @@ import androidx.compose.runtime.setValue
 
 @Composable
 fun App() {
-    var isDarkMode by remember {
-        mutableStateOf(false)
-    }
+    var isDarkMode = isSystemInDarkTheme()
 
+    // O componente Theme aplica automaticamente as cores claras ou escuras
     Theme(darkTheme = isDarkMode) {
-
         Surface(
-            color = MaterialTheme.colorScheme.background
+            color = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.onBackground
         ) {
             AppNavigation(
                 darkTheme = isDarkMode,
-                onDarkThemeChange = {
-                    isDarkMode = it
-                }
+                onDarkThemeChange = { isDarkMode = it }
             )
         }
     }
