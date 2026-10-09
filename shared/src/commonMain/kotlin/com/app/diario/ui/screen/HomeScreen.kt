@@ -19,8 +19,7 @@ import com.app.diario.ui.components.Cabecalho
 @Composable
 fun HomeScreen(
     onRelatosClick: () -> Unit,
-    onPensamentosClick: () -> Unit,
-    onPontuacaoClick: () -> Unit
+    onPensamentosClick: () -> Unit
 ) {
 
     Column(
@@ -52,11 +51,6 @@ fun HomeScreen(
             Text("Pensamentos disfuncionais")
         }
 
-        Button(
-            onClick = onPontuacaoClick
-        ) {
-            Text("Pontuação diária")
-        }
     }
 }
 
@@ -65,7 +59,6 @@ fun HomeScreen(
 fun HomeScreenPreview() {
     HomeScreen(
         onRelatosClick = {},
-        onPensamentosClick = {},
-        onPontuacaoClick = {}
+        onPensamentosClick = {}
     )
 }

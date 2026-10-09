@@ -11,8 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 
 @Composable
 fun Cabecalho(
@@ -22,14 +23,16 @@ fun Cabecalho(
     onVoltar: () -> Unit
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth().semantics(mergeDescendants = true){}
+        modifier = modifier.fillMaxWidth().semantics(mergeDescendants = true){}
     ) {
         IconButton(
             onClick = onVoltar,
             colors = IconButtonDefaults.iconButtonColors(
                 containerColor = MaterialTheme.colorScheme.primary
-            )
+            ),
+            modifier = Modifier.semantics {
+                contentDescription = "Voltar"
+            }
         ) {
             Text(
                 text = "←",
