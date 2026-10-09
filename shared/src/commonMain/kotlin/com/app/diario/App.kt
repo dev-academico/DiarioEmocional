@@ -42,8 +42,7 @@ fun App(initialDeepLink: String? = null) {
         ) {
             AppNavigation(
                 darkTheme = isDarkMode,
-                onDarkThemeChange = { isDarkMode = it },
-                initialDeepLink = initialDeepLink
+                onDarkThemeChange = { isDarkMode = it }
             )
         }
     }

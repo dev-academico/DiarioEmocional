@@ -31,22 +31,9 @@ import kotlin.time.Clock
 @Composable
 fun AppNavigation(
     darkTheme: Boolean,
-    onDarkThemeChange: (Boolean) -> Unit,
-    initialDeepLink: String? = null
+    onDarkThemeChange: (Boolean) -> Unit
 ) {
     val navController = rememberNavController()
-
-    androidx.compose.runtime.LaunchedEffect(initialDeepLink) {
-        initialDeepLink?.let { uri ->
-            if (uri.contains("relato")) {
-                val data = uri.substringAfter("dataRegistro=", "Registro").replace("%20", " ")
-                navController.navigate(RelatoIndividualRoute(dataRegistro = data))
-            } else if (uri.contains("pensamento")) {
-                val data = uri.substringAfter("dataRegistro=", "Registro").replace("%20", " ")
-                navController.navigate(PensamentoDisfuncionalIndividualRoute(dataRegistro = data))
-            }
-        }
-    }
 
     NavHost(
         navController = navController,
@@ -129,7 +116,7 @@ fun AppNavigation(
                 onPensamentoIndividual = { pensamento ->
                     navController.navigate(
                         PensamentoDisfuncionalIndividualRoute(
-                            dataRegistro = pensamento.dataHora
+                            dataRegistro = pensamento.dataRegistro
                         )
                     )
                 },
@@ -167,7 +154,7 @@ fun AppNavigation(
 
         composable<CriarPensamentoDisfuncionalRoute> {
             CriarPensamentoDisfuncionalScreen(
-                dataHora = Clock.System.now().toString(),
+                dataRegistro = Clock.System.now().toString().substringBefore("T"),
                 onVoltar = {
                     navController.popBackStack()
                 },

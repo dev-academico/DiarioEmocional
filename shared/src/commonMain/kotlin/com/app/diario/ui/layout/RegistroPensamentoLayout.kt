@@ -59,7 +59,7 @@ fun PensamentoLayoutCelular(
         ) {
             items(pensamentos) { pensamento ->
                 CardSistema(
-                    dataRegistro = pensamento.dataHora,
+                    dataRegistro = pensamento.dataRegistro,
                     titulo = pensamento.situacao,
                     onClick = {
                         onPensamentoClick(pensamento)
@@ -113,7 +113,7 @@ fun PensamentoLayoutLargo(
             ) {
                 items(pensamentos) { pensamento ->
                     CardSistema(
-                        dataRegistro = pensamento.dataHora,
+                        dataRegistro = pensamento.dataRegistro,
                         titulo = pensamento.situacao,
                         onClick = {
                             onPensamentoClick(pensamento)
@@ -127,7 +127,7 @@ fun PensamentoLayoutLargo(
         if (pensamentoSelecionado != null) {
 
             PensamentoIndividualComponent(
-                dataHora = pensamentoSelecionado.dataHora,
+                dataRegistro = pensamentoSelecionado.dataRegistro,
                 situacao = pensamentoSelecionado.situacao,
                 pensamentosImagens = pensamentoSelecionado.pensamentosImagens,
                 emocoesSentimentos = pensamentoSelecionado.emocoesSentimentos,

@@ -18,7 +18,7 @@ fun RegistroPensamentoIndividualScreen(
     onVoltar: () -> Unit
 ) {
     val pensamento = pensamentosDisfuncionaisMock.find {
-        it.dataHora == dataRegistro
+        it.dataRegistro == dataRegistro
     }
 
     Column(
@@ -42,7 +42,7 @@ fun RegistroPensamentoIndividualScreen(
 
         if (pensamento != null) {
             PensamentoIndividualComponent(
-                dataHora = pensamento.dataHora,
+                dataRegistro = pensamento.dataRegistro,
                 situacao = pensamento.situacao,
                 pensamentosImagens = pensamento.pensamentosImagens,
                 emocoesSentimentos = pensamento.emocoesSentimentos,

@@ -64,7 +64,7 @@ fun mensagemErroFormularioPensamento(
 
 @Composable
 fun CriarPensamentoDisfuncionalScreen(
-    dataHora: String,
+    dataRegistro: String,
     onVoltar: () -> Unit,
     onSalvar: (String, String, String, String) -> Unit
 ) {
@@ -91,11 +91,11 @@ fun CriarPensamentoDisfuncionalScreen(
         )
 
         OutlinedTextField(
-            value = dataHora,
+            value = dataRegistro,
             onValueChange = {},
             readOnly = true,
             label = {
-                Text("Data hora")
+                Text("Data")
             },
             modifier = Modifier.fillMaxWidth()
         )

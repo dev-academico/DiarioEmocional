@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun PensamentoIndividualComponent(
-    dataHora: String,
+    dataRegistro: String,
     situacao: String,
     pensamentosImagens: String,
     emocoesSentimentos: String,
@@ -24,7 +24,7 @@ fun PensamentoIndividualComponent(
             modifier = Modifier.padding(24.dp)
         ) {
             Text(
-                text = dataHora,
+                text = dataRegistro,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
