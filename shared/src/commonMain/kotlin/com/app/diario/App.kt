@@ -31,7 +31,7 @@ import androidx.compose.runtime.setValue
 
 
 @Composable
-fun App() {
+fun App(initialDeepLink: String? = null) {
     var isDarkMode = isSystemInDarkTheme()
 
     // O componente Theme aplica automaticamente as cores claras ou escuras
@@ -42,7 +42,8 @@ fun App() {
         ) {
             AppNavigation(
                 darkTheme = isDarkMode,
-                onDarkThemeChange = { isDarkMode = it }
+                onDarkThemeChange = { isDarkMode = it },
+                initialDeepLink = initialDeepLink
             )
         }
     }

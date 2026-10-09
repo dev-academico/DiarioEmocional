@@ -23,6 +23,7 @@ import RegistroPensamentoScreen
 import androidx.annotation.RequiresApi
 import androidx.navigation.navDeepLink
 import com.app.diario.ui.screens.HomeScreen
+import jdk.internal.net.http.common.Log
 import pensamentosDisfuncionaisMock
 import kotlin.time.Clock
 
@@ -30,9 +31,22 @@ import kotlin.time.Clock
 @Composable
 fun AppNavigation(
     darkTheme: Boolean,
-    onDarkThemeChange: (Boolean) -> Unit
+    onDarkThemeChange: (Boolean) -> Unit,
+    initialDeepLink: String? = null
 ) {
     val navController = rememberNavController()
+
+    androidx.compose.runtime.LaunchedEffect(initialDeepLink) {
+        initialDeepLink?.let { uri ->
+            if (uri.contains("relato")) {
+                val data = uri.substringAfter("dataRegistro=", "Registro").replace("%20", " ")
+                navController.navigate(RelatoIndividualRoute(dataRegistro = data))
+            } else if (uri.contains("pensamento")) {
+                val data = uri.substringAfter("dataRegistro=", "Registro").replace("%20", " ")
+                navController.navigate(PensamentoDisfuncionalIndividualRoute(dataRegistro = data))
+            }
+        }
+    }
 
     NavHost(
         navController = navController,
@@ -48,11 +62,8 @@ fun AppNavigation(
 
                 onPensamentosClick = {
                     navController.navigate(PensamentoDisfuncionalRoute)
-                },
-
-                onPontuacaoClick = {
-                    navController.navigate(PontuacaoDiariaRoute)
                 }
+
             )
         }
 
@@ -181,20 +192,6 @@ fun AppNavigation(
         }
 
 
-        // PONTUAÇÃO DIÁRIA
-        composable<PontuacaoDiariaRoute> {
-
-            PontuacaoDiariaScreen(
-                onVoltar = {
-                    navController.popBackStack()
-                }
-            )
-        }
     }
 }
 
-
-@Composable
-fun PontuacaoDiariaScreen(onVoltar: () -> Boolean) {
-    TODO("Not yet implemented")
-}
