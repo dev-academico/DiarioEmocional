@@ -25,7 +25,6 @@ Acreditamos que os adolescentes universitários vão se sentir melhor mentalment
 | Relato do dia (texto livre) | Fotos, GPS com o relato |
 | Avaliação dos sentimentos do dia (escala simples, ex.: 1–5 + emoção principal) | Aspectos da vida relacionados |
 | Registro de Pensamento Disfuncional (RPD) para momentos de crise (formulário guiado) | Compartilhar com o psicologo |
-| Marcação de pontuação diária | Gamificação avançada (loja, ranking entre usuários, recompensas complexas) |
 | Registro de higiene do sono (horas dormidas + uso de celular antes de dormir) | Múltiplos perfis e permissões |
 | Preenchimento de cronograma semanal de atividades obrigatórias | Integração com wearables (smartwatch) |
 
