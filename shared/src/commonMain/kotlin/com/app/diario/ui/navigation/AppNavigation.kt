@@ -1,5 +1,7 @@
 package com.app.diario.ui.navigation
 
+import CriarPensamentoDisfuncionalRoute
+import CriarPensamentoDisfuncionalScreen
 import CriarRelatoRoute
 import CriarRelatoScreen
 import PensamentoDisfuncionalRoute
@@ -21,6 +23,7 @@ import RegistroPensamentoScreen
 import androidx.annotation.RequiresApi
 import androidx.navigation.navDeepLink
 import com.app.diario.ui.screens.HomeScreen
+import jdk.internal.net.http.common.Log
 import pensamentosDisfuncionaisMock
 import kotlin.time.Clock
 
@@ -46,11 +49,8 @@ fun AppNavigation(
 
                 onPensamentosClick = {
                     navController.navigate(PensamentoDisfuncionalRoute)
-                },
-
-                onPontuacaoClick = {
-                    navController.navigate(PontuacaoDiariaRoute)
                 }
+
             )
         }
 
@@ -106,28 +106,59 @@ fun AppNavigation(
         }
 
 
-        // LISTA / FORMULÁRIO DE PENSAMENTO DISFUNCIONAL
+// LISTA DE PENSAMENTOS DISFUNCIONAIS
         composable<PensamentoDisfuncionalRoute> {
-
-            TODO()
-        }
-
-
-        // PENSAMENTOS DISFUNCIONAIS
-        composable<PensamentoDisfuncionalRoute> {
-
             RegistroPensamentoScreen(
                 pensamentos = pensamentosDisfuncionaisMock,
 
-                onPensamentoClick = { pensamento ->
+                // CELULAR: navega para a página individual.
+                // LAYOUT LARGO: a tela intercepta o clique e apenas seleciona.
+                onPensamentoIndividual = { pensamento ->
                     navController.navigate(
                         PensamentoDisfuncionalIndividualRoute(
-                            dataRegistro = pensamento.dataHora
+                            dataRegistro = pensamento.dataRegistro
                         )
                     )
                 },
 
+                onNovoPensamentoClick = {
+                    navController.navigate(CriarPensamentoDisfuncionalRoute)
+                },
+
                 onVoltar = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+
+// PENSAMENTO DISFUNCIONAL INDIVIDUAL
+        composable<PensamentoDisfuncionalIndividualRoute>(
+            deepLinks = listOf(
+                navDeepLink<PensamentoDisfuncionalIndividualRoute>(
+                    basePath = "diario://pensamento"
+                )
+            )
+        ) { backStackEntry ->
+
+            val rota = backStackEntry.toRoute<PensamentoDisfuncionalIndividualRoute>()
+
+            RegistroPensamentoIndividualScreen(
+                dataRegistro = rota.dataRegistro,
+                onVoltar = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+
+        composable<CriarPensamentoDisfuncionalRoute> {
+            CriarPensamentoDisfuncionalScreen(
+                dataRegistro = Clock.System.now().toString().substringBefore("T"),
+                onVoltar = {
+                    navController.popBackStack()
+                },
+                onSalvar = { situacao, pensamentos, emocoes, comportamentos ->
                     navController.popBackStack()
                 }
             )
@@ -148,24 +179,6 @@ fun AppNavigation(
         }
 
 
-        // PONTUAÇÃO DIÁRIA
-        composable<PontuacaoDiariaRoute> {
-
-            PontuacaoDiariaScreen(
-                onVoltar = {
-                    navController.popBackStack()
-                }
-            )
-        }
     }
 }
 
-@Composable
-fun CriarRelatoScreen(onVoltar: () -> Boolean) {
-    TODO("Not yet implemented")
-}
-
-@Composable
-fun PontuacaoDiariaScreen(onVoltar: () -> Boolean) {
-    TODO("Not yet implemented")
-}

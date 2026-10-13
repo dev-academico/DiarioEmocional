@@ -8,8 +8,13 @@ object RelatosRoute
 
 @Serializable
 object PensamentoDisfuncionalRoute
+
 @Serializable
 data object CriarRelatoRoute
+
+@Serializable
+data object CriarPensamentoDisfuncionalRoute
+
 @Serializable
 object PontuacaoDiariaRoute
 
