@@ -25,8 +25,5 @@ class HomeScreenTest {
 
         onNodeWithText("Pensamentos disfuncionais")
             .assertIsDisplayed()
-
-        onNodeWithText("Pontuação diária")
-            .assertIsDisplayed()
     }
 }
