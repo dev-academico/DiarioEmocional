@@ -16,8 +16,7 @@ class HomeScreenTest {
         setContent {
             HomeScreen(
                 onRelatosClick = {},
-                onPensamentosClick = {},
-                onPontuacaoClick = {}
+                onPensamentosClick = {}
             )
         }
 
