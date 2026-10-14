@@ -29,33 +29,34 @@ fun PensamentoLayoutCelular(
     modifier: Modifier = Modifier,
     onVoltar: () -> Unit,
     onPensamentoClick: (PensamentoMock) -> Unit,
-    onNovoPensamentoClick: () -> Unit
+    onNovoPensamentoClick: () -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(32.dp)
-            .windowInsetsPadding(WindowInsets.safeDrawing)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(32.dp)
+                .windowInsetsPadding(WindowInsets.safeDrawing),
     ) {
-
         Cabecalho(
             title = "Registro de pensamentos disfuncionais",
             subtitle = "Escreva sobre seus pensamentos disfuncionais seguindo a tabela da psicologia.",
-            onVoltar = onVoltar
+            onVoltar = onVoltar,
         )
 
         Button(
             onClick = onNovoPensamentoClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
         ) {
             Text("Novo registro")
         }
 
         LazyColumn(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(pensamentos) { pensamento ->
                 CardSistema(
@@ -63,13 +64,12 @@ fun PensamentoLayoutCelular(
                     titulo = pensamento.situacao,
                     onClick = {
                         onPensamentoClick(pensamento)
-                    }
+                    },
                 )
             }
         }
     }
 }
-
 
 @Composable
 fun PensamentoLayoutLargo(
@@ -78,38 +78,38 @@ fun PensamentoLayoutLargo(
     onPensamentoClick: (PensamentoMock) -> Unit = {},
     onNovoPensamentoClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onVoltar: () -> Unit
+    onVoltar: () -> Unit,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-
         // LADO ESQUERDO
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
-
             Cabecalho(
                 title = "Registro de pensamentos disfuncionais",
                 subtitle = "Escreva sobre seus pensamentos disfuncionais.",
-                onVoltar = onVoltar
+                onVoltar = onVoltar,
             )
 
             Button(
                 onClick = onNovoPensamentoClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
             ) {
                 Text("Novo registro")
             }
 
             LazyColumn(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 items(pensamentos) { pensamento ->
                     CardSistema(
@@ -117,7 +117,7 @@ fun PensamentoLayoutLargo(
                         titulo = pensamento.situacao,
                         onClick = {
                             onPensamentoClick(pensamento)
-                        }
+                        },
                     )
                 }
             }
@@ -125,25 +125,22 @@ fun PensamentoLayoutLargo(
 
         // LADO DIREITO
         if (pensamentoSelecionado != null) {
-
             PensamentoIndividualComponent(
                 dataRegistro = pensamentoSelecionado.dataRegistro,
                 situacao = pensamentoSelecionado.situacao,
                 pensamentosImagens = pensamentoSelecionado.pensamentosImagens,
                 emocoesSentimentos = pensamentoSelecionado.emocoesSentimentos,
                 comportamentosReacoes = pensamentoSelecionado.comportamentosReacoes,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
-
         } else {
-
             Card(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     text = "Selecione um registro",
                     modifier = Modifier.padding(16.dp),
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
                 )
             }
         }

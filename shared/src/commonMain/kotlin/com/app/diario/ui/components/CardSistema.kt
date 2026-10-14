@@ -1,5 +1,4 @@
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -14,42 +13,42 @@ import androidx.compose.ui.unit.dp
 fun CardSistema(
     dataRegistro: String,
     titulo: String,
-    onClick: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null,
 ) {
     if (onClick != null) {
         Card(
-            modifier = Modifier.fillMaxWidth().semantics(mergeDescendants = true){},
-            onClick = onClick
+            modifier = Modifier.fillMaxWidth().semantics(mergeDescendants = true) {},
+            onClick = onClick,
         ) {
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
             ) {
                 Text(
                     text = titulo,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
 
                 Text(
                     text = dataRegistro,
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
                 )
             }
         }
     } else {
         Card(
-            modifier = Modifier.fillMaxWidth().semantics(mergeDescendants = true){}
+            modifier = Modifier.fillMaxWidth().semantics(mergeDescendants = true) {},
         ) {
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
             ) {
                 Text(
                     text = titulo,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
 
                 Text(
                     text = dataRegistro,
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
                 )
             }
         }

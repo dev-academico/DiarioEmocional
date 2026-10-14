@@ -15,15 +15,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.app.diario.ui.mock.RelatoMock
 import com.app.diario.ui.components.Cabecalho
-import androidx.compose.material3.Icon
+import com.app.diario.ui.mock.RelatoMock
 
 @Composable
 fun RelatosLayoutCelular(
@@ -31,33 +29,34 @@ fun RelatosLayoutCelular(
     modifier: Modifier = Modifier,
     onVoltar: () -> Unit,
     onRelatoClick: (RelatoMock) -> Unit,
-    onNovoRelatoClick: () -> Unit
+    onNovoRelatoClick: () -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(32.dp)
-            .windowInsetsPadding(WindowInsets.safeDrawing)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(32.dp)
+                .windowInsetsPadding(WindowInsets.safeDrawing),
     ) {
-
         Cabecalho(
             title = "Relatos",
             subtitle = "Escreva acontecimentos interessantes do seu dia, como foram as coisas no trabalho, etc.",
-            onVoltar = onVoltar
+            onVoltar = onVoltar,
         )
 
         Button(
             onClick = onNovoRelatoClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
         ) {
             Text("Novo relato")
         }
 
         LazyColumn(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(relatos) { relato ->
                 CardSistema(
@@ -65,13 +64,12 @@ fun RelatosLayoutCelular(
                     titulo = relato.titulo,
                     onClick = {
                         onRelatoClick(relato)
-                    }
+                    },
                 )
             }
         }
     }
 }
-
 
 @Composable
 fun RelatosLayoutLargo(
@@ -80,37 +78,37 @@ fun RelatosLayoutLargo(
     onRelatoClick: (RelatoMock) -> Unit = {},
     onNovoRelatoClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onVoltar : () -> Unit
+    onVoltar: () -> Unit,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-
         // LADO ESQUERDO
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
-
             Cabecalho(
                 title = "Relatos",
                 subtitle = "Escreva acontecimentos interessantes do seu dia.",
-                onVoltar =  onVoltar
-                )
+                onVoltar = onVoltar,
+            )
 
             Button(
                 onClick = onNovoRelatoClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
             ) {
                 Text("Novo relato")
             }
 
             LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 items(relatos) { relato ->
                     CardSistema(
@@ -118,7 +116,7 @@ fun RelatosLayoutLargo(
                         titulo = relato.titulo,
                         onClick = {
                             onRelatoClick(relato)
-                        }
+                        },
                     )
                 }
             }
@@ -126,23 +124,20 @@ fun RelatosLayoutLargo(
 
         // LADO DIREITO
         if (relatoSelecionado != null) {
-
             RelatoIndividualComponent(
                 dataRegistro = relatoSelecionado.dataRegistro,
                 titulo = relatoSelecionado.titulo,
                 conteudo = relatoSelecionado.conteudo,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
-
         } else {
-
             Card(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     text = "Selecione um relato",
                     modifier = Modifier.padding(16.dp),
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
                 )
             }
         }

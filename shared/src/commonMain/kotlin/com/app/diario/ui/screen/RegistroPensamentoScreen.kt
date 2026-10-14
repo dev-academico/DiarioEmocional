@@ -14,7 +14,7 @@ fun RegistroPensamentoScreen(
     pensamentos: List<PensamentoMock>,
     onPensamentoIndividual: (PensamentoMock) -> Unit,
     onNovoPensamentoClick: () -> Unit,
-    onVoltar: () -> Unit
+    onVoltar: () -> Unit,
 ) {
     var pensamentoSelecionado by remember {
         mutableStateOf<PensamentoMock?>(null)
@@ -26,18 +26,18 @@ fun RegistroPensamentoScreen(
             .windowWidthSizeClass
 
     when (width) {
-
         WindowWidthSizeClass.COMPACT -> {
             PensamentoLayoutCelular(
                 pensamentos = pensamentos,
                 onPensamentoClick = onPensamentoIndividual,
                 onVoltar = onVoltar,
-                onNovoPensamentoClick = onNovoPensamentoClick
+                onNovoPensamentoClick = onNovoPensamentoClick,
             )
         }
 
         WindowWidthSizeClass.MEDIUM,
-        WindowWidthSizeClass.EXPANDED -> {
+        WindowWidthSizeClass.EXPANDED,
+        -> {
             PensamentoLayoutLargo(
                 pensamentos = pensamentos,
                 pensamentoSelecionado = pensamentoSelecionado,
@@ -45,7 +45,7 @@ fun RegistroPensamentoScreen(
                     pensamentoSelecionado = it
                 },
                 onVoltar = onVoltar,
-                onNovoPensamentoClick = onNovoPensamentoClick
+                onNovoPensamentoClick = onNovoPensamentoClick,
             )
         }
     }
@@ -58,7 +58,7 @@ fun RegistroPensamentoScreenPreview() {
         pensamentos = pensamentosDisfuncionaisMock,
         onPensamentoIndividual = {},
         onNovoPensamentoClick = {},
-        onVoltar = {}
+        onVoltar = {},
     )
 }
 
@@ -69,6 +69,6 @@ fun RegistroPensamentoScreenEmptyPreview() {
         pensamentos = emptyList(),
         onPensamentoIndividual = {},
         onNovoPensamentoClick = {},
-        onVoltar = {}
+        onVoltar = {},
     )
 }

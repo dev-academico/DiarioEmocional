@@ -1,23 +1,22 @@
-import androidx.compose.runtime.Composable
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.app.diario.ui.layout.RelatosLayoutCelular
 import com.app.diario.ui.layout.RelatosLayoutLargo
 import com.app.diario.ui.mock.RelatoMock
 import com.app.diario.ui.mock.relatosMock
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-
 
 @Composable
 fun RelatosScreen(
     relatos: List<RelatoMock>,
     onRelatoIndividual: (RelatoMock) -> Unit,
     onNovoRelatoClick: () -> Unit,
-    onVoltar: () -> Unit
+    onVoltar: () -> Unit,
 ) {
     var relatoSelecionado by remember {
         mutableStateOf<RelatoMock?>(null)
@@ -29,18 +28,18 @@ fun RelatosScreen(
             .windowWidthSizeClass
 
     when (width) {
-
         WindowWidthSizeClass.COMPACT -> {
             RelatosLayoutCelular(
                 relatos = relatos,
                 onRelatoClick = onRelatoIndividual,
                 onVoltar = onVoltar,
-                onNovoRelatoClick =  onNovoRelatoClick
+                onNovoRelatoClick = onNovoRelatoClick,
             )
         }
 
         WindowWidthSizeClass.MEDIUM,
-        WindowWidthSizeClass.EXPANDED -> {
+        WindowWidthSizeClass.EXPANDED,
+        -> {
             RelatosLayoutLargo(
                 relatos = relatos,
                 relatoSelecionado = relatoSelecionado,
@@ -48,11 +47,12 @@ fun RelatosScreen(
                     relatoSelecionado = it
                 },
                 onVoltar = onVoltar,
-                onNovoRelatoClick = onNovoRelatoClick
+                onNovoRelatoClick = onNovoRelatoClick,
             )
         }
     }
 }
+
 @Preview
 @Composable
 fun RelatosScreenPreview() {
@@ -60,7 +60,7 @@ fun RelatosScreenPreview() {
         relatos = relatosMock,
         onRelatoIndividual = {},
         onNovoRelatoClick = {},
-        onVoltar = {}
+        onVoltar = {},
     )
 }
 
@@ -71,6 +71,6 @@ fun RelatosScreenEmptyPreview() {
         relatos = emptyList(),
         onRelatoIndividual = {},
         onNovoRelatoClick = {},
-        onVoltar = {}
+        onVoltar = {},
     )
 }

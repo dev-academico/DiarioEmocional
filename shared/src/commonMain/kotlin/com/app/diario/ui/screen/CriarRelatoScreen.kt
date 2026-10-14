@@ -13,33 +13,27 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.app.diario.ui.components.Cabecalho
-import java.time.LocalDate
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.dp
+import com.app.diario.ui.components.Cabecalho
 
 data class CriarRelatoFormState(
     val titulo: String = "",
-    val conteudo: String = ""
+    val conteudo: String = "",
 )
 
-fun formularioRelatoValido(
-    state: CriarRelatoFormState
-): Boolean {
+fun formularioRelatoValido(state: CriarRelatoFormState): Boolean {
     return state.titulo.isNotBlank() &&
-            state.conteudo.isNotBlank()
+        state.conteudo.isNotBlank()
 }
 
-fun mensagemErroFormulario(
-    state: CriarRelatoFormState
-): String? {
-
+fun mensagemErroFormulario(state: CriarRelatoFormState): String? {
     if (state.titulo.isBlank()) {
         return "O título é obrigatório."
     }
@@ -50,11 +44,12 @@ fun mensagemErroFormulario(
 
     return null
 }
+
 @Composable
 fun CriarRelatoScreen(
     dataRegistro: String,
     onVoltar: () -> Unit,
-    onSalvar: (String, String) -> Unit
+    onSalvar: (String, String) -> Unit,
 ) {
     var formState by remember {
         mutableStateOf(CriarRelatoFormState())
@@ -64,18 +59,18 @@ fun CriarRelatoScreen(
     val mensagemErro = mensagemErroFormulario(formState)
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp)
-            .verticalScroll(rememberScrollState())
-            .windowInsetsPadding(WindowInsets.safeDrawing),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(24.dp)
+                .verticalScroll(rememberScrollState())
+                .windowInsetsPadding(WindowInsets.safeDrawing),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-
         Cabecalho(
             title = "Novo relato",
             subtitle = "Registre os acontecimentos do seu dia.",
-            onVoltar = onVoltar
+            onVoltar = onVoltar,
         )
 
         OutlinedTextField(
@@ -83,9 +78,9 @@ fun CriarRelatoScreen(
             onValueChange = {},
             readOnly = true,
             label = {
-                Text("Data",  modifier = Modifier.semantics{ heading() })
+                Text("Data", modifier = Modifier.semantics { heading() })
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         OutlinedTextField(
@@ -94,9 +89,9 @@ fun CriarRelatoScreen(
                 formState = formState.copy(titulo = novoTitulo)
             },
             label = {
-                Text("Título",  modifier = Modifier.semantics{ heading() })
+                Text("Título", modifier = Modifier.semantics { heading() })
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         OutlinedTextField(
@@ -105,15 +100,15 @@ fun CriarRelatoScreen(
                 formState = formState.copy(conteudo = novoConteudo)
             },
             label = {
-                Text("Conteúdo",  modifier = Modifier.semantics{ heading() })
+                Text("Conteúdo", modifier = Modifier.semantics { heading() })
             },
             minLines = 6,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         if (mensagemErro != null) {
             Text(
                 text = mensagemErro,
-                color = MaterialTheme.colorScheme.error
+                color = MaterialTheme.colorScheme.error,
             )
         }
         Button(
@@ -121,7 +116,7 @@ fun CriarRelatoScreen(
                 onSalvar(formState.titulo, formState.conteudo)
             },
             enabled = valido,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             Text("Salvar")
         }
