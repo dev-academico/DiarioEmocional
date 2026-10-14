@@ -25,7 +25,7 @@ jobs:
         uses: ./.github/actions/gradle-setup
 
       - name: Run unit tests
-        run: ./gradlew desktopTest
+        run: ./gradlew jvmTest
 
       - name: Run Linters (ktlint & detekt)
         run: ./gradlew ktlintCheck detekt

@@ -27,7 +27,7 @@ ktlint {
 kotlin {
     // Antes: jvm()
     // Agora o alvo JVM se chama "desktop"
-    jvm("desktop")
+    jvm()
 
     android {
         namespace = "com.app.diario.shared"
@@ -78,7 +78,7 @@ kotlin {
             implementation("org.jetbrains.compose.ui:ui-test:1.11.1")
         }
 
-        val desktopTest by getting {
+        val jvmTest by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(compose.desktop.uiTestJUnit4)
