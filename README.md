@@ -7,7 +7,6 @@ Para descobrir as funcionalidades e justificativas das escolhas de tecnologia, a
 https://github.com/dev-academico/DiarioEmocional/blob/main/docs/proposta.md
 
 ## 2. Tecnologias utilizadas
-- Banco de dados: Supabase
 - Kotlin Multiplatform (Compose Multiplatform)
 - IDE: Android Studio
 
