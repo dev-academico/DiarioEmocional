@@ -35,3 +35,6 @@ data object AvaliacaoRoute
 data class AvaliacaoIndividualRoute(
     val dataRegistro: String,
 )
+
+@Serializable
+data object CriarAvaliacaoSentimento

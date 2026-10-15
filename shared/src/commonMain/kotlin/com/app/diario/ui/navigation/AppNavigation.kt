@@ -15,6 +15,7 @@ import RelatoIndividualRoute
 import RelatoIndividualScreen
 import RelatosRoute
 import RelatosScreen
+import CriarAvaliacaoSentimento
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -25,6 +26,7 @@ import avaliacaoMock
 import com.app.diario.ui.mock.relatosMock
 import com.app.diario.ui.screen.AvaliacaoIndividualScreen
 import com.app.diario.ui.screen.AvaliacaoSentimentoScreen
+import com.app.diario.ui.screen.CriarAvaliacaoScreen
 import com.app.diario.ui.screens.HomeScreen
 import pensamentosDisfuncionaisMock
 import kotlin.time.Clock
@@ -106,8 +108,16 @@ fun AppNavigation(
                 onAvaliacaoIndividual = {
                     navController.navigate(AvaliacaoIndividualRoute(it.dataRegistro))
                 },
-                onNovaAvaliacaoClick = {}, // falta implementar
+                onNovaAvaliacaoClick = { navController.navigate(CriarAvaliacaoSentimento)}, // falta implementar
                 onVoltar = { navController.popBackStack() },
+            )
+        }
+
+        composable<CriarAvaliacaoSentimento> {
+            CriarAvaliacaoScreen(
+                dataRegistro = Clock.System.now().toString().substringBefore("T"),
+                onVoltar = { navController.popBackStack() },
+                onSalvar = { _, _, _ -> navController.popBackStack() },
             )
         }
 

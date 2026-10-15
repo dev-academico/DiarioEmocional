@@ -3,24 +3,26 @@ package com.app.diario.ui.layout
 import CardSistema
 import RelatoIndividualComponent
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.app.diario.ui.components.Cabecalho
+import com.app.diario.ui.components.FloatingAdd
 import com.app.diario.ui.mock.RelatoMock
 
 @Composable
@@ -31,31 +33,34 @@ fun RelatosLayoutCelular(
     onRelatoClick: (RelatoMock) -> Unit,
     onNovoRelatoClick: () -> Unit,
 ) {
-    Column(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .padding(32.dp)
-                .windowInsetsPadding(WindowInsets.safeDrawing),
-    ) {
-        Cabecalho(
-            title = "Relatos",
-            subtitle = "Escreva acontecimentos interessantes do seu dia, como foram as coisas no trabalho, etc.",
-            onVoltar = onVoltar,
-        )
-
-        Button(
-            onClick = onNovoRelatoClick,
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            Cabecalho(
+                title = "Relatos",
+                subtitle = "Escreva acontecimentos interessantes do seu dia, como foram as coisas no trabalho, etc.",
+                onVoltar = onVoltar,
+            )
+        },
+        floatingActionButton = {
+            FloatingAdd(
+                onClick = onNovoRelatoClick,
+                title = "Novo relato"
+            )
+        },
+    ) { padding ->
+        LazyColumn(
             modifier =
                 Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-        ) {
-            Text("Novo relato")
-        }
-
-        LazyColumn(
-            modifier = Modifier.weight(1f),
+                    .fillMaxSize()
+                    .padding(padding),
+            contentPadding =
+                PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 8.dp,
+                    bottom = 96.dp,
+                ),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(relatos) { relato ->
@@ -80,34 +85,41 @@ fun RelatosLayoutLargo(
     modifier: Modifier = Modifier,
     onVoltar: () -> Unit,
 ) {
-    Row(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        // LADO ESQUERDO
-        Column(
-            modifier = Modifier.weight(1f),
-        ) {
+    Scaffold(
+        modifier = modifier,
+        topBar = {
             Cabecalho(
                 title = "Relatos",
                 subtitle = "Escreva acontecimentos interessantes do seu dia.",
                 onVoltar = onVoltar,
             )
-
-            Button(
+        },
+        floatingActionButton = {
+            FloatingAdd(
                 onClick = onNovoRelatoClick,
+                title = "Novo relato"
+            )
+        },
+    ) { padding ->
+        Row(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+        ) {
+            // LADO ESQUERDO
+            LazyColumn(
                 modifier =
                     Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-            ) {
-                Text("Novo relato")
-            }
-
-            LazyColumn(
+                        .weight(1f)
+                        .fillMaxHeight(),
+                contentPadding =
+                    PaddingValues(
+                        start = 16.dp,
+                        end = 8.dp,
+                        top = 8.dp,
+                        bottom = 96.dp,
+                    ),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 items(relatos) { relato ->
@@ -120,25 +132,31 @@ fun RelatosLayoutLargo(
                     )
                 }
             }
-        }
 
-        // LADO DIREITO
-        if (relatoSelecionado != null) {
-            RelatoIndividualComponent(
-                dataRegistro = relatoSelecionado.dataRegistro,
-                titulo = relatoSelecionado.titulo,
-                conteudo = relatoSelecionado.conteudo,
-                modifier = Modifier.weight(1f),
-            )
-        } else {
-            Card(
-                modifier = Modifier.weight(1f),
-            ) {
-                Text(
-                    text = "Selecione um relato",
-                    modifier = Modifier.padding(16.dp),
-                    style = MaterialTheme.typography.bodyLarge,
+            // LADO DIREITO
+            if (relatoSelecionado != null) {
+                RelatoIndividualComponent(
+                    dataRegistro = relatoSelecionado.dataRegistro,
+                    titulo = relatoSelecionado.titulo,
+                    conteudo = relatoSelecionado.conteudo,
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .padding(start = 8.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
                 )
+            } else {
+                Card(
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .padding(start = 8.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
+                ) {
+                    Text(
+                        text = "Selecione um relato",
+                        modifier = Modifier.padding(16.dp),
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
             }
         }
     }

@@ -8,10 +8,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun NovaAvaliacaoFab(onClick: () -> Unit) {
+fun FloatingAdd(onClick: () -> Unit, title: String) {
     ExtendedFloatingActionButton(
         onClick = onClick,
         icon = { Icon(Icons.Filled.Add, contentDescription = null) },
-        text = { Text("Nova avaliação") },
+        text = { Text(title) },
     )
 }

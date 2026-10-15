@@ -33,7 +33,7 @@ import avaliacaoMock
 import com.app.diario.ui.components.AvaliacaoCard
 import com.app.diario.ui.components.AvaliacaoPrevia
 import com.app.diario.ui.components.Cabecalho
-import com.app.diario.ui.components.NovaAvaliacaoFab
+import com.app.diario.ui.components.FloatingAdd
 import com.app.diario.ui.components.ResumoCard
 
 // Tela principal
@@ -81,7 +81,7 @@ fun AvaliacaoLayoutCelular(
 ) {
     Scaffold(
         topBar = { Cabecalho(title = "Avaliação sentimento", subtitle = "Como está se sentindo hoje?", onVoltar = onVoltar) },
-        floatingActionButton = { NovaAvaliacaoFab(onClick = onNovaAvaliacaoClick) },
+        floatingActionButton = { FloatingAdd(onClick = onNovaAvaliacaoClick, "Nova avaliação") },
     ) { padding ->
         if (avaliacoes.isEmpty()) {
             EstadoVazio(modifier = Modifier.padding(padding))
@@ -127,7 +127,7 @@ fun AvaliacaoLayoutLargo(
 ) {
     Scaffold(
         topBar = { Cabecalho(title = "Avaliação sentimento", subtitle = "Como está se sentindo hoje?", onVoltar = onVoltar) },
-        floatingActionButton = { NovaAvaliacaoFab(onClick = onNovaAvaliacaoClick) },
+        floatingActionButton = { FloatingAdd(onClick = onNovaAvaliacaoClick, "Nova avalição") },
     ) { padding ->
         Row(
             modifier =
