@@ -2,6 +2,7 @@ package com.app.diario.ui.navigation
 
 import AvaliacaoIndividualRoute
 import AvaliacaoRoute
+import CriarAvaliacaoSentimento
 import CriarPensamentoDisfuncionalRoute
 import CriarPensamentoDisfuncionalScreen
 import CriarRelatoRoute
@@ -15,7 +16,6 @@ import RelatoIndividualRoute
 import RelatoIndividualScreen
 import RelatosRoute
 import RelatosScreen
-import CriarAvaliacaoSentimento
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -108,7 +108,7 @@ fun AppNavigation(
                 onAvaliacaoIndividual = {
                     navController.navigate(AvaliacaoIndividualRoute(it.dataRegistro))
                 },
-                onNovaAvaliacaoClick = { navController.navigate(CriarAvaliacaoSentimento)}, // falta implementar
+                onNovaAvaliacaoClick = { navController.navigate(CriarAvaliacaoSentimento) }, // falta implementar
                 onVoltar = { navController.popBackStack() },
             )
         }

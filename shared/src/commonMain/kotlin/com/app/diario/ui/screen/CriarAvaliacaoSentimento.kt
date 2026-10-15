@@ -1,6 +1,5 @@
 package com.app.diario.ui.screen
 
-import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -68,7 +67,7 @@ private val gatilhosSugeridos =
 
 fun formularioAvaliacaoValido(state: CriarAvaliacaoFormState): Boolean {
     return state.descricao.isNotBlank() &&
-            state.gatilhos.isNotEmpty()
+        state.gatilhos.isNotEmpty()
 }
 
 fun mensagemErroFormularioAvaliacao(state: CriarAvaliacaoFormState): String? {
