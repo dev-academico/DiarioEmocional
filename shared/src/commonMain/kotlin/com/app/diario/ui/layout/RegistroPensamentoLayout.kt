@@ -46,13 +46,12 @@ fun PensamentoLayoutCelular(
         floatingActionButton = {
             FloatingAdd(onClick = onNovoPensamentoClick, title = "Novo pensamento")
         },
-    )
-    { padding ->
+    ) { padding ->
         if (pensamentos.isEmpty()) {
             EstadoVazio(
                 modifier = Modifier,
                 titulo = "Nenhum registros de pensamentos disfuncionais ainda.",
-                inserirNovoComponente =  "Toque em “Novo registro” para registrar um pensamento disfuncional"
+                inserirNovoComponente = "Toque em “Novo registro” para registrar um pensamento disfuncional",
             )
         } else {
             LazyColumn(
@@ -112,12 +111,12 @@ fun PensamentoLayoutLargo(
                     .fillMaxSize()
                     .padding(padding),
         ) {
-        // LADO ESQUERDO
+            // LADO ESQUERDO
             if (pensamentos.isEmpty()) {
                 EstadoVazio(
                     modifier = Modifier.weight(1f),
                     titulo = "Nenhum registros de pensamentos disfuncionais ainda.",
-                    inserirNovoComponente =  "Toque em “Novo registro” para registrar um pensamento disfuncional"
+                    inserirNovoComponente = "Toque em “Novo registro” para registrar um pensamento disfuncional",
                 )
             } else {
                 LazyColumn(

@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 fun EstadoVazio(
     modifier: Modifier = Modifier,
     titulo: String,
-    inserirNovoComponente: String
+    inserirNovoComponente: String,
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -29,7 +29,7 @@ fun EstadoVazio(
                 text = titulo,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.semantics{heading()}
+                modifier = Modifier.semantics { heading() },
             )
             Spacer(Modifier.size(4.dp))
             Text(
