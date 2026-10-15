@@ -47,7 +47,7 @@ data class CriarSonoFormState(
 
 fun formularioSonoValido(state: CriarSonoFormState): Boolean {
     return state.horarioDormiu.isNotBlank() &&
-            state.horarioAcordou.isNotBlank()
+        state.horarioAcordou.isNotBlank()
 }
 
 fun mensagemErroFormularioSono(state: CriarSonoFormState): String? {

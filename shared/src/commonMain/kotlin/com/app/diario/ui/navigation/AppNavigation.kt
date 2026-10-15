@@ -3,6 +3,7 @@ package com.app.diario.ui.navigation
 import AvaliacaoIndividualRoute
 import AvaliacaoRoute
 import CriarAvaliacaoSentimento
+import CriarHigieneSonoRoute
 import CriarPensamentoDisfuncionalRoute
 import CriarPensamentoDisfuncionalScreen
 import CriarRelatoRoute
@@ -30,9 +31,8 @@ import com.app.diario.ui.mock.relatosMock
 import com.app.diario.ui.screen.AvaliacaoIndividualScreen
 import com.app.diario.ui.screen.AvaliacaoSentimentoScreen
 import com.app.diario.ui.screen.CriarAvaliacaoScreen
-import com.app.diario.ui.screen.HigieneSonoScreen
-import CriarHigieneSonoRoute
 import com.app.diario.ui.screen.CriarSonoScreen
+import com.app.diario.ui.screen.HigieneSonoScreen
 import com.app.diario.ui.screens.HomeScreen
 import pensamentosDisfuncionaisMock
 import kotlin.time.Clock
@@ -219,7 +219,7 @@ fun AppNavigation(
             HigieneSonoScreen(
                 registros = registrosSonoMock,
                 onRegistroIndividual = { navController.navigate(HigieneSonoIndividualRoute) },
-                onNovoRegistroClick = { navController.navigate(CriarHigieneSonoRoute)},
+                onNovoRegistroClick = { navController.navigate(CriarHigieneSonoRoute) },
                 onVoltar = { navController.popBackStack() },
             )
         }
