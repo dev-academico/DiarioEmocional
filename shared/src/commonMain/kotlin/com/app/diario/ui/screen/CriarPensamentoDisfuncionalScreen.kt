@@ -74,7 +74,7 @@ fun CriarPensamentoDisfuncionalScreen(
         modifier =
             Modifier
                 .fillMaxSize()
-                .padding(24.dp)
+                .padding(8.dp)
                 .verticalScroll(rememberScrollState())
                 .windowInsetsPadding(WindowInsets.safeDrawing),
         verticalArrangement = Arrangement.spacedBy(16.dp),
