@@ -15,28 +15,31 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun RegistroPensamentoIndividualScreen(
     dataRegistro: String,
-    onVoltar: () -> Unit
+    onVoltar: () -> Unit,
 ) {
-    val pensamento = pensamentosDisfuncionaisMock.find {
-        it.dataRegistro == dataRegistro
-    }
+    val pensamento =
+        pensamentosDisfuncionaisMock.find {
+            it.dataRegistro == dataRegistro
+        }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .windowInsetsPadding(WindowInsets.safeDrawing)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .windowInsetsPadding(WindowInsets.safeDrawing),
     ) {
         IconButton(
             onClick = onVoltar,
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = MaterialTheme.colorScheme.primary
-            )
+            colors =
+                IconButtonDefaults.iconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                ),
         ) {
             Text(
                 text = "←",
                 style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onPrimary
+                color = MaterialTheme.colorScheme.onPrimary,
             )
         }
 
@@ -46,7 +49,7 @@ fun RegistroPensamentoIndividualScreen(
                 situacao = pensamento.situacao,
                 pensamentosImagens = pensamento.pensamentosImagens,
                 emocoesSentimentos = pensamento.emocoesSentimentos,
-                comportamentosReacoes = pensamento.comportamentosReacoes
+                comportamentosReacoes = pensamento.comportamentosReacoes,
             )
         }
     }

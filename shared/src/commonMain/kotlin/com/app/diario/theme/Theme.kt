@@ -13,7 +13,7 @@ private val DarkColors = darkColorScheme()
 @Composable
 fun Theme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val colorScheme =
         if (darkTheme) {

@@ -14,20 +14,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.app.diario.ui.components.Cabecalho
 
 @Composable
 fun HomeScreen(
     onRelatosClick: () -> Unit,
-    onPensamentosClick: () -> Unit
+    onPensamentosClick: () -> Unit,
+    onAvaliacaoClick: () -> Unit,
 ) {
-
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp)
-            .windowInsetsPadding(WindowInsets.safeDrawing),
-        verticalArrangement = Arrangement.Top
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(32.dp)
+                .windowInsetsPadding(WindowInsets.safeDrawing),
+        verticalArrangement = Arrangement.Top,
     ) {
         Text(
             text = "Diário Emocional",
@@ -37,20 +37,25 @@ fun HomeScreen(
         Text(
             text = "Registre seus dias e melhore sua saúde mental",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Button(
-            onClick = onRelatosClick
+            onClick = onRelatosClick,
         ) {
             Text("Relatos")
         }
 
         Button(
-            onClick = onPensamentosClick
+            onClick = onPensamentosClick,
         ) {
             Text("Pensamentos disfuncionais")
         }
 
+        Button(
+            onClick = onAvaliacaoClick,
+        ) {
+            Text("Avaliação Sentimento")
+        }
     }
 }
 
@@ -59,6 +64,7 @@ fun HomeScreen(
 fun HomeScreenPreview() {
     HomeScreen(
         onRelatosClick = {},
-        onPensamentosClick = {}
+        onPensamentosClick = {},
+        onAvaliacaoClick = {},
     )
 }

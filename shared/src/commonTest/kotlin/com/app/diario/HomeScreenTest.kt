@@ -8,26 +8,25 @@ import com.app.diario.ui.screens.HomeScreen
 import kotlin.test.Test
 
 class HomeScreenTest {
-
     @OptIn(ExperimentalTestApi::class)
     @Test
-    fun home_exibe_botoes_principais() = runComposeUiTest {
+    fun home_exibe_botoes_principais() =
+        runComposeUiTest {
+            setContent {
+                HomeScreen(
+                    onRelatosClick = {},
+                    onPensamentosClick = {},
+                    onAvaliacaoClick = {},
+                )
+            }
 
-        setContent {
-            HomeScreen(
-                onRelatosClick = {},
-                onPensamentosClick = {},
-                onPontuacaoClick = {}
-            )
+            onNodeWithText("Relatos")
+                .assertIsDisplayed()
+
+            onNodeWithText("Pensamentos disfuncionais")
+                .assertIsDisplayed()
+
+            onNodeWithText("Avaliação Sentimento")
+                .assertIsDisplayed()
         }
-
-        onNodeWithText("Relatos")
-            .assertIsDisplayed()
-
-        onNodeWithText("Pensamentos disfuncionais")
-            .assertIsDisplayed()
-
-        onNodeWithText("Pontuação diária")
-            .assertIsDisplayed()
-    }
 }

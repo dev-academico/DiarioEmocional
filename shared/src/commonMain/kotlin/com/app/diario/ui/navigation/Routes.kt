@@ -20,10 +20,21 @@ object PontuacaoDiariaRoute
 
 @Serializable
 data class RelatoIndividualRoute(
-    val dataRegistro: String
+    val dataRegistro: String,
 )
 
 @Serializable
 data class PensamentoDisfuncionalIndividualRoute(
-    val dataRegistro: String
+    val dataRegistro: String,
 )
+
+@Serializable
+data object AvaliacaoRoute
+
+@Serializable
+data class AvaliacaoIndividualRoute(
+    val dataRegistro: String,
+)
+
+@Serializable
+data object CriarAvaliacaoSentimento

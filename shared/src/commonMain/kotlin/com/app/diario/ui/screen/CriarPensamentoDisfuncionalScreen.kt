@@ -27,22 +27,17 @@ data class CriarPensamentoFormState(
     val situacao: String = "",
     val pensamentosImagens: String = "",
     val emocoesSentimentos: String = "",
-    val comportamentosReacoes: String = ""
+    val comportamentosReacoes: String = "",
 )
 
-fun formularioPensamentoValido(
-    state: CriarPensamentoFormState
-): Boolean {
+fun formularioPensamentoValido(state: CriarPensamentoFormState): Boolean {
     return state.situacao.isNotBlank() &&
-            state.pensamentosImagens.isNotBlank() &&
-            state.emocoesSentimentos.isNotBlank() &&
-            state.comportamentosReacoes.isNotBlank()
+        state.pensamentosImagens.isNotBlank() &&
+        state.emocoesSentimentos.isNotBlank() &&
+        state.comportamentosReacoes.isNotBlank()
 }
 
-fun mensagemErroFormularioPensamento(
-    state: CriarPensamentoFormState
-): String? {
-
+fun mensagemErroFormularioPensamento(state: CriarPensamentoFormState): String? {
     if (state.situacao.isBlank()) {
         return "A situação é obrigatória."
     }
@@ -66,7 +61,7 @@ fun mensagemErroFormularioPensamento(
 fun CriarPensamentoDisfuncionalScreen(
     dataRegistro: String,
     onVoltar: () -> Unit,
-    onSalvar: (String, String, String, String) -> Unit
+    onSalvar: (String, String, String, String) -> Unit,
 ) {
     var formState by remember {
         mutableStateOf(CriarPensamentoFormState())
@@ -76,18 +71,18 @@ fun CriarPensamentoDisfuncionalScreen(
     val mensagemErro = mensagemErroFormularioPensamento(formState)
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp)
-            .verticalScroll(rememberScrollState())
-            .windowInsetsPadding(WindowInsets.safeDrawing),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(8.dp)
+                .verticalScroll(rememberScrollState())
+                .windowInsetsPadding(WindowInsets.safeDrawing),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-
         Cabecalho(
             title = "Novo registro de pensamento",
             subtitle = "Preencha seguindo a tabela da psicologia.",
-            onVoltar = onVoltar
+            onVoltar = onVoltar,
         )
 
         OutlinedTextField(
@@ -97,7 +92,7 @@ fun CriarPensamentoDisfuncionalScreen(
             label = {
                 Text("Data")
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         OutlinedTextField(
@@ -106,10 +101,10 @@ fun CriarPensamentoDisfuncionalScreen(
                 formState = formState.copy(situacao = novaSituacao)
             },
             label = {
-                Text("Situação", modifier = Modifier.semantics{ heading() })
+                Text("Situação", modifier = Modifier.semantics { heading() })
             },
             minLines = 2,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         OutlinedTextField(
@@ -118,10 +113,10 @@ fun CriarPensamentoDisfuncionalScreen(
                 formState = formState.copy(pensamentosImagens = novoValor)
             },
             label = {
-                Text("Pensamentos / imagens", modifier = Modifier.semantics{ heading() })
+                Text("Pensamentos / imagens", modifier = Modifier.semantics { heading() })
             },
             minLines = 3,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         OutlinedTextField(
@@ -130,10 +125,10 @@ fun CriarPensamentoDisfuncionalScreen(
                 formState = formState.copy(emocoesSentimentos = novoValor)
             },
             label = {
-                Text("Emoções / sentimentos",  modifier = Modifier.semantics{ heading() })
+                Text("Emoções / sentimentos", modifier = Modifier.semantics { heading() })
             },
             minLines = 3,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         OutlinedTextField(
@@ -142,16 +137,16 @@ fun CriarPensamentoDisfuncionalScreen(
                 formState = formState.copy(comportamentosReacoes = novoValor)
             },
             label = {
-                Text("Comportamentos / reações",  modifier = Modifier.semantics{ heading() })
+                Text("Comportamentos / reações", modifier = Modifier.semantics { heading() })
             },
             minLines = 3,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         if (mensagemErro != null) {
             Text(
                 text = mensagemErro,
-                color = MaterialTheme.colorScheme.error
+                color = MaterialTheme.colorScheme.error,
             )
         }
 
@@ -161,11 +156,11 @@ fun CriarPensamentoDisfuncionalScreen(
                     formState.situacao,
                     formState.pensamentosImagens,
                     formState.emocoesSentimentos,
-                    formState.comportamentosReacoes
+                    formState.comportamentosReacoes,
                 )
             },
             enabled = valido,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             Text("Salvar")
         }
