@@ -31,6 +31,8 @@ import com.app.diario.ui.screen.AvaliacaoIndividualScreen
 import com.app.diario.ui.screen.AvaliacaoSentimentoScreen
 import com.app.diario.ui.screen.CriarAvaliacaoScreen
 import com.app.diario.ui.screen.HigieneSonoScreen
+import CriarHigieneSonoRoute
+import com.app.diario.ui.screen.CriarSonoScreen
 import com.app.diario.ui.screens.HomeScreen
 import pensamentosDisfuncionaisMock
 import kotlin.time.Clock
@@ -217,18 +219,18 @@ fun AppNavigation(
             HigieneSonoScreen(
                 registros = registrosSonoMock,
                 onRegistroIndividual = { navController.navigate(HigieneSonoIndividualRoute) },
-                onNovoRegistroClick = {},
+                onNovoRegistroClick = { navController.navigate(CriarHigieneSonoRoute)},
                 onVoltar = { navController.popBackStack() },
             )
         }
 
-//        composable<CriarAvaliacaoSentimento> {
-//            CriarAvaliacaoScreen(
-//                dataRegistro = Clock.System.now().toString().substringBefore("T"),
-//                onVoltar = { navController.popBackStack() },
-//                onSalvar = { _, _, _ -> navController.popBackStack() },
-//            )
-//        }
+        composable<CriarHigieneSonoRoute> {
+            CriarSonoScreen(
+                dataRegistro = Clock.System.now().toString().substringBefore("T"),
+                onVoltar = { navController.popBackStack() },
+                onSalvar = { _, _, _, _, _, _, _ -> navController.popBackStack() },
+            )
+        }
 
         composable<HigieneSonoIndividualRoute>(
             deepLinks =

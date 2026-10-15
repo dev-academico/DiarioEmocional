@@ -46,3 +46,6 @@ data object HigieneSonoRoute
 data class HigieneSonoIndividualRoute(
     val dataRegistro: String,
 )
+
+@Serializable
+data object CriarHigieneSonoRoute

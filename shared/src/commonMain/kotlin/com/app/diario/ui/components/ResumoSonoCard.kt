@@ -4,8 +4,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -13,7 +17,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.HorizontalAlignmentLine
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,6 +28,7 @@ import com.app.diario.ui.mock.RegistroSonoMock
 import com.app.diario.ui.mock.registrosSonoMock
 import com.app.diario.ui.util.calcularDuracaoFormatada
 import com.app.diario.ui.util.formatarData
+import org.intellij.lang.annotations.JdkConstants
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -48,29 +55,39 @@ fun SonoCard(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Text(
-                text = formatarData(registro.dataRegistro),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-            )
+            Row( modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Column {
+                    Text(
+                        text = formatarData(registro.dataRegistro),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                    )
 
-            // Linha 2: Horários e Duração calculada
-            val duracao = calcularDuracaoFormatada(registro.horarioDormiu, registro.horarioAcordou)
-            Text(
-                text = "${registro.horarioDormiu} - ${registro.horarioAcordou}  •  $duracao",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontWeight = FontWeight.Medium,
-            )
+                    Text(
+                        text = registro.disposicao.rotulo,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = FontWeight.Medium,
+                    )
+                }
+
+                Spacer(Modifier.size(8.dp))
+                val duracao = calcularDuracaoFormatada(registro.horarioDormiu, registro.horarioAcordou)
+                Text(
+                    text = duracao,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Medium,
+                )
+            }
 
             // Linha 3: Tags rápidas (Disposição, Celular, Pesadelos)
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                TagInfo(texto = "Disposição: ${registro.disposicao.rotulo}")
                 if (registro.usouCelularAntesDeDormir) {
-                    TagInfo(texto = "Usou celular")
+                    TagInfo(texto = "Celular")
                 }
                 if (registro.tevePesadelos) {
                     TagInfo(texto = "Pesadelo")
