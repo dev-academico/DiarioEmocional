@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -66,13 +67,14 @@ fun AvaliacaoPrevia(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IntensidadeBadge(intensidade = intensidade, tamanho = 64)
-                Spacer(Modifier.width(16.dp))
+                Spacer(Modifier.size(8.dp))
                 Column {
                     Text(
                         text = formatarData(avaliacao.dataRegistro),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                     )
+                    Spacer(Modifier.size(4.dp))
                     Text(
                         text = "Intensidade ${rotuloIntensidade(intensidade).lowercase()}",
                         style = MaterialTheme.typography.bodyMedium,
@@ -92,6 +94,8 @@ fun AvaliacaoPrevia(
                 trackColor = cor.copy(alpha = 0.15f),
             )
 
+            HorizontalDivider()
+
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(
                     text = "Descrição",
@@ -103,6 +107,8 @@ fun AvaliacaoPrevia(
                     style = MaterialTheme.typography.bodyLarge,
                 )
             }
+
+            HorizontalDivider()
 
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(

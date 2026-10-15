@@ -70,7 +70,7 @@ fun AvaliacaoCard(
                     }
                 }
 
-                Spacer(Modifier.size(4.dp))
+                Spacer(Modifier.size(8.dp))
 
                 Text(
                     text = avaliacao.descricao,

@@ -48,8 +48,6 @@ fun AvaliacaoSentimentoScreen(
     }
 }
 
-
-
 // Preview
 
 @Preview(showBackground = true)
