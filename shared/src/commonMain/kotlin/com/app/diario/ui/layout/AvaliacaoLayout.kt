@@ -1,25 +1,18 @@
 package com.app.diario.ui.layout
 
 import AvaliacaoMock
+import EstadoVazio
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.app.diario.ui.components.AvaliacaoCard
 import com.app.diario.ui.components.AvaliacaoPrevia
@@ -38,7 +31,11 @@ fun AvaliacaoLayoutCelular(
         floatingActionButton = { FloatingAdd(onClick = onNovaAvaliacaoClick, "Nova avaliação") },
     ) { padding ->
         if (avaliacoes.isEmpty()) {
-            EstadoVazio(modifier = Modifier.padding(padding))
+            EstadoVazio(
+                modifier = Modifier.padding(padding),
+                "Nenhuma avaliação ainda",
+                "Toque em “Nova avaliação” para registrar como você está se sentindo.",
+            )
         } else {
             LazyColumn(
                 modifier =
@@ -87,7 +84,11 @@ fun AvaliacaoLayoutLargo(
                     .padding(padding),
         ) {
             if (avaliacoes.isEmpty()) {
-                EstadoVazio(modifier = Modifier.weight(1f))
+                EstadoVazio(
+                    modifier = Modifier.weight(1f),
+                    "Nenhuma avaliação ainda",
+                    "Toque em “Nova avaliação” para registrar como você está se sentindo.",
+                )
             } else {
                 LazyColumn(
                     modifier =
@@ -121,31 +122,6 @@ fun AvaliacaoLayoutLargo(
                             .padding(start = 8.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
                 )
             }
-        }
-    }
-}
-
-// Vazio
-
-@Composable
-private fun EstadoVazio(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                text = "Nenhuma avaliação ainda",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-            )
-            Spacer(Modifier.size(4.dp))
-            Text(
-                text = "Toque em “Nova avaliação” para registrar como você está se sentindo.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 32.dp),
-            )
         }
     }
 }
