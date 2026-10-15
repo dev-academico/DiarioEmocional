@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.app.diario.ui.components.Cabecalho
 
 @Composable
 fun RegistroPensamentoIndividualScreen(
@@ -26,22 +27,13 @@ fun RegistroPensamentoIndividualScreen(
         modifier =
             Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(8.dp)
                 .windowInsetsPadding(WindowInsets.safeDrawing),
     ) {
-        IconButton(
-            onClick = onVoltar,
-            colors =
-                IconButtonDefaults.iconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                ),
-        ) {
-            Text(
-                text = "←",
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onPrimary,
-            )
-        }
+        Cabecalho(
+            title = "Pensamento disfuncional",
+            onVoltar = onVoltar,
+        )
 
         if (pensamento != null) {
             PensamentoIndividualComponent(

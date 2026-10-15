@@ -22,7 +22,7 @@ fun RelatoIndividualScreen(
     Column(
         modifier =
             Modifier
-                .padding(32.dp)
+                .padding(8.dp)
                 .windowInsetsPadding(WindowInsets.safeDrawing),
     ) {
         if (relato != null) {
