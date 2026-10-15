@@ -32,6 +32,7 @@ import com.app.diario.ui.screen.AvaliacaoIndividualScreen
 import com.app.diario.ui.screen.AvaliacaoSentimentoScreen
 import com.app.diario.ui.screen.CriarAvaliacaoScreen
 import com.app.diario.ui.screen.CriarSonoScreen
+import com.app.diario.ui.screen.HigieneSonoIndividualScreen
 import com.app.diario.ui.screen.HigieneSonoScreen
 import com.app.diario.ui.screens.HomeScreen
 import pensamentosDisfuncionaisMock
@@ -218,7 +219,11 @@ fun AppNavigation(
         composable<HigieneSonoRoute> {
             HigieneSonoScreen(
                 registros = registrosSonoMock,
-                onRegistroIndividual = { navController.navigate(HigieneSonoIndividualRoute) },
+                onRegistroIndividual = {
+                    navController.navigate(
+                        HigieneSonoIndividualRoute(dataRegistro = it.dataRegistro),
+                    )
+                },
                 onNovoRegistroClick = { navController.navigate(CriarHigieneSonoRoute) },
                 onVoltar = { navController.popBackStack() },
             )
@@ -235,16 +240,16 @@ fun AppNavigation(
         composable<HigieneSonoIndividualRoute>(
             deepLinks =
                 listOf(
-                    navDeepLink<AvaliacaoIndividualRoute>(
+                    navDeepLink<HigieneSonoIndividualRoute>(
                         basePath = "diario://higiene-sono",
                     ),
                 ),
         ) { backStackEntry ->
-            val route = backStackEntry.toRoute<AvaliacaoIndividualRoute>()
-            val avaliacao = avaliacaoMock.find { it.dataRegistro == route.dataRegistro }
+            val route = backStackEntry.toRoute<HigieneSonoIndividualRoute>()
+            val registro = registrosSonoMock.find { it.dataRegistro == route.dataRegistro }
 
-            AvaliacaoIndividualScreen(
-                avaliacao = avaliacao,
+            HigieneSonoIndividualScreen(
+                registroSonoMock = registro,
                 onVoltar = { navController.popBackStack() },
             )
         }
