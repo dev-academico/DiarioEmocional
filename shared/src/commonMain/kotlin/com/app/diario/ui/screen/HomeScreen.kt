@@ -20,6 +20,7 @@ fun HomeScreen(
     onRelatosClick: () -> Unit,
     onPensamentosClick: () -> Unit,
     onAvaliacaoClick: () -> Unit,
+    onHigieneClick: () -> Unit,
 ) {
     Column(
         modifier =
@@ -56,6 +57,12 @@ fun HomeScreen(
         ) {
             Text("Avaliação Sentimento")
         }
+
+        Button(
+            onClick = onHigieneClick,
+        ) {
+            Text("Higiene do Sono")
+        }
     }
 }
 
@@ -66,5 +73,6 @@ fun HomeScreenPreview() {
         onRelatosClick = {},
         onPensamentosClick = {},
         onAvaliacaoClick = {},
+        onHigieneClick = {},
     )
 }

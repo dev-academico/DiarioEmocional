@@ -7,6 +7,8 @@ import CriarPensamentoDisfuncionalRoute
 import CriarPensamentoDisfuncionalScreen
 import CriarRelatoRoute
 import CriarRelatoScreen
+import HigieneSonoIndividualRoute
+import HigieneSonoRoute
 import HomeRoute
 import PensamentoDisfuncionalIndividualRoute
 import PensamentoDisfuncionalRoute
@@ -23,10 +25,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import avaliacaoMock
+import com.app.diario.ui.mock.registrosSonoMock
 import com.app.diario.ui.mock.relatosMock
 import com.app.diario.ui.screen.AvaliacaoIndividualScreen
 import com.app.diario.ui.screen.AvaliacaoSentimentoScreen
 import com.app.diario.ui.screen.CriarAvaliacaoScreen
+import com.app.diario.ui.screen.HigieneSonoScreen
 import com.app.diario.ui.screens.HomeScreen
 import pensamentosDisfuncionaisMock
 import kotlin.time.Clock
@@ -53,6 +57,9 @@ fun AppNavigation(
                 },
                 onAvaliacaoClick = {
                     navController.navigate(AvaliacaoRoute)
+                },
+                onHigieneClick = {
+                    navController.navigate(HigieneSonoRoute)
                 },
             )
         }
@@ -102,6 +109,7 @@ fun AppNavigation(
                 },
             )
         }
+
         composable<AvaliacaoRoute> {
             AvaliacaoSentimentoScreen(
                 avaliacoes = avaliacaoMock,
@@ -202,6 +210,40 @@ fun AppNavigation(
                 onSalvar = { titulo, conteudo ->
                     navController.popBackStack()
                 },
+            )
+        }
+
+        composable<HigieneSonoRoute> {
+            HigieneSonoScreen(
+                registros = registrosSonoMock,
+                onRegistroIndividual = { navController.navigate(HigieneSonoIndividualRoute) },
+                onNovoRegistroClick = {},
+                onVoltar = { navController.popBackStack() },
+            )
+        }
+
+//        composable<CriarAvaliacaoSentimento> {
+//            CriarAvaliacaoScreen(
+//                dataRegistro = Clock.System.now().toString().substringBefore("T"),
+//                onVoltar = { navController.popBackStack() },
+//                onSalvar = { _, _, _ -> navController.popBackStack() },
+//            )
+//        }
+
+        composable<HigieneSonoIndividualRoute>(
+            deepLinks =
+                listOf(
+                    navDeepLink<AvaliacaoIndividualRoute>(
+                        basePath = "diario://higiene-sono",
+                    ),
+                ),
+        ) { backStackEntry ->
+            val route = backStackEntry.toRoute<AvaliacaoIndividualRoute>()
+            val avaliacao = avaliacaoMock.find { it.dataRegistro == route.dataRegistro }
+
+            AvaliacaoIndividualScreen(
+                avaliacao = avaliacao,
+                onVoltar = { navController.popBackStack() },
             )
         }
     }
