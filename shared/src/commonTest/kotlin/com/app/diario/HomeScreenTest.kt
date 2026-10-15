@@ -17,7 +17,7 @@ class HomeScreenTest {
                     onRelatosClick = {},
                     onPensamentosClick = {},
                     onAvaliacaoClick = {},
-                    onHigieneClick = {}
+                    onHigieneClick = {},
                 )
             }
 
