@@ -16,7 +16,7 @@ fun GatilhoChip(texto: String) {
     Surface(
         shape = RoundedCornerShape(50),
         color = MaterialTheme.colorScheme.surfaceContainerHighest,
-        modifier = Modifier.semantics(mergeDescendants = true) {}
+        modifier = Modifier.semantics(mergeDescendants = true) {},
     ) {
         Text(
             text = texto,

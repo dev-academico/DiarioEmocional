@@ -126,7 +126,7 @@ fun AvaliacaoLayoutLargo(
     onVoltar: () -> Unit,
 ) {
     Scaffold(
-        topBar = { Cabecalho(title = "Avaliação sentimento", subtitle = "Como está se sentindo hoje?", onVoltar = onVoltar)  },
+        topBar = { Cabecalho(title = "Avaliação sentimento", subtitle = "Como está se sentindo hoje?", onVoltar = onVoltar) },
         floatingActionButton = { NovaAvaliacaoFab(onClick = onNovaAvaliacaoClick) },
     ) { padding ->
         Row(
