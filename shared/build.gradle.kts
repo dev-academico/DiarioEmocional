@@ -71,6 +71,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.compose.adaptive)
             implementation(libs.navigation.compose)
+            implementation("org.jetbrains.compose.material:material-icons-core:1.7.3")
         }
 
         commonTest.dependencies {
@@ -78,7 +79,12 @@ kotlin {
             implementation("org.jetbrains.compose.ui:ui-test:1.11.1")
         }
 
+        val desktopMain by getting {
+            kotlin.srcDir("src/jvmMain/kotlin")
+        }
+
         val desktopTest by getting {
+            kotlin.srcDir("src/jvmTest/kotlin")
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(compose.desktop.uiTestJUnit4)
