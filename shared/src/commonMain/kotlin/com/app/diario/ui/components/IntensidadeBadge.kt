@@ -18,7 +18,7 @@ import com.app.diario.ui.util.corIntensidade
 @Composable
 fun IntensidadeBadge(
     intensidade: Int,
-    tamanho: Int = 48,
+    tamanho: Int = 32,
 ) {
     val cor = corIntensidade(intensidade)
     Box(

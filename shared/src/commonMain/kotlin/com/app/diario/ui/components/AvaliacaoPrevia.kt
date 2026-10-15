@@ -17,7 +17,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -37,11 +36,10 @@ import com.app.diario.ui.util.rotuloIntensidade
 fun AvaliacaoPrevia(
     avaliacao: AvaliacaoMock?,
     modifier: Modifier = Modifier,
-    onVerDetalhes: ((AvaliacaoMock) -> Unit)? = null,
 ) {
     Surface(
         modifier = modifier,
-        shape = RoundedCornerShape(28.dp),
+        shape = RoundedCornerShape(20.dp),
         color = MaterialTheme.colorScheme.surfaceContainer,
     ) {
         if (avaliacao == null) {
@@ -117,15 +115,6 @@ fun AvaliacaoPrevia(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     avaliacao.gatilhos.forEach { GatilhoChip(it) }
-                }
-            }
-
-            if (onVerDetalhes != null) {
-                Button(
-                    onClick = { onVerDetalhes(avaliacao) },
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text("Ver detalhes")
                 }
             }
         }

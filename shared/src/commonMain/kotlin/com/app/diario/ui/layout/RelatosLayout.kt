@@ -52,8 +52,8 @@ fun RelatosLayoutCelular(
                     .padding(padding),
             contentPadding =
                 PaddingValues(
-                    start = 16.dp,
-                    end = 16.dp,
+                    start = 8.dp,
+                    end = 8.dp,
                     top = 8.dp,
                     bottom = 96.dp,
                 ),
@@ -74,11 +74,11 @@ fun RelatosLayoutCelular(
 
 @Composable
 fun RelatosLayoutLargo(
+    modifier: Modifier = Modifier,
     relatos: List<RelatoMock>,
     relatoSelecionado: RelatoMock? = null,
     onRelatoClick: (RelatoMock) -> Unit = {},
     onNovoRelatoClick: () -> Unit,
-    modifier: Modifier = Modifier,
     onVoltar: () -> Unit,
 ) {
     Scaffold(

@@ -34,7 +34,6 @@ import com.app.diario.ui.components.AvaliacaoCard
 import com.app.diario.ui.components.AvaliacaoPrevia
 import com.app.diario.ui.components.Cabecalho
 import com.app.diario.ui.components.FloatingAdd
-import com.app.diario.ui.components.ResumoCard
 
 // Tela principal
 
@@ -65,7 +64,6 @@ fun AvaliacaoSentimentoScreen(
             avaliacoes = avaliacoes,
             avaliacaoSelecionada = avaliacaoSelecionada,
             onAvaliacaoClick = { avaliacaoSelecionada = it },
-            onVerDetalhes = onAvaliacaoIndividual,
             onNovaAvaliacaoClick = onNovaAvaliacaoClick,
             onVoltar = onVoltar,
         )
@@ -93,14 +91,13 @@ fun AvaliacaoLayoutCelular(
                         .padding(padding),
                 contentPadding =
                     PaddingValues(
-                        start = 16.dp,
-                        end = 16.dp,
+                        start = 8.dp,
+                        end = 8.dp,
                         top = 8.dp,
                         bottom = 96.dp,
                     ),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                item { ResumoCard(avaliacoes) }
                 items(avaliacoes) { avaliacao ->
                     AvaliacaoCard(
                         avaliacao = avaliacao,
@@ -121,7 +118,6 @@ fun AvaliacaoLayoutLargo(
     avaliacoes: List<AvaliacaoMock>,
     avaliacaoSelecionada: AvaliacaoMock?,
     onAvaliacaoClick: (AvaliacaoMock) -> Unit,
-    onVerDetalhes: (AvaliacaoMock) -> Unit,
     onNovaAvaliacaoClick: () -> Unit,
     onVoltar: () -> Unit,
 ) {
@@ -152,7 +148,6 @@ fun AvaliacaoLayoutLargo(
                         ),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    item { ResumoCard(avaliacoes) }
                     items(avaliacoes) { avaliacao ->
                         AvaliacaoCard(
                             avaliacao = avaliacao,
@@ -164,7 +159,6 @@ fun AvaliacaoLayoutLargo(
 
                 AvaliacaoPrevia(
                     avaliacao = avaliacaoSelecionada,
-                    onVerDetalhes = onVerDetalhes,
                     modifier =
                         Modifier
                             .weight(0.55f)
@@ -232,7 +226,6 @@ fun AvaliacaoSentimentoScreenLargePreview() {
         avaliacoes = avaliacaoMock,
         avaliacaoSelecionada = avaliacaoMock.first(),
         onAvaliacaoClick = {},
-        onVerDetalhes = {},
         onNovaAvaliacaoClick = {},
         onVoltar = {},
     )
