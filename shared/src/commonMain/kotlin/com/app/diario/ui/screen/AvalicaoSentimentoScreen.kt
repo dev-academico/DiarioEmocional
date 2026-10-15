@@ -13,15 +13,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,21 +28,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.window.core.layout.WindowWidthSizeClass
+import androidx.window.core.layout.WindowSizeClass
 import avaliacaoMock
 import com.app.diario.ui.components.AvaliacaoCard
 import com.app.diario.ui.components.AvaliacaoPrevia
+import com.app.diario.ui.components.Cabecalho
 import com.app.diario.ui.components.NovaAvaliacaoFab
 import com.app.diario.ui.components.ResumoCard
 
-// ---------------------------------------------------------------------------
-// Tela principal (decide o layout conforme o tamanho da janela)
-// ---------------------------------------------------------------------------
+// Tela principal
 
 @Composable
 fun AvaliacaoSentimentoScreen(
     avaliacoes: List<AvaliacaoMock>,
-    onAvaliacaoIndividual: (AvaliacaoMock) -> Unit, // abre a página de detalhes (a implementar)
+    onAvaliacaoIndividual: (AvaliacaoMock) -> Unit,
     onNovaAvaliacaoClick: () -> Unit,
     onVoltar: () -> Unit,
 ) {
@@ -55,39 +49,29 @@ fun AvaliacaoSentimentoScreen(
         mutableStateOf<AvaliacaoMock?>(null)
     }
 
-    val width =
-        currentWindowAdaptiveInfo()
-            .windowSizeClass
-            .windowWidthSizeClass
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    val isCompact =
+        !windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
 
-    when (width) {
-        WindowWidthSizeClass.COMPACT -> {
-            AvaliacaoLayoutCelular(
-                avaliacoes = avaliacoes,
-                onAvaliacaoClick = onAvaliacaoIndividual,
-                onNovaAvaliacaoClick = onNovaAvaliacaoClick,
-                onVoltar = onVoltar,
-            )
-        }
-
-        else -> {
-            AvaliacaoLayoutLargo(
-                avaliacoes = avaliacoes,
-                avaliacaoSelecionada = avaliacaoSelecionada,
-                onAvaliacaoClick = { avaliacaoSelecionada = it },
-                onVerDetalhes = onAvaliacaoIndividual,
-                onNovaAvaliacaoClick = onNovaAvaliacaoClick,
-                onVoltar = onVoltar,
-            )
-        }
+    if (isCompact) {
+        AvaliacaoLayoutCelular(
+            avaliacoes = avaliacoes,
+            onAvaliacaoClick = onAvaliacaoIndividual,
+            onNovaAvaliacaoClick = onNovaAvaliacaoClick,
+            onVoltar = onVoltar,
+        )
+    } else {
+        AvaliacaoLayoutLargo(
+            avaliacoes = avaliacoes,
+            avaliacaoSelecionada = avaliacaoSelecionada,
+            onAvaliacaoClick = { avaliacaoSelecionada = it },
+            onVerDetalhes = onAvaliacaoIndividual,
+            onNovaAvaliacaoClick = onNovaAvaliacaoClick,
+            onVoltar = onVoltar,
+        )
     }
 }
 
-// ---------------------------------------------------------------------------
-// Layout celular: lista única, toque abre a página de detalhes
-// ---------------------------------------------------------------------------
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AvaliacaoLayoutCelular(
     avaliacoes: List<AvaliacaoMock>,
@@ -96,7 +80,7 @@ fun AvaliacaoLayoutCelular(
     onVoltar: () -> Unit,
 ) {
     Scaffold(
-        topBar = { AvaliacaoTopBar(onVoltar = onVoltar) },
+        topBar = { Cabecalho(title = "Avaliação sentimento", subtitle = "Como está se sentindo hoje?", onVoltar = onVoltar) },
         floatingActionButton = { NovaAvaliacaoFab(onClick = onNovaAvaliacaoClick) },
     ) { padding ->
         if (avaliacoes.isEmpty()) {
@@ -129,9 +113,7 @@ fun AvaliacaoLayoutCelular(
     }
 }
 
-// ---------------------------------------------------------------------------
-// Layout largo: lista à esquerda + prévia da avaliação selecionada à direita
-// ---------------------------------------------------------------------------
+// Layout largo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -144,7 +126,7 @@ fun AvaliacaoLayoutLargo(
     onVoltar: () -> Unit,
 ) {
     Scaffold(
-        topBar = { AvaliacaoTopBar(onVoltar = onVoltar) },
+        topBar = { Cabecalho(title = "Avaliação sentimento", subtitle = "Como está se sentindo hoje?", onVoltar = onVoltar)  },
         floatingActionButton = { NovaAvaliacaoFab(onClick = onNovaAvaliacaoClick) },
     ) { padding ->
         Row(
@@ -194,38 +176,7 @@ fun AvaliacaoLayoutLargo(
     }
 }
 
-// ---------------------------------------------------------------------------
-// Componentes
-// ---------------------------------------------------------------------------
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun AvaliacaoTopBar(onVoltar: () -> Unit) {
-    TopAppBar(
-        title = {
-            Column {
-                Text(
-                    text = "Avaliação de sentimento",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.SemiBold,
-                )
-                Text(
-                    text = "Como você tem se sentido",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-        },
-        navigationIcon = {
-            IconButton(onClick = onVoltar) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Voltar",
-                )
-            }
-        },
-    )
-}
+// Vazio
 
 @Composable
 private fun EstadoVazio(modifier: Modifier = Modifier) {
@@ -250,9 +201,7 @@ private fun EstadoVazio(modifier: Modifier = Modifier) {
     }
 }
 
-// ---------------------------------------------------------------------------
 // Preview
-// ---------------------------------------------------------------------------
 
 @Preview(showBackground = true)
 @Composable

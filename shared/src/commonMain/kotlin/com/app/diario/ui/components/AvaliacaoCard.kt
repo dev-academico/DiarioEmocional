@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -27,7 +28,6 @@ import com.app.diario.ui.util.corIntensidade
 import com.app.diario.ui.util.formatarData
 import com.app.diario.ui.util.rotuloIntensidade
 
-/** Card de cada avaliação: mostra só uma parte (resumo) e abre os detalhes ao tocar. */
 @Composable
 fun AvaliacaoCard(
     avaliacao: AvaliacaoMock,
@@ -38,7 +38,7 @@ fun AvaliacaoCard(
 
     Card(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().semantics(mergeDescendants = true) {},
         shape = RoundedCornerShape(20.dp),
         colors =
             CardDefaults.cardColors(
