@@ -38,3 +38,14 @@ data class AvaliacaoIndividualRoute(
 
 @Serializable
 data object CriarAvaliacaoSentimento
+
+@Serializable
+data object HigieneSonoRoute
+
+@Serializable
+data class HigieneSonoIndividualRoute(
+    val dataRegistro: String,
+)
+
+@Serializable
+data object CriarHigieneSonoRoute
