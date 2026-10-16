@@ -7,7 +7,13 @@ object HomeRoute
 object RelatosRoute
 
 @Serializable
+data object RelatosGraphRoute
+
+@Serializable
 object PensamentoDisfuncionalRoute
+
+@Serializable
+data object PensamentoGraphRoute
 
 @Serializable
 data object CriarRelatoRoute
@@ -32,6 +38,9 @@ data class PensamentoDisfuncionalIndividualRoute(
 data object AvaliacaoRoute
 
 @Serializable
+data object AvaliacaoGraphRoute
+
+@Serializable
 data class AvaliacaoIndividualRoute(
     val dataRegistro: String,
 )
@@ -41,6 +50,9 @@ data object CriarAvaliacaoSentimento
 
 @Serializable
 data object HigieneSonoRoute
+
+@Serializable
+data object HigieneSonoGraphRoute
 
 @Serializable
 data class HigieneSonoIndividualRoute(

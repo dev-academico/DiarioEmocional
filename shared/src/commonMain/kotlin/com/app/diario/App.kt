@@ -20,10 +20,7 @@ fun App(initialDeepLink: String? = null) {
             color = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.onBackground,
         ) {
-            AppNavigation(
-                darkTheme = isDarkMode,
-                onDarkThemeChange = { isDarkMode = it },
-            )
+            AppNavigation()
         }
     }
 }

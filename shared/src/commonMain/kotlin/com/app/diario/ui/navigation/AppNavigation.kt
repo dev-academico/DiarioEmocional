@@ -1,5 +1,6 @@
 package com.app.diario.ui.navigation
 
+import AvaliacaoGraphRoute
 import AvaliacaoIndividualRoute
 import AvaliacaoRoute
 import CriarAvaliacaoSentimento
@@ -8,20 +9,24 @@ import CriarPensamentoDisfuncionalRoute
 import CriarPensamentoDisfuncionalScreen
 import CriarRelatoRoute
 import CriarRelatoScreen
+import HigieneSonoGraphRoute
 import HigieneSonoIndividualRoute
 import HigieneSonoRoute
 import HomeRoute
 import PensamentoDisfuncionalIndividualRoute
 import PensamentoDisfuncionalRoute
+import PensamentoGraphRoute
 import RegistroPensamentoIndividualScreen
 import RegistroPensamentoScreen
 import RelatoIndividualRoute
 import RelatoIndividualScreen
+import RelatosGraphRoute
 import RelatosRoute
 import RelatosScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
@@ -39,10 +44,7 @@ import pensamentosDisfuncionaisMock
 import kotlin.time.Clock
 
 @Composable
-fun AppNavigation(
-    darkTheme: Boolean,
-    onDarkThemeChange: (Boolean) -> Unit,
-) {
+fun AppNavigation() {
     val navController = rememberNavController()
 
     NavHost(
@@ -53,205 +55,201 @@ fun AppNavigation(
         composable<HomeRoute> {
             HomeScreen(
                 onRelatosClick = {
-                    navController.navigate(RelatosRoute)
+                    navController.navigate(RelatosGraphRoute)
                 },
                 onPensamentosClick = {
-                    navController.navigate(PensamentoDisfuncionalRoute)
+                    navController.navigate(PensamentoGraphRoute)
                 },
                 onAvaliacaoClick = {
-                    navController.navigate(AvaliacaoRoute)
+                    navController.navigate(AvaliacaoGraphRoute)
                 },
                 onHigieneClick = {
-                    navController.navigate(HigieneSonoRoute)
+                    navController.navigate(HigieneSonoGraphRoute)
                 },
             )
         }
 
-        // LISTA DE RELATOS
-        composable<RelatosRoute> {
-            RelatosScreen(
-                relatos = relatosMock,
-                // CELULAR:
-                // o clique navega para a página individual.
-                //
-                // LAYOUT LARGO:
-                // o RelatosScreen intercepta esse clique
-                // e apenas seleciona o relato.
-                onRelatoIndividual = { relato ->
-                    navController.navigate(
-                        RelatoIndividualRoute(
-                            dataRegistro = relato.dataRegistro,
+        // grafo dos relatos
+        navigation<RelatosGraphRoute>(startDestination = RelatosRoute) {
+            composable<RelatosRoute> {
+                RelatosScreen(
+                    relatos = relatosMock,
+                    onRelatoIndividual = { relato ->
+                        navController.navigate(
+                            RelatoIndividualRoute(
+                                dataRegistro = relato.dataRegistro,
+                            ),
+                        )
+                    },
+                    onNovoRelatoClick = {
+                        navController.navigate(CriarRelatoRoute)
+                    },
+                    onVoltar = {
+                        navController.popBackStack()
+                    },
+                )
+            }
+
+            composable<RelatoIndividualRoute>(
+                deepLinks =
+                    listOf(
+                        navDeepLink<RelatoIndividualRoute>(
+                            basePath = "diario://relato",
                         ),
-                    )
-                },
-                onNovoRelatoClick = {
-                    navController.navigate(CriarRelatoRoute)
-                },
-                onVoltar = {
-                    navController.popBackStack()
-                },
-            )
-        }
-
-        // RELATO INDIVIDUAL
-        composable<RelatoIndividualRoute>(
-            deepLinks =
-                listOf(
-                    navDeepLink<RelatoIndividualRoute>(
-                        basePath = "diario://relato",
                     ),
-                ),
-        ) { backStackEntry ->
+            ) { backStackEntry ->
+                val rota = backStackEntry.toRoute<RelatoIndividualRoute>()
+                RelatoIndividualScreen(
+                    dataRegistro = rota.dataRegistro,
+                    onVoltar = {
+                        navController.popBackStack()
+                    },
+                )
+            }
 
-            val rota = backStackEntry.toRoute<RelatoIndividualRoute>()
-
-            RelatoIndividualScreen(
-                dataRegistro = rota.dataRegistro,
-                onVoltar = {
-                    navController.popBackStack()
-                },
-            )
+            composable<CriarRelatoRoute> {
+                CriarRelatoScreen(
+                    dataRegistro = Clock.System.now().toString(),
+                    onVoltar = {
+                        navController.popBackStack()
+                    },
+                    onSalvar = { _, _ ->
+                        navController.popBackStack()
+                    },
+                )
+            }
         }
 
-        composable<AvaliacaoRoute> {
-            AvaliacaoSentimentoScreen(
-                avaliacoes = avaliacaoMock,
-                onAvaliacaoIndividual = {
-                    navController.navigate(AvaliacaoIndividualRoute(it.dataRegistro))
-                },
-                onNovaAvaliacaoClick = { navController.navigate(CriarAvaliacaoSentimento) }, // falta implementar
-                onVoltar = { navController.popBackStack() },
-            )
-        }
+        // grafo das avaliações
+        navigation<AvaliacaoGraphRoute>(startDestination = AvaliacaoRoute) {
+            composable<AvaliacaoRoute> {
+                AvaliacaoSentimentoScreen(
+                    avaliacoes = avaliacaoMock,
+                    onAvaliacaoIndividual = {
+                        navController.navigate(AvaliacaoIndividualRoute(it.dataRegistro))
+                    },
+                    onNovaAvaliacaoClick = { navController.navigate(CriarAvaliacaoSentimento) },
+                    onVoltar = { navController.popBackStack() },
+                )
+            }
 
-        composable<CriarAvaliacaoSentimento> {
-            CriarAvaliacaoScreen(
-                dataRegistro = Clock.System.now().toString().substringBefore("T"),
-                onVoltar = { navController.popBackStack() },
-                onSalvar = { _, _, _ -> navController.popBackStack() },
-            )
-        }
+            composable<CriarAvaliacaoSentimento> {
+                CriarAvaliacaoScreen(
+                    dataRegistro = Clock.System.now().toString().substringBefore("T"),
+                    onVoltar = { navController.popBackStack() },
+                    onSalvar = { _, _, _ -> navController.popBackStack() },
+                )
+            }
 
-        composable<AvaliacaoIndividualRoute>(
-            deepLinks =
-                listOf(
-                    navDeepLink<AvaliacaoIndividualRoute>(
-                        basePath = "diario://avaliacao",
-                    ),
-                ),
-        ) { backStackEntry ->
-            val route = backStackEntry.toRoute<AvaliacaoIndividualRoute>()
-            val avaliacao = avaliacaoMock.find { it.dataRegistro == route.dataRegistro }
-
-            AvaliacaoIndividualScreen(
-                avaliacao = avaliacao,
-                onVoltar = { navController.popBackStack() },
-            )
-        }
-
-// LISTA DE PENSAMENTOS DISFUNCIONAIS
-        composable<PensamentoDisfuncionalRoute> {
-            RegistroPensamentoScreen(
-                pensamentos = pensamentosDisfuncionaisMock,
-                // CELULAR: navega para a página individual.
-                // LAYOUT LARGO: a tela intercepta o clique e apenas seleciona.
-                onPensamentoIndividual = { pensamento ->
-                    navController.navigate(
-                        PensamentoDisfuncionalIndividualRoute(
-                            dataRegistro = pensamento.dataRegistro,
+            composable<AvaliacaoIndividualRoute>(
+                deepLinks =
+                    listOf(
+                        navDeepLink<AvaliacaoIndividualRoute>(
+                            basePath = "diario://avaliacao",
                         ),
-                    )
-                },
-                onNovoPensamentoClick = {
-                    navController.navigate(CriarPensamentoDisfuncionalRoute)
-                },
-                onVoltar = {
-                    navController.popBackStack()
-                },
-            )
-        }
-
-// PENSAMENTO DISFUNCIONAL INDIVIDUAL
-        composable<PensamentoDisfuncionalIndividualRoute>(
-            deepLinks =
-                listOf(
-                    navDeepLink<PensamentoDisfuncionalIndividualRoute>(
-                        basePath = "diario://pensamento",
                     ),
-                ),
-        ) { backStackEntry ->
+            ) { backStackEntry ->
+                val route = backStackEntry.toRoute<AvaliacaoIndividualRoute>()
+                val avaliacao = avaliacaoMock.find { it.dataRegistro == route.dataRegistro }
 
-            val rota = backStackEntry.toRoute<PensamentoDisfuncionalIndividualRoute>()
-
-            RegistroPensamentoIndividualScreen(
-                dataRegistro = rota.dataRegistro,
-                onVoltar = {
-                    navController.popBackStack()
-                },
-            )
+                AvaliacaoIndividualScreen(
+                    avaliacao = avaliacao,
+                    onVoltar = { navController.popBackStack() },
+                )
+            }
         }
 
-        composable<CriarPensamentoDisfuncionalRoute> {
-            CriarPensamentoDisfuncionalScreen(
-                dataRegistro = Clock.System.now().toString().substringBefore("T"),
-                onVoltar = {
-                    navController.popBackStack()
-                },
-                onSalvar = { situacao, pensamentos, emocoes, comportamentos ->
-                    navController.popBackStack()
-                },
-            )
-        }
+        // grafo dos pensamentos
+        navigation<PensamentoGraphRoute>(startDestination = PensamentoDisfuncionalRoute) {
+            composable<PensamentoDisfuncionalRoute> {
+                RegistroPensamentoScreen(
+                    pensamentos = pensamentosDisfuncionaisMock,
+                    onPensamentoIndividual = { pensamento ->
+                        navController.navigate(
+                            PensamentoDisfuncionalIndividualRoute(
+                                dataRegistro = pensamento.dataRegistro,
+                            ),
+                        )
+                    },
+                    onNovoPensamentoClick = {
+                        navController.navigate(CriarPensamentoDisfuncionalRoute)
+                    },
+                    onVoltar = {
+                        navController.popBackStack()
+                    },
+                )
+            }
 
-        // CRIAR RELATO
-        composable<CriarRelatoRoute> {
-            CriarRelatoScreen(
-                dataRegistro = Clock.System.now().toString(),
-                onVoltar = {
-                    navController.popBackStack()
-                },
-                onSalvar = { titulo, conteudo ->
-                    navController.popBackStack()
-                },
-            )
-        }
-
-        composable<HigieneSonoRoute> {
-            HigieneSonoScreen(
-                registros = registrosSonoMock,
-                onRegistroIndividual = {
-                    navController.navigate(
-                        HigieneSonoIndividualRoute(dataRegistro = it.dataRegistro),
-                    )
-                },
-                onNovoRegistroClick = { navController.navigate(CriarHigieneSonoRoute) },
-                onVoltar = { navController.popBackStack() },
-            )
-        }
-
-        composable<CriarHigieneSonoRoute> {
-            CriarSonoScreen(
-                dataRegistro = Clock.System.now().toString().substringBefore("T"),
-                onVoltar = { navController.popBackStack() },
-                onSalvar = { _, _, _, _, _, _, _ -> navController.popBackStack() },
-            )
-        }
-
-        composable<HigieneSonoIndividualRoute>(
-            deepLinks =
-                listOf(
-                    navDeepLink<HigieneSonoIndividualRoute>(
-                        basePath = "diario://higiene-sono",
+            composable<PensamentoDisfuncionalIndividualRoute>(
+                deepLinks =
+                    listOf(
+                        navDeepLink<PensamentoDisfuncionalIndividualRoute>(
+                            basePath = "diario://pensamento",
+                        ),
                     ),
-                ),
-        ) { backStackEntry ->
-            val route = backStackEntry.toRoute<HigieneSonoIndividualRoute>()
-            val registro = registrosSonoMock.find { it.dataRegistro == route.dataRegistro }
+            ) { backStackEntry ->
+                val rota = backStackEntry.toRoute<PensamentoDisfuncionalIndividualRoute>()
 
-            HigieneSonoIndividualScreen(
-                registroSonoMock = registro,
-                onVoltar = { navController.popBackStack() },
-            )
+                RegistroPensamentoIndividualScreen(
+                    dataRegistro = rota.dataRegistro,
+                    onVoltar = {
+                        navController.popBackStack()
+                    },
+                )
+            }
+
+            composable<CriarPensamentoDisfuncionalRoute> {
+                CriarPensamentoDisfuncionalScreen(
+                    dataRegistro = Clock.System.now().toString().substringBefore("T"),
+                    onVoltar = {
+                        navController.popBackStack()
+                    },
+                    onSalvar = { _, _, _, _ ->
+                        navController.popBackStack()
+                    },
+                )
+            }
+        }
+
+        // grafo da higiene do sono
+        navigation<HigieneSonoGraphRoute>(startDestination = HigieneSonoRoute) {
+            composable<HigieneSonoRoute> {
+                HigieneSonoScreen(
+                    registros = registrosSonoMock,
+                    onRegistroIndividual = {
+                        navController.navigate(
+                            HigieneSonoIndividualRoute(dataRegistro = it.dataRegistro),
+                        )
+                    },
+                    onNovoRegistroClick = { navController.navigate(CriarHigieneSonoRoute) },
+                    onVoltar = { navController.popBackStack() },
+                )
+            }
+
+            composable<CriarHigieneSonoRoute> {
+                CriarSonoScreen(
+                    dataRegistro = Clock.System.now().toString().substringBefore("T"),
+                    onVoltar = { navController.popBackStack() },
+                    onSalvar = { _, _, _, _, _, _, _ -> navController.popBackStack() },
+                )
+            }
+
+            composable<HigieneSonoIndividualRoute>(
+                deepLinks =
+                    listOf(
+                        navDeepLink<HigieneSonoIndividualRoute>(
+                            basePath = "diario://higiene-sono",
+                        ),
+                    ),
+            ) { backStackEntry ->
+                val route = backStackEntry.toRoute<HigieneSonoIndividualRoute>()
+                val registro = registrosSonoMock.find { it.dataRegistro == route.dataRegistro }
+
+                HigieneSonoIndividualScreen(
+                    registroSonoMock = registro,
+                    onVoltar = { navController.popBackStack() },
+                )
+            }
         }
     }
 }
