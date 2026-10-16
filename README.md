@@ -40,3 +40,6 @@ Implementações para garantir suporte a leitores de tela (TalkBack) e diretrize
 - **Independência do Botão de Voltar no Cabeçalho:** O componente `Cabecalho` **não** utiliza `mergeDescendants = true` para que o botão de voltar (`<-`) mantenha seu foco interativo independente no leitor de tela (TalkBack), permitindo que usuários com deficiência visual o acionem facilmente sem que ele seja fundido ao texto estático.
 - **Agrupamento Semântico (`mergeDescendants = true`):** Aplicado estrategicamente em cartões de listagem (`CardSistema`) e componentes de detalhes (que contêm apenas textos informativos estáticos), unificando a leitura de título e data.
 - **Contraste e Tema:** Suporte completo aos modos claro e escuro utilizando paletas de cores validadas (Emerald e Zinc).
+
+## 5. Video de apresentação (Sprint 1)
+https://youtu.be/lXQpVL2p2is?is=0zovS1DKr7hNfq07
