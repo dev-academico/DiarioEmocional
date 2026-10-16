@@ -16,7 +16,6 @@ https://github.com/dev-academico/DiarioEmocional/blob/main/docs/proposta.md
 O aplicativo suporta deep links para navegação direta a registros individuais. Os esquemas estão declarados no `AndroidManifest.xml` e no grafo de navegação (`AppNavigation.kt`).
 
 ### Comandos de Teste via ADB:
-### Comandos de Teste via ADB:
 - **Abrir Relato Individual:**
   ```powershell
   adb shell am start -a android.intent.action.VIEW -d "diario://relato/09-09-2026"
