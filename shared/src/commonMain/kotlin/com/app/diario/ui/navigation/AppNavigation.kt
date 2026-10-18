@@ -22,7 +22,6 @@ import RelatoIndividualRoute
 import RelatoIndividualScreen
 import RelatosGraphRoute
 import RelatosRoute
-import RelatosScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -39,6 +38,7 @@ import com.app.diario.ui.screen.CriarAvaliacaoScreen
 import com.app.diario.ui.screen.CriarSonoScreen
 import com.app.diario.ui.screen.HigieneSonoIndividualScreen
 import com.app.diario.ui.screen.HigieneSonoScreen
+import com.app.diario.ui.screen.RelatosScreen
 import com.app.diario.ui.screens.HomeScreen
 import pensamentosDisfuncionaisMock
 import kotlin.time.Clock
@@ -73,7 +73,6 @@ fun AppNavigation() {
         navigation<RelatosGraphRoute>(startDestination = RelatosRoute) {
             composable<RelatosRoute> {
                 RelatosScreen(
-                    relatos = relatosMock,
                     onRelatoIndividual = { relato ->
                         navController.navigate(
                             RelatoIndividualRoute(
