@@ -1,4 +1,4 @@
-package com.app.diario.ui.screen
+package com.app.diario.ui.avaliacao
 
 import AvaliacaoMock
 import androidx.compose.foundation.layout.Box
