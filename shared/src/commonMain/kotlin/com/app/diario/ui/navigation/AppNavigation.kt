@@ -8,7 +8,6 @@ import CriarHigieneSonoRoute
 import CriarPensamentoDisfuncionalRoute
 import CriarPensamentoDisfuncionalScreen
 import CriarRelatoRoute
-import CriarRelatoScreen
 import HigieneSonoGraphRoute
 import HigieneSonoIndividualRoute
 import HigieneSonoRoute
@@ -17,12 +16,9 @@ import PensamentoDisfuncionalIndividualRoute
 import PensamentoDisfuncionalRoute
 import PensamentoGraphRoute
 import RegistroPensamentoIndividualScreen
-import RegistroPensamentoScreen
 import RelatoIndividualRoute
-import RelatoIndividualScreen
 import RelatosGraphRoute
 import RelatosRoute
-import RelatosScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,13 +28,16 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import avaliacaoMock
 import com.app.diario.ui.mock.registrosSonoMock
-import com.app.diario.ui.mock.relatosMock
-import com.app.diario.ui.screen.AvaliacaoIndividualScreen
-import com.app.diario.ui.screen.AvaliacaoSentimentoScreen
-import com.app.diario.ui.screen.CriarAvaliacaoScreen
-import com.app.diario.ui.screen.CriarSonoScreen
-import com.app.diario.ui.screen.HigieneSonoIndividualScreen
-import com.app.diario.ui.screen.HigieneSonoScreen
+import com.app.diario.ui.avaliacao.AvaliacaoIndividualScreen
+import com.app.diario.ui.avaliacao.AvaliacaoSentimentoScreen
+import com.app.diario.ui.avaliacao.CriarAvaliacaoScreen
+import com.app.diario.ui.higiene.CriarSonoScreen
+import com.app.diario.ui.higiene.HigieneSonoIndividualScreen
+import com.app.diario.ui.higiene.HigieneSonoScreen
+import com.app.diario.ui.pensamentos.RegistroPensamentoScreen
+import com.app.diario.ui.relatos.CriarRelatoScreen
+import com.app.diario.ui.relatos.RelatoIndividualScreen
+import com.app.diario.ui.screen.RelatosScreen
 import com.app.diario.ui.screens.HomeScreen
 import pensamentosDisfuncionaisMock
 import kotlin.time.Clock
@@ -73,7 +72,6 @@ fun AppNavigation() {
         navigation<RelatosGraphRoute>(startDestination = RelatosRoute) {
             composable<RelatosRoute> {
                 RelatosScreen(
-                    relatos = relatosMock,
                     onRelatoIndividual = { relato ->
                         navController.navigate(
                             RelatoIndividualRoute(
@@ -124,7 +122,6 @@ fun AppNavigation() {
         navigation<AvaliacaoGraphRoute>(startDestination = AvaliacaoRoute) {
             composable<AvaliacaoRoute> {
                 AvaliacaoSentimentoScreen(
-                    avaliacoes = avaliacaoMock,
                     onAvaliacaoIndividual = {
                         navController.navigate(AvaliacaoIndividualRoute(it.dataRegistro))
                     },
@@ -163,7 +160,6 @@ fun AppNavigation() {
         navigation<PensamentoGraphRoute>(startDestination = PensamentoDisfuncionalRoute) {
             composable<PensamentoDisfuncionalRoute> {
                 RegistroPensamentoScreen(
-                    pensamentos = pensamentosDisfuncionaisMock,
                     onPensamentoIndividual = { pensamento ->
                         navController.navigate(
                             PensamentoDisfuncionalIndividualRoute(
@@ -215,7 +211,6 @@ fun AppNavigation() {
         navigation<HigieneSonoGraphRoute>(startDestination = HigieneSonoRoute) {
             composable<HigieneSonoRoute> {
                 HigieneSonoScreen(
-                    registros = registrosSonoMock,
                     onRegistroIndividual = {
                         navController.navigate(
                             HigieneSonoIndividualRoute(dataRegistro = it.dataRegistro),
