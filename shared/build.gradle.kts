@@ -81,6 +81,9 @@ kotlin {
 
         val desktopMain by getting {
             kotlin.srcDir("src/jvmMain/kotlin")
+            dependencies {
+                implementation(libs.kotlinx.coroutinesSwing)
+            }
         }
 
         val desktopTest by getting {

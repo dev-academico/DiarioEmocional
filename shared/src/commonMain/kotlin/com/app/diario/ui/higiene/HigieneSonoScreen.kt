@@ -1,4 +1,4 @@
-package com.app.diario.ui.screen
+package com.app.diario.ui.higiene
 
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowSizeClass
 import com.app.diario.ui.layout.SonoLayoutCelular
 import com.app.diario.ui.layout.SonoLayoutLargo
@@ -17,11 +19,12 @@ import com.app.diario.ui.mock.registrosSonoMock
 
 @Composable
 fun HigieneSonoScreen(
-    registros: List<RegistroSonoMock>,
+    viewModel: HigieneSonoViewModel = viewModel { HigieneSonoViewModel() },
     onRegistroIndividual: (RegistroSonoMock) -> Unit,
     onNovoRegistroClick: () -> Unit,
     onVoltar: () -> Unit,
 ) {
+    val estado by viewModel.estado.collectAsStateWithLifecycle()
     var registroSelecionado by remember {
         mutableStateOf<RegistroSonoMock?>(null)
     }
@@ -32,14 +35,14 @@ fun HigieneSonoScreen(
 
     if (isCompact) {
         SonoLayoutCelular(
-            registros = registros,
+            registros = estado.registros,
             onRegistroClick = onRegistroIndividual,
             onNovoRegistroClick = onNovoRegistroClick,
             onVoltar = onVoltar,
         )
     } else {
         SonoLayoutLargo(
-            registros = registros,
+            registros = estado.registros,
             registroSelecionado = registroSelecionado,
             onRegistroClick = { registroSelecionado = it },
             onNovoRegistroClick = onNovoRegistroClick,
@@ -54,7 +57,6 @@ fun HigieneSonoScreen(
 @Composable
 fun RegistroSonoScreenPreview() {
     HigieneSonoScreen(
-        registros = registrosSonoMock,
         onRegistroIndividual = {},
         onNovoRegistroClick = {},
         onVoltar = {},
@@ -65,7 +67,6 @@ fun RegistroSonoScreenPreview() {
 @Composable
 fun RegistroSonoScreenEmptyPreview() {
     HigieneSonoScreen(
-        registros = emptyList(),
         onRegistroIndividual = {},
         onNovoRegistroClick = {},
         onVoltar = {},

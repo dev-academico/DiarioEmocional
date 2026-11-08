@@ -1,4 +1,4 @@
-package com.app.diario.ui.screen
+package com.app.diario.ui.avaliacao
 
 import AvaliacaoMock
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
@@ -8,6 +8,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowSizeClass
 import avaliacaoMock
 import com.app.diario.ui.layout.AvaliacaoLayoutCelular
@@ -17,11 +19,12 @@ import com.app.diario.ui.layout.AvaliacaoLayoutLargo
 
 @Composable
 fun AvaliacaoSentimentoScreen(
-    avaliacoes: List<AvaliacaoMock>,
+    viewModel: AvaliacaoViewModel = viewModel { AvaliacaoViewModel() },
     onAvaliacaoIndividual: (AvaliacaoMock) -> Unit,
     onNovaAvaliacaoClick: () -> Unit,
     onVoltar: () -> Unit,
 ) {
+    val estado by viewModel.estado.collectAsStateWithLifecycle()
     var avaliacaoSelecionada by remember {
         mutableStateOf<AvaliacaoMock?>(null)
     }
@@ -32,14 +35,14 @@ fun AvaliacaoSentimentoScreen(
 
     if (isCompact) {
         AvaliacaoLayoutCelular(
-            avaliacoes = avaliacoes,
+            avaliacoes = estado.avaliacoes,
             onAvaliacaoClick = onAvaliacaoIndividual,
             onNovaAvaliacaoClick = onNovaAvaliacaoClick,
             onVoltar = onVoltar,
         )
     } else {
         AvaliacaoLayoutLargo(
-            avaliacoes = avaliacoes,
+            avaliacoes = estado.avaliacoes,
             avaliacaoSelecionada = avaliacaoSelecionada,
             onAvaliacaoClick = { avaliacaoSelecionada = it },
             onNovaAvaliacaoClick = onNovaAvaliacaoClick,
@@ -54,7 +57,6 @@ fun AvaliacaoSentimentoScreen(
 @Composable
 fun AvaliacaoSentimentoScreenPreview() {
     AvaliacaoSentimentoScreen(
-        avaliacoes = avaliacaoMock,
         onAvaliacaoIndividual = {},
         onNovaAvaliacaoClick = {},
         onVoltar = {},
@@ -65,7 +67,6 @@ fun AvaliacaoSentimentoScreenPreview() {
 @Composable
 fun AvaliacaoSentimentoScreenEmptyPreview() {
     AvaliacaoSentimentoScreen(
-        avaliacoes = emptyList(),
         onAvaliacaoIndividual = {},
         onNovaAvaliacaoClick = {},
         onVoltar = {},
