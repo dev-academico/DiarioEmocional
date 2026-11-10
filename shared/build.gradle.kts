@@ -71,6 +71,8 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.compose.adaptive)
             implementation(libs.navigation.compose)
+            implementation(libs.kotlinx.datetime)
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
             implementation("org.jetbrains.compose.material:material-icons-core:1.7.3")
         }
 

@@ -1,4 +1,4 @@
-package com.app.diario.ui.screens
+package com.app.diario.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

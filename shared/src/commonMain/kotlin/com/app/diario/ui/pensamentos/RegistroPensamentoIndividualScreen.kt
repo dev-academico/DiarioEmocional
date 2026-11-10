@@ -1,3 +1,5 @@
+package com.app.diario.ui.pensamentos
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,6 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.app.diario.ui.components.Cabecalho
+import com.app.diario.ui.components.PensamentoIndividualComponent
+import com.app.diario.ui.mock.pensamentosDisfuncionaisMock
 
 @Composable
 fun RegistroPensamentoIndividualScreen(

@@ -1,24 +1,5 @@
 package com.app.diario.ui.navigation
 
-import AvaliacaoGraphRoute
-import AvaliacaoIndividualRoute
-import AvaliacaoRoute
-import CriarAvaliacaoSentimento
-import CriarHigieneSonoRoute
-import CriarPensamentoDisfuncionalRoute
-import CriarPensamentoDisfuncionalScreen
-import CriarRelatoRoute
-import HigieneSonoGraphRoute
-import HigieneSonoIndividualRoute
-import HigieneSonoRoute
-import HomeRoute
-import PensamentoDisfuncionalIndividualRoute
-import PensamentoDisfuncionalRoute
-import PensamentoGraphRoute
-import RegistroPensamentoIndividualScreen
-import RelatoIndividualRoute
-import RelatosGraphRoute
-import RelatosRoute
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,20 +7,20 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
-import avaliacaoMock
-import com.app.diario.ui.mock.registrosSonoMock
+import com.app.diario.ui.HomeScreen
 import com.app.diario.ui.avaliacao.AvaliacaoIndividualScreen
 import com.app.diario.ui.avaliacao.AvaliacaoSentimentoScreen
 import com.app.diario.ui.avaliacao.CriarAvaliacaoScreen
 import com.app.diario.ui.higiene.CriarSonoScreen
 import com.app.diario.ui.higiene.HigieneSonoIndividualScreen
 import com.app.diario.ui.higiene.HigieneSonoScreen
+import com.app.diario.ui.mock.*
+import com.app.diario.ui.pensamentos.CriarPensamentoDisfuncionalScreen
+import com.app.diario.ui.pensamentos.RegistroPensamentoIndividualScreen
 import com.app.diario.ui.pensamentos.RegistroPensamentoScreen
 import com.app.diario.ui.relatos.CriarRelatoScreen
 import com.app.diario.ui.relatos.RelatoIndividualScreen
-import com.app.diario.ui.screen.RelatosScreen
-import com.app.diario.ui.screens.HomeScreen
-import pensamentosDisfuncionaisMock
+import com.app.diario.ui.relatos.RelatosScreen
 import kotlin.time.Clock
 
 @Composable
@@ -107,7 +88,9 @@ fun AppNavigation() {
 
             composable<CriarRelatoRoute> {
                 CriarRelatoScreen(
-                    dataRegistro = Clock.System.now().toString(),
+                    dataRegistro = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", java.util.Locale.US)
+                        .apply { timeZone = java.util.TimeZone.getTimeZone("UTC") }
+                        .format(java.util.Date()),
                     onVoltar = {
                         navController.popBackStack()
                     },
@@ -132,7 +115,9 @@ fun AppNavigation() {
 
             composable<CriarAvaliacaoSentimento> {
                 CriarAvaliacaoScreen(
-                    dataRegistro = Clock.System.now().toString().substringBefore("T"),
+                    dataRegistro = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", java.util.Locale.US)
+                        .apply { timeZone = java.util.TimeZone.getTimeZone("UTC") }
+                        .format(java.util.Date()),
                     onVoltar = { navController.popBackStack() },
                     onSalvar = { _, _, _ -> navController.popBackStack() },
                 )
@@ -196,7 +181,9 @@ fun AppNavigation() {
 
             composable<CriarPensamentoDisfuncionalRoute> {
                 CriarPensamentoDisfuncionalScreen(
-                    dataRegistro = Clock.System.now().toString().substringBefore("T"),
+                    dataRegistro = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", java.util.Locale.US)
+                        .apply { timeZone = java.util.TimeZone.getTimeZone("UTC") }
+                        .format(java.util.Date()),
                     onVoltar = {
                         navController.popBackStack()
                     },
@@ -223,7 +210,9 @@ fun AppNavigation() {
 
             composable<CriarHigieneSonoRoute> {
                 CriarSonoScreen(
-                    dataRegistro = Clock.System.now().toString().substringBefore("T"),
+                    dataRegistro = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", java.util.Locale.US)
+                        .apply { timeZone = java.util.TimeZone.getTimeZone("UTC") }
+                        .format(java.util.Date()),
                     onVoltar = { navController.popBackStack() },
                     onSalvar = { _, _, _, _, _, _, _ -> navController.popBackStack() },
                 )

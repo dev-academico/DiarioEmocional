@@ -1,21 +1,29 @@
 package com.app.diario.ui.avaliacao
 
-import AvaliacaoMock
+import com.app.diario.ui.mock.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowSizeClass
-import avaliacaoMock
-import com.app.diario.ui.layout.AvaliacaoLayoutCelular
-import com.app.diario.ui.layout.AvaliacaoLayoutLargo
-
-// Tela principal
 
 @Composable
 fun AvaliacaoSentimentoScreen(
@@ -25,61 +33,70 @@ fun AvaliacaoSentimentoScreen(
     onVoltar: () -> Unit,
 ) {
     val estado by viewModel.estado.collectAsStateWithLifecycle()
-    var avaliacaoSelecionada by remember {
-        mutableStateOf<AvaliacaoMock?>(null)
-    }
+    var avaliacaoSelecionada by remember { mutableStateOf<AvaliacaoMock?>(null) }
 
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val isCompact =
         !windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
 
-    if (isCompact) {
-        AvaliacaoLayoutCelular(
-            avaliacoes = estado.avaliacoes,
-            onAvaliacaoClick = onAvaliacaoIndividual,
-            onNovaAvaliacaoClick = onNovaAvaliacaoClick,
-            onVoltar = onVoltar,
-        )
-    } else {
-        AvaliacaoLayoutLargo(
-            avaliacoes = estado.avaliacoes,
-            avaliacaoSelecionada = avaliacaoSelecionada,
-            onAvaliacaoClick = { avaliacaoSelecionada = it },
-            onNovaAvaliacaoClick = onNovaAvaliacaoClick,
-            onVoltar = onVoltar,
-        )
+    when (val tela = estado.tela) {
+        EstadoAvaliacaoTela.Carregando -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    CircularProgressIndicator()
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Carregando avaliações...")
+                }
+            }
+        }
+
+        EstadoAvaliacaoTela.Vazio -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("Nenhuma avaliação registrada ainda.")
+            }
+        }
+
+        is EstadoAvaliacaoTela.Sucesso -> {
+            val avaliacoes = tela.avaliacoes
+            if (isCompact) {
+                AvaliacaoLayoutCelular(
+                    avaliacoes = avaliacoes,
+                    onAvaliacaoClick = onAvaliacaoIndividual,
+                    onNovaAvaliacaoClick = onNovaAvaliacaoClick,
+                    onVoltar = onVoltar,
+                )
+            } else {
+                AvaliacaoLayoutLargo(
+                    avaliacoes = avaliacoes,
+                    avaliacaoSelecionada = avaliacaoSelecionada,
+                    onAvaliacaoClick = { avaliacaoSelecionada = it },
+                    onNovaAvaliacaoClick = onNovaAvaliacaoClick,
+                    onVoltar = onVoltar,
+                )
+            }
+        }
+
+        is EstadoAvaliacaoTela.Erro -> {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text(tela.mensagem, color = MaterialTheme.colorScheme.error)
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = { viewModel.carregarAvaliacoes() }) {
+                    Text("Tentar de novo")
+                }
+            }
+        }
     }
 }
 
-// Preview
-
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun AvaliacaoSentimentoScreenPreview() {
     AvaliacaoSentimentoScreen(
         onAvaliacaoIndividual = {},
-        onNovaAvaliacaoClick = {},
-        onVoltar = {},
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun AvaliacaoSentimentoScreenEmptyPreview() {
-    AvaliacaoSentimentoScreen(
-        onAvaliacaoIndividual = {},
-        onNovaAvaliacaoClick = {},
-        onVoltar = {},
-    )
-}
-
-@Preview(showBackground = true, widthDp = 900, heightDp = 600)
-@Composable
-fun AvaliacaoSentimentoScreenLargePreview() {
-    AvaliacaoLayoutLargo(
-        avaliacoes = avaliacaoMock,
-        avaliacaoSelecionada = avaliacaoMock.first(),
-        onAvaliacaoClick = {},
         onNovaAvaliacaoClick = {},
         onVoltar = {},
     )

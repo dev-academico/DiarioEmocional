@@ -1,6 +1,5 @@
 package com.app.diario.ui.avaliacao
 
-import AvaliacaoMock
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,8 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import avaliacaoMock
 import com.app.diario.ui.components.AvaliacaoPrevia
+import com.app.diario.ui.mock.AvaliacaoMock
+import com.app.diario.ui.mock.avaliacaoMock
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,7 +70,7 @@ fun AvaliacaoIndividualScreen(
                     avaliacao = avaliacao,
                     modifier =
                         Modifier
-                            .widthIn(max = 720.dp) // em telas grandes não estica demais
+                            .widthIn(max = 720.dp)
                             .fillMaxHeight()
                             .padding(16.dp),
                 )
@@ -78,10 +78,6 @@ fun AvaliacaoIndividualScreen(
         }
     }
 }
-
-// ---------------------------------------------------------------------------
-// Preview
-// ---------------------------------------------------------------------------
 
 @Preview(showBackground = true)
 @Composable

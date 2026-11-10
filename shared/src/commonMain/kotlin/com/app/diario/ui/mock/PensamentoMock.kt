@@ -1,3 +1,5 @@
+package com.app.diario.ui.mock
+
 data class PensamentoMock(
     val dataRegistro: String,
     val situacao: String,
