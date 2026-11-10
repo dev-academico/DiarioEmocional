@@ -1,8 +1,5 @@
-package com.app.diario.ui.layout
+package com.app.diario.ui.pensamentos
 
-import CardSistema
-import EstadoVazio
-import RelatoIndividualComponent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,38 +20,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.app.diario.ui.components.Cabecalho
+import com.app.diario.ui.components.CardSistema
+import com.app.diario.ui.components.EstadoVazio
 import com.app.diario.ui.components.FloatingAdd
-import com.app.diario.ui.mock.RelatoMock
+import com.app.diario.ui.components.PensamentoIndividualComponent
+import com.app.diario.ui.mock.PensamentoMock
 
 @Composable
-fun RelatosLayoutCelular(
-    relatos: List<RelatoMock>,
+fun PensamentoLayoutCelular(
+    pensamentos: List<PensamentoMock>,
     modifier: Modifier = Modifier,
     onVoltar: () -> Unit,
-    onRelatoClick: (RelatoMock) -> Unit,
-    onNovoRelatoClick: () -> Unit,
+    onPensamentoClick: (PensamentoMock) -> Unit,
+    onNovoPensamentoClick: () -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
         topBar = {
             Cabecalho(
-                title = "Relatos",
-                subtitle = "Escreva acontecimentos interessantes do seu dia, como foram as coisas no trabalho, etc.",
+                title = "Registro de pensamentos disfuncionais",
+                subtitle = "Escreva sobre seus pensamentos disfuncionais seguindo a tabela da psicologia.",
                 onVoltar = onVoltar,
             )
         },
         floatingActionButton = {
-            FloatingAdd(
-                onClick = onNovoRelatoClick,
-                title = "Novo relato",
-            )
+            FloatingAdd(onClick = onNovoPensamentoClick, title = "Novo pensamento")
         },
     ) { padding ->
-        if (relatos.isEmpty()) {
+        if (pensamentos.isEmpty()) {
             EstadoVazio(
-                modifier = Modifier.padding(padding),
-                titulo = "Nenhum relato registrado ainda.",
-                inserirNovoComponente = "Toque em “Novo relato” para escrever o primeiro.",
+                modifier = Modifier,
+                titulo = "Nenhum registros de pensamentos disfuncionais ainda.",
+                inserirNovoComponente = "Toque em “Novo registro” para registrar um pensamento disfuncional",
             )
         } else {
             LazyColumn(
@@ -71,11 +68,11 @@ fun RelatosLayoutCelular(
                     ),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                items(relatos) { relato ->
+                items(pensamentos) { pensamento ->
                     CardSistema(
-                        dataRegistro = relato.dataRegistro,
-                        titulo = relato.titulo,
-                        onClick = { onRelatoClick(relato) },
+                        dataRegistro = pensamento.dataRegistro,
+                        titulo = pensamento.situacao,
+                        onClick = { onPensamentoClick(pensamento) },
                     )
                 }
             }
@@ -84,27 +81,27 @@ fun RelatosLayoutCelular(
 }
 
 @Composable
-fun RelatosLayoutLargo(
+fun PensamentoLayoutLargo(
     modifier: Modifier = Modifier,
-    relatos: List<RelatoMock>,
-    relatoSelecionado: RelatoMock? = null,
-    onRelatoClick: (RelatoMock) -> Unit = {},
-    onNovoRelatoClick: () -> Unit,
+    pensamentos: List<PensamentoMock>,
+    pensamentoSelecionado: PensamentoMock? = null,
+    onPensamentoClick: (PensamentoMock) -> Unit = {},
+    onNovoPensamentoClick: () -> Unit,
     onVoltar: () -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
         topBar = {
             Cabecalho(
-                title = "Relatos",
-                subtitle = "Escreva acontecimentos interessantes do seu dia.",
+                title = "Registro de pensamentos disfuncionais",
+                subtitle = "Escreva sobre seus pensamentos disfuncionais.",
                 onVoltar = onVoltar,
             )
         },
         floatingActionButton = {
             FloatingAdd(
-                onClick = onNovoRelatoClick,
-                title = "Novo relato",
+                onClick = onNovoPensamentoClick,
+                title = "Novo registro",
             )
         },
     ) { padding ->
@@ -115,11 +112,11 @@ fun RelatosLayoutLargo(
                     .padding(padding),
         ) {
             // LADO ESQUERDO
-            if (relatos.isEmpty()) {
+            if (pensamentos.isEmpty()) {
                 EstadoVazio(
                     modifier = Modifier.weight(1f),
-                    titulo = "Nenhum relato registrado ainda.",
-                    inserirNovoComponente = "Toque em “Novo relato” para escrever o primeiro.",
+                    titulo = "Nenhum registros de pensamentos disfuncionais ainda.",
+                    inserirNovoComponente = "Toque em “Novo registro” para registrar um pensamento disfuncional",
                 )
             } else {
                 LazyColumn(
@@ -136,22 +133,24 @@ fun RelatosLayoutLargo(
                         ),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    items(relatos) { relato ->
+                    items(pensamentos) { pensamento ->
                         CardSistema(
-                            dataRegistro = relato.dataRegistro,
-                            titulo = relato.titulo,
-                            onClick = { onRelatoClick(relato) },
+                            dataRegistro = pensamento.dataRegistro,
+                            titulo = pensamento.situacao,
+                            onClick = { onPensamentoClick(pensamento) },
                         )
                     }
                 }
             }
 
             // LADO DIREITO
-            if (relatoSelecionado != null) {
-                RelatoIndividualComponent(
-                    dataRegistro = relatoSelecionado.dataRegistro,
-                    titulo = relatoSelecionado.titulo,
-                    conteudo = relatoSelecionado.conteudo,
+            if (pensamentoSelecionado != null) {
+                PensamentoIndividualComponent(
+                    dataRegistro = pensamentoSelecionado.dataRegistro,
+                    situacao = pensamentoSelecionado.situacao,
+                    pensamentosImagens = pensamentoSelecionado.pensamentosImagens,
+                    emocoesSentimentos = pensamentoSelecionado.emocoesSentimentos,
+                    comportamentosReacoes = pensamentoSelecionado.comportamentosReacoes,
                     modifier =
                         Modifier
                             .weight(1f)
@@ -172,7 +171,7 @@ fun RelatosLayoutLargo(
                         modifier = Modifier.fillMaxSize(),
                     ) {
                         Text(
-                            text = if (relatos.isEmpty()) "Crie seu primeiro relato" else "Selecione um relato",
+                            text = if (pensamentos.isEmpty()) "Crie seu primeiro registro" else "Selecione um registro",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center,

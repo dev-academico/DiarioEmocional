@@ -1,7 +1,5 @@
-package com.app.diario.ui.layout
+package com.app.diario.ui.avaliacao
 
-import AvaliacaoMock
-import EstadoVazio
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -17,7 +15,9 @@ import androidx.compose.ui.unit.dp
 import com.app.diario.ui.components.AvaliacaoCard
 import com.app.diario.ui.components.AvaliacaoPrevia
 import com.app.diario.ui.components.Cabecalho
+import com.app.diario.ui.components.EstadoVazio
 import com.app.diario.ui.components.FloatingAdd
+import com.app.diario.ui.mock.AvaliacaoMock
 
 @Composable
 fun AvaliacaoLayoutCelular(
@@ -33,8 +33,8 @@ fun AvaliacaoLayoutCelular(
         if (avaliacoes.isEmpty()) {
             EstadoVazio(
                 modifier = Modifier.padding(padding),
-                "Nenhuma avaliação ainda",
-                "Toque em “Nova avaliação” para registrar como você está se sentindo.",
+                titulo = "Nenhuma avaliação ainda",
+                inserirNovoComponente = "Toque em “Nova avaliação” para registrar como você está se sentindo.",
             )
         } else {
             LazyColumn(
@@ -86,8 +86,8 @@ fun AvaliacaoLayoutLargo(
             if (avaliacoes.isEmpty()) {
                 EstadoVazio(
                     modifier = Modifier.weight(1f),
-                    "Nenhuma avaliação ainda",
-                    "Toque em “Nova avaliação” para registrar como você está se sentindo.",
+                    titulo = "Nenhuma avaliação ainda",
+                    inserirNovoComponente = "Toque em “Nova avaliação” para registrar como você está se sentindo.",
                 )
             } else {
                 LazyColumn(

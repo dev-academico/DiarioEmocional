@@ -1,3 +1,5 @@
+package com.app.diario.ui.components
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card

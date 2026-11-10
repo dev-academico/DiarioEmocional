@@ -1,7 +1,5 @@
 package com.app.diario.ui.relatos
 
-import RelatoIndividualComponent
-import RelatosViewModel
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
@@ -14,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.diario.ui.components.Cabecalho
-
+import com.app.diario.ui.components.RelatoIndividualComponent
 
 @Composable
 fun RelatoIndividualScreen(
@@ -24,8 +22,9 @@ fun RelatoIndividualScreen(
 ) {
     val estado by viewModel.estado.collectAsStateWithLifecycle()
     val relato =
-        estado.relatos.find {
-            it.dataRegistro == dataRegistro
+        when (val tela = estado.tela) {
+            is EstadoTela.Sucesso -> tela.relatos.find { it.dataRegistro == dataRegistro }
+            else -> null
         }
 
     Column(

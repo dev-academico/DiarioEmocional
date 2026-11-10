@@ -1,3 +1,5 @@
+package com.app.diario.ui.navigation
+
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -1,3 +1,5 @@
+package com.app.diario.ui.mock
+
 data class AvaliacaoMock(
     val dataRegistro: String,
     val intensity: Number,

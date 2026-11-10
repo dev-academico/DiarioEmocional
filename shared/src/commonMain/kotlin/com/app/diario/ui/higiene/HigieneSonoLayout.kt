@@ -1,6 +1,6 @@
-package com.app.diario.ui.layout
+package com.app.diario.ui.higiene
 
-import EstadoVazio
+import com.app.diario.ui.components.EstadoVazio
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row

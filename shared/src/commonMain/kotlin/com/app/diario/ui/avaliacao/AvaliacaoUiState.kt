@@ -1,9 +1,14 @@
 package com.app.diario.ui.avaliacao
 
-import AvaliacaoMock
-import avaliacaoMock
+import com.app.diario.ui.mock.AvaliacaoMock
+
+sealed interface EstadoAvaliacaoTela {
+    data object Carregando : EstadoAvaliacaoTela
+    data object Vazio : EstadoAvaliacaoTela
+    data class Sucesso(val avaliacoes: List<AvaliacaoMock>) : EstadoAvaliacaoTela
+    data class Erro(val mensagem: String) : EstadoAvaliacaoTela
+}
 
 data class AvaliacaoUiState(
-    val avaliacoes: List<AvaliacaoMock> = avaliacaoMock,
-    val isLoading: Boolean = false,
+    val tela: EstadoAvaliacaoTela = EstadoAvaliacaoTela.Carregando,
 )

@@ -1,6 +1,6 @@
 package com.app.diario.ui.components
 
-import AvaliacaoMock
+import com.app.diario.ui.mock.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

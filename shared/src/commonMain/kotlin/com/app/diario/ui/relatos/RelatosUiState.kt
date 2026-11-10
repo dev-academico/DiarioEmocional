@@ -1,9 +1,14 @@
 package com.app.diario.ui.relatos
 
 import com.app.diario.ui.mock.RelatoMock
-import com.app.diario.ui.mock.relatosMock
+
+sealed interface EstadoTela {
+    data object Carregando : EstadoTela
+    data object Vazio : EstadoTela
+    data class Sucesso(val relatos: List<RelatoMock>) : EstadoTela
+    data class Erro(val mensagem: String) : EstadoTela
+}
 
 data class RelatosUiState(
-    val relatos: List<RelatoMock> = relatosMock,
-    val isLoading: Boolean = false
+    val tela: EstadoTela = EstadoTela.Carregando
 )
