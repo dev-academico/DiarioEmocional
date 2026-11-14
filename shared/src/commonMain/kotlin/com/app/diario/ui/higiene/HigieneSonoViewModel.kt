@@ -2,8 +2,8 @@ package com.app.diario.ui.higiene
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.diario.dominio.repositorio.HigieneSonoRepository
 import com.app.diario.ui.mock.RegistroSonoMock
-import com.app.diario.ui.mock.registrosSonoMock
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +11,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class HigieneSonoViewModel : ViewModel() {
+class HigieneSonoViewModel(
+    private val repository: HigieneSonoRepository,
+) : ViewModel() {
     private val _estado = MutableStateFlow(HigieneSonoUiState())
     val estado: StateFlow<HigieneSonoUiState> = _estado.asStateFlow()
 
@@ -24,7 +26,7 @@ class HigieneSonoViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 delay(500)
-                val lista = registrosSonoMock
+                val lista = repository.getRegistros()
                 val novaTela =
                     if (lista.isEmpty()) {
                         EstadoSonoTela.Vazio
@@ -39,9 +41,10 @@ class HigieneSonoViewModel : ViewModel() {
     }
 
     fun adicionarRegistro(registro: RegistroSonoMock) {
+        repository.adicionarRegistro(registro)
         val atual = _estado.value.tela
         if (atual is EstadoSonoTela.Sucesso) {
-            val novaLista = atual.registros + registro
+            val novaLista = repository.getRegistros()
             _estado.update { it.copy(tela = EstadoSonoTela.Sucesso(novaLista)) }
         }
     }

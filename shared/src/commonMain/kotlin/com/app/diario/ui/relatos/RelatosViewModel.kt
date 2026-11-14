@@ -2,6 +2,7 @@ package com.app.diario.ui.relatos
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.diario.dominio.repositorio.RelatosRepository
 import com.app.diario.ui.mock.RelatoMock
 import com.app.diario.ui.mock.relatosMock
 import kotlinx.coroutines.delay
@@ -11,7 +12,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class RelatosViewModel : ViewModel() {
+class RelatosViewModel(
+    private val repository: RelatosRepository
+) : ViewModel() {
     private val _estado = MutableStateFlow(RelatosUiState())
     val estado: StateFlow<RelatosUiState> = _estado.asStateFlow()
 

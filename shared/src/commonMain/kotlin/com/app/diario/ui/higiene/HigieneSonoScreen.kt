@@ -23,11 +23,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowSizeClass
+import com.app.diario.dados.repositorio.HigieneSonoRepositoryImpl
 import com.app.diario.ui.mock.RegistroSonoMock
 
 @Composable
 fun HigieneSonoScreen(
-    viewModel: HigieneSonoViewModel = viewModel { HigieneSonoViewModel() },
+    viewModel: HigieneSonoViewModel = viewModel { HigieneSonoViewModel(HigieneSonoRepositoryImpl()) },
     onRegistroIndividual: (RegistroSonoMock) -> Unit,
     onNovoRegistroClick: () -> Unit,
     onVoltar: () -> Unit,

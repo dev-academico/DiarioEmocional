@@ -22,11 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowWidthSizeClass
-import com.app.diario.ui.mock.*
+import com.app.diario.dados.repositorio.PensamentoRepositoryImpl
+import com.app.diario.ui.mock.PensamentoMock
 
 @Composable
 fun RegistroPensamentoScreen(
-    viewModel: PensamentoViewModel = viewModel { PensamentoViewModel() },
+    viewModel: PensamentoViewModel = viewModel { PensamentoViewModel(PensamentoRepositoryImpl()) },
     onPensamentoIndividual: (PensamentoMock) -> Unit,
     onNovoPensamentoClick: () -> Unit,
     onVoltar: () -> Unit,

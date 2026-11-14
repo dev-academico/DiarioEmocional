@@ -2,8 +2,8 @@ package com.app.diario.ui.pensamentos
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.diario.dominio.repositorio.PensamentoRepository
 import com.app.diario.ui.mock.PensamentoMock
-import com.app.diario.ui.mock.pensamentosDisfuncionaisMock
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +11,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class PensamentoViewModel : ViewModel() {
+class PensamentoViewModel(
+    private val repository: PensamentoRepository,
+) : ViewModel() {
     private val _estado = MutableStateFlow(PensamentoUiState())
     val estado: StateFlow<PensamentoUiState> = _estado.asStateFlow()
 
@@ -24,7 +26,7 @@ class PensamentoViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 delay(500)
-                val lista = pensamentosDisfuncionaisMock
+                val lista = repository.getPensamentos()
                 val novaTela =
                     if (lista.isEmpty()) {
                         EstadoPensamentoTela.Vazio
@@ -39,9 +41,10 @@ class PensamentoViewModel : ViewModel() {
     }
 
     fun adicionarPensamento(pensamento: PensamentoMock) {
+        repository.adicionarPensamento(pensamento)
         val atual = _estado.value.tela
         if (atual is EstadoPensamentoTela.Sucesso) {
-            val novaLista = atual.pensamentos + pensamento
+            val novaLista = repository.getPensamentos()
             _estado.update { it.copy(tela = EstadoPensamentoTela.Sucesso(novaLista)) }
         }
     }

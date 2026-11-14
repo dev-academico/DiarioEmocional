@@ -1,6 +1,5 @@
 package com.app.diario.ui.avaliacao
 
-import com.app.diario.ui.mock.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,10 +23,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowSizeClass
+import com.app.diario.dados.repositorio.AvaliacaoRepositoryImpl
+import com.app.diario.ui.mock.AvaliacaoMock
+import com.app.diario.ui.mock.avaliacaoMock
 
 @Composable
 fun AvaliacaoSentimentoScreen(
-    viewModel: AvaliacaoViewModel = viewModel { AvaliacaoViewModel() },
+    viewModel: AvaliacaoViewModel = viewModel { AvaliacaoViewModel(AvaliacaoRepositoryImpl()) },
     onAvaliacaoIndividual: (AvaliacaoMock) -> Unit,
     onNovaAvaliacaoClick: () -> Unit,
     onVoltar: () -> Unit,

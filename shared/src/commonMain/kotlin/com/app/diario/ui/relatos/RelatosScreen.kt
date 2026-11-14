@@ -22,11 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.app.diario.dados.repositorio.RelatosRepositoryImpl
 import com.app.diario.ui.mock.RelatoMock
 
 @Composable
 fun RelatosScreen(
-    viewModel: RelatosViewModel = viewModel { RelatosViewModel() },
+    viewModel: RelatosViewModel = viewModel { RelatosViewModel(RelatosRepositoryImpl()) },
     onRelatoIndividual: (RelatoMock) -> Unit,
     onNovoRelatoClick: () -> Unit,
     onVoltar: () -> Unit,

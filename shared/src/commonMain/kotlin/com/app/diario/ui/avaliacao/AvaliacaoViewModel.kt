@@ -2,8 +2,8 @@ package com.app.diario.ui.avaliacao
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.diario.dominio.repositorio.AvaliacaoRepository
 import com.app.diario.ui.mock.AvaliacaoMock
-import com.app.diario.ui.mock.avaliacaoMock
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +11,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AvaliacaoViewModel : ViewModel() {
+class AvaliacaoViewModel(
+    private val repository: AvaliacaoRepository,
+) : ViewModel() {
     private val _estado = MutableStateFlow(AvaliacaoUiState())
     val estado: StateFlow<AvaliacaoUiState> = _estado.asStateFlow()
 
@@ -24,7 +26,7 @@ class AvaliacaoViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 delay(500)
-                val lista = avaliacaoMock
+                val lista = repository.getAvaliacoes()
                 val novaTela =
                     if (lista.isEmpty()) {
                         EstadoAvaliacaoTela.Vazio
@@ -39,9 +41,10 @@ class AvaliacaoViewModel : ViewModel() {
     }
 
     fun adicionarAvaliacao(avaliacao: AvaliacaoMock) {
+        repository.adicionarAvaliacao(avaliacao)
         val atual = _estado.value.tela
         if (atual is EstadoAvaliacaoTela.Sucesso) {
-            val novaLista = atual.avaliacoes + avaliacao
+            val novaLista = repository.getAvaliacoes()
             _estado.update { it.copy(tela = EstadoAvaliacaoTela.Sucesso(novaLista)) }
         }
     }
