@@ -1,11 +1,10 @@
-package com.app.diario
+package com.app.diario.domain.repository
 
 import com.app.diario.domain.data.remote.createHttpClient
+import com.app.diario.domain.data.repository.RelatoRepositoryImpl
 import com.app.diario.domain.model.Falha
-import com.app.diario.domain.repository.RelatoRepositoryImpl
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
-import io.ktor.client.request.request
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
@@ -106,7 +105,7 @@ class RelatoRepositoryTest {
         val client = createHttpClient(engine = mockEngine)
         val repository = RelatoRepositoryImpl(client = client)
 
-        // O expectSuccess = true faz o Ktor lançar exceção, e o repository traduz para Falha.RespostaInvalida
+        // testar expectSuccess = true do ktor
         val falha = assertFailsWith<Falha.RespostaInvalida> {
             repository.buscarRelatos()
         }
@@ -126,7 +125,7 @@ class RelatoRepositoryTest {
         val client = createHttpClient(engine = mockEngine)
         val repository = RelatoRepositoryImpl(client = client)
 
-        // O expectSuccess = true faz o Ktor lançar exceção, e o repository traduz para Falha.RespostaInvalida
+        // testar expectSuccess = true do ktor
         val falha = assertFailsWith<Falha.RespostaInvalida> {
             repository.buscarRelatos()
         }
@@ -137,13 +136,13 @@ class RelatoRepositoryTest {
     @Test
     fun testeSemInternet() = runTest {
         val mockEngine = MockEngine {
-            request -> throw Exception("Sem conexão com a internet (UnknownHostException / ConnectException)")
+            _ -> throw Exception("Sem conexão com a internet (UnknownHostException / ConnectException)")
         }
 
         val client = createHttpClient(engine = mockEngine)
         val repository = RelatoRepositoryImpl(client = client)
 
-        val falha = assertFailsWith<Falha.SemConexao> {
+        assertFailsWith<Falha.SemConexao> {
             repository.buscarRelatos()
         }
     }
