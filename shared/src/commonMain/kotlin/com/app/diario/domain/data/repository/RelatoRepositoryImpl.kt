@@ -1,4 +1,4 @@
-package com.app.diario.domain.repository
+package com.app.diario.domain.data.repository
 
 import com.app.diario.domain.model.Relato
 import com.app.diario.domain.data.remote.ApiConfig
@@ -6,6 +6,7 @@ import com.app.diario.domain.data.remote.dto.CriarRelatoDto
 import com.app.diario.domain.data.remote.dto.RelatoDto
 import com.app.diario.domain.data.remote.dto.toDomain
 import com.app.diario.domain.model.Falha
+import com.app.diario.domain.model.repository.RelatoRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ResponseException

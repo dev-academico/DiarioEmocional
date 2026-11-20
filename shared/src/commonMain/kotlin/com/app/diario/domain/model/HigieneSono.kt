@@ -1,4 +1,4 @@
-package com.app.diario.model
+package com.app.diario.domain.model
 
 data class RegistroSono(
     val dataRegistro: String, // "2026-10-15"

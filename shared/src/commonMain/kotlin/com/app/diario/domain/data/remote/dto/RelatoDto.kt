@@ -1,4 +1,4 @@
-package com.app.diario.domain.remote.dto
+package com.app.diario.domain.data.remote.dto
 
 import com.app.diario.domain.model.Relato
 import kotlinx.serialization.SerialName

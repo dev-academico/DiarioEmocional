@@ -1,4 +1,4 @@
-package com.app.diario.domain.remote
+package com.app.diario.domain.data.remote
 
 
 expect object ApiConfig {

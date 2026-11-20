@@ -1,4 +1,4 @@
-package com.app.diario.domain.data.repository
+package com.app.diario.domain.model.repository
 
 import com.app.diario.domain.model.Relato
 

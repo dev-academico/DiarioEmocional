@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.app.diario.domain.model.Relato
 import com.app.diario.ui.components.Cabecalho
 import com.app.diario.ui.components.FloatingAdd
 import com.app.diario.ui.components.RelatoIndividualComponent
@@ -28,10 +29,10 @@ import com.app.diario.ui.mock.RelatoMock
 
 @Composable
 fun RelatosLayoutCelular(
-    relatos: List<RelatoMock>,
+    relatos: List<Relato>,
     modifier: Modifier = Modifier,
     onVoltar: () -> Unit,
-    onRelatoClick: (RelatoMock) -> Unit,
+    onRelatoClick: (Relato) -> Unit,
     onNovoRelatoClick: () -> Unit,
 ) {
     Scaffold(
@@ -86,9 +87,9 @@ fun RelatosLayoutCelular(
 @Composable
 fun RelatosLayoutLargo(
     modifier: Modifier = Modifier,
-    relatos: List<RelatoMock>,
-    relatoSelecionado: RelatoMock? = null,
-    onRelatoClick: (RelatoMock) -> Unit = {},
+    relatos: List<Relato>,
+    relatoSelecionado: Relato? = null,
+    onRelatoClick: (Relato) -> Unit = {},
     onNovoRelatoClick: () -> Unit,
     onVoltar: () -> Unit,
 ) {

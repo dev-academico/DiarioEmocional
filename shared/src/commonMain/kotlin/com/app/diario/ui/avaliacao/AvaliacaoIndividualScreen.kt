@@ -22,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.app.diario.ui.components.AvaliacaoPrevia
 import com.app.diario.ui.mock.AvaliacaoMock
-import com.app.diario.ui.mock.avaliacaoMock
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,7 +82,7 @@ fun AvaliacaoIndividualScreen(
 @Composable
 fun AvaliacaoIndividualScreenPreview() {
     AvaliacaoIndividualScreen(
-        avaliacao = avaliacaoMock.first(),
+        avaliacao = null,
         onVoltar = {},
     )
 }

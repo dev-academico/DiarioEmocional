@@ -1,6 +1,11 @@
 package com.app.diario.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
@@ -21,6 +26,9 @@ import com.app.diario.ui.pensamentos.RegistroPensamentoScreen
 import com.app.diario.ui.relatos.CriarRelatoScreen
 import com.app.diario.ui.relatos.RelatoIndividualScreen
 import com.app.diario.ui.relatos.RelatosScreen
+import com.app.diario.ui.relatos.RelatosViewModel
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
 import kotlin.time.Clock
 
 @Composable
@@ -51,13 +59,17 @@ fun AppNavigation() {
 
         // grafo dos relatos
         navigation<RelatosGraphRoute>(startDestination = RelatosRoute) {
-            composable<RelatosRoute> {
+            composable<RelatosRoute> { backStackEntry ->
+                val parentEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry<RelatosGraphRoute>()
+                }
+                val viewModel: RelatosViewModel = viewModel(parentEntry) { RelatosViewModel() }
+
                 RelatosScreen(
+                    viewModel = viewModel,
                     onRelatoIndividual = { relato ->
                         navController.navigate(
-                            RelatoIndividualRoute(
-                                dataRegistro = relato.dataRegistro,
-                            ),
+                            RelatoIndividualRoute(dataRegistro = relato.dataRegistro)
                         )
                     },
                     onNovoRelatoClick = {
@@ -86,16 +98,33 @@ fun AppNavigation() {
                 )
             }
 
-            composable<CriarRelatoRoute> {
+            composable<CriarRelatoRoute> { backStackEntry ->
+                val parentEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry<RelatosGraphRoute>()
+                }
+                val viewModel: RelatosViewModel = viewModel(parentEntry) { RelatosViewModel() }
+                val hoje = Clock.System.todayIn(TimeZone.currentSystemDefault()).toString()
+                var erroSalvar by remember { mutableStateOf<String?>(null) }
+
                 CriarRelatoScreen(
-                    dataRegistro = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", java.util.Locale.US)
-                        .apply { timeZone = java.util.TimeZone.getTimeZone("UTC") }
-                        .format(java.util.Date()),
+                    dataRegistro = hoje,
+                    mensagemErroSalvar = erroSalvar,
                     onVoltar = {
                         navController.popBackStack()
                     },
-                    onSalvar = { _, _ ->
-                        navController.popBackStack()
+                    onSalvar = { titulo, conteudo ->
+                        erroSalvar = null
+                        viewModel.salvarNovoRelato(
+                            titulo = titulo,
+                            conteudo = conteudo,
+                            dataRegistro = hoje,
+                            onSucesso = {
+                                navController.popBackStack()
+                            },
+                            onErro = { mensagemErro ->
+                                erroSalvar = mensagemErro
+                            }
+                        )
                     },
                 )
             }

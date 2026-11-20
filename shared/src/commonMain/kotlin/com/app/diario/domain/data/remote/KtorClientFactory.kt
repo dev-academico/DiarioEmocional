@@ -1,4 +1,4 @@
-package com.app.diario.domain.remote
+package com.app.diario.domain.data.remote
 
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
@@ -17,10 +17,8 @@ fun createHttpClient(
     apiKey: String = ApiConfig.supabaseAnonKey
 ): HttpClient {
     val block: HttpClientConfig<*>.() -> Unit = {
-        // Exigência: expectSuccess = true (faz o Ktor lançar exceção em status 4xx/5xx)
         expectSuccess = true
 
-        // Exigência: ignoreUnknownKeys = true na negociação JSON
         install(ContentNegotiation) {
             json(
                 Json {

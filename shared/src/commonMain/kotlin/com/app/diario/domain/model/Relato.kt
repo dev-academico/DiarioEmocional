@@ -1,4 +1,4 @@
-package com.app.diario.model
+package com.app.diario.domain.model
 
 data class Relato(
     val id: String,

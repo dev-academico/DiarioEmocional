@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
@@ -22,17 +24,20 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.app.diario.domain.model.Relato
+import com.app.diario.ui.components.Cabecalho
+import com.app.diario.ui.components.FloatingAdd
 import com.app.diario.ui.mock.RelatoMock
 
 @Composable
 fun RelatosScreen(
     viewModel: RelatosViewModel = viewModel { RelatosViewModel() },
-    onRelatoIndividual: (RelatoMock) -> Unit,
+    onRelatoIndividual: (Relato) -> Unit,
     onNovoRelatoClick: () -> Unit,
     onVoltar: () -> Unit,
 ) {
     val estado by viewModel.estado.collectAsStateWithLifecycle()
-    var relatoSelecionado by remember { mutableStateOf<RelatoMock?>(null) }
+    var relatoSelecionado by remember { mutableStateOf<Relato?>(null) }
     val width = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
 
     when (val tela = estado.tela) {
@@ -47,9 +52,27 @@ fun RelatosScreen(
         }
 
         EstadoTela.Vazio -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Nenhum relato cadastrado ainda.")
+            Scaffold(
+                modifier = Modifier,
+                topBar = {
+                    Cabecalho(
+                        title = "Relatos",
+                        subtitle = "Escreva acontecimentos interessantes do seu dia.",
+                        onVoltar = onVoltar,
+                    )
+                },
+                floatingActionButton = {
+                    FloatingAdd(
+                        onClick = onNovoRelatoClick,
+                        title = "Novo relato",
+                    )
+                },
+            ) { padding ->
+                Box(modifier = Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
+                    Text("Nenhum relato cadastrado ainda.")
+                }
             }
+
         }
 
         is EstadoTela.Sucesso -> {
@@ -75,7 +98,21 @@ fun RelatosScreen(
             }
         }
 
-        is EstadoTela.Erro -> {
+        is EstadoTela.ErroRespostaInvalida-> {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text(tela.mensagem, color = MaterialTheme.colorScheme.error)
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = { viewModel.carregarRelatos() }) {
+                    Text("Tentar de novo")
+                }
+            }
+        }
+
+        is EstadoTela.ErroConexao-> {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
