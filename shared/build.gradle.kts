@@ -58,6 +58,8 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.compose.uiTooling)
+            implementation(libs.ktor.client.okhttp)
+
         }
 
         commonMain.dependencies {
@@ -74,17 +76,24 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
             implementation("org.jetbrains.compose.material:material-icons-core:1.7.3")
+
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.kotlinx.datetime)
         }
 
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation("org.jetbrains.compose.ui:ui-test:1.11.1")
+            implementation(libs.ktor.client.mock)
         }
 
         val desktopMain by getting {
             kotlin.srcDir("src/jvmMain/kotlin")
             dependencies {
                 implementation(libs.kotlinx.coroutinesSwing)
+                implementation(libs.ktor.client.cio)
             }
         }
 
@@ -93,6 +102,7 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(compose.desktop.uiTestJUnit4)
+                implementation(libs.ktor.client.mock)
             }
         }
     }
