@@ -87,6 +87,7 @@ kotlin {
             implementation(libs.kotlin.test)
             implementation("org.jetbrains.compose.ui:ui-test:1.11.1")
             implementation(libs.ktor.client.mock)
+            implementation(libs.turbine)
         }
 
         val desktopMain by getting {

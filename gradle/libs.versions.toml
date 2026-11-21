@@ -18,9 +18,11 @@ material3 = "1.11.0-alpha07"
 navigation = "2.9.0"
 kotlinxDatetime = "0.7.1"
 ktor = "3.0.3"
+turbine = "1.2.1"
 
 
 [libraries]
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 compose-adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "composeAdaptive" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
