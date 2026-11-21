@@ -6,8 +6,7 @@ sealed interface EstadoTela {
     data object Carregando : EstadoTela
     data object Vazio : EstadoTela
     data class Sucesso(val relatos: List<Relato>) : EstadoTela
-    data class ErroConexao(val mensagem: String = "Sem conexão com a internet. Verifique sua rede e tente novamente.") : EstadoTela
-    data class ErroRespostaInvalida(val mensagem: String = "Resposta inesperada ou indisponível do servidor.") : EstadoTela
+    data class Erro(val mensagem: String) : EstadoTela
 }
 
 data class RelatosUiState(

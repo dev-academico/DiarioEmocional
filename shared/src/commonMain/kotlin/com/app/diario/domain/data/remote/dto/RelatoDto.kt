@@ -12,7 +12,7 @@ data class RelatoDto(
     @SerialName("conteudo") val conteudo: String
 )
 
-fun RelatoDto.toDomain(): Relato {
+fun RelatoDto.paraDominio(): Relato {
     return Relato(
         id = id ?: "",
         titulo = titulo,

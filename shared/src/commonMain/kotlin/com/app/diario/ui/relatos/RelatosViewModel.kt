@@ -19,10 +19,10 @@ class RelatosViewModel(
     val estado: StateFlow<RelatosUiState> = _estado.asStateFlow()
 
     init {
-        carregarRelatos()
+        carregar()
     }
 
-    fun carregarRelatos() {
+    fun carregar() {
         viewModelScope.launch {
             _estado.update { it.copy(tela = EstadoTela.Carregando) }
             try {
@@ -35,14 +35,14 @@ class RelatosViewModel(
                     }
                 _estado.update { it.copy(tela = tela) }
             } catch (e: Falha.SemConexao) {
-                _estado.update { it.copy(tela = EstadoTela.ErroConexao(e.message ?: "")) }
+                _estado.update { it.copy(tela = EstadoTela.Erro(e.message ?: "")) }
             } catch (e: Falha.RespostaInvalida) {
-                _estado.update { it.copy(tela = EstadoTela.ErroRespostaInvalida(e.message ?: "")) }
+                _estado.update { it.copy(tela = EstadoTela.Erro(e.message ?: "")) }
             }
         }
     }
 
-    fun salvarNovoRelato(
+    fun salvar(
         titulo: String,
         conteudo: String,
         dataRegistro: String,
@@ -52,7 +52,7 @@ class RelatosViewModel(
         viewModelScope.launch {
             try {
                 repository.criarRelato(titulo = titulo, dataRegistro = dataRegistro, conteudo = conteudo)
-                carregarRelatos()
+                carregar()
                 onSucesso()
             } catch (e: Falha.RespostaInvalida) {
                 onErro("${e.message}")
