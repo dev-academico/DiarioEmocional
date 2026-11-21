@@ -1,6 +1,7 @@
 package com.app.diario.ui.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -23,7 +24,7 @@ fun PensamentoIndividualComponent(
         modifier = modifier,
     ) {
         Column(
-            modifier = Modifier.padding(24.dp),
+            modifier = Modifier.padding(24.dp).fillMaxWidth(),
         ) {
             Text(
                 text = dataRegistro,
