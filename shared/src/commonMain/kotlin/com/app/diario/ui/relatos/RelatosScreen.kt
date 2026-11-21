@@ -55,7 +55,7 @@ fun RelatosScreen(
         }
 
         EstadoTela.Vazio -> {
-            LayoutVazio(onVoltar, "pensamento")
+            LayoutVazio(onVoltar, onNovoRelatoClick, "relato", "Relatos", "Escreva acontecimentos interessantes do seu dia.")
         }
 
         is EstadoTela.Erro-> {

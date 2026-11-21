@@ -8,17 +8,24 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.capitalize
 
 
 @Composable
-fun LayoutVazio(onVoltar: () -> Unit, entidade: String) {
+fun LayoutVazio(onVoltar: () -> Unit, onNovoClick: () -> Unit, entidade: String, title: String, subtitle: String) {
     Scaffold(
         modifier = Modifier,
         topBar = {
             Cabecalho(
-                title = "Relatos",
-                subtitle = "Escreva acontecimentos interessantes do seu dia.",
+                title = title,
+                subtitle = subtitle,
                 onVoltar = onVoltar,
+            )
+        },
+        floatingActionButton = {
+            FloatingAdd(
+                onClick = onNovoClick,
+                title = "Novo $entidade",
             )
         },
     ) { padding ->

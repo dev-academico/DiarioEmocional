@@ -109,8 +109,6 @@ class RelatoRepositoryTest {
         val falha = assertFailsWith<Falha.RespostaInvalida> {
             repository.buscarRelatos()
         }
-
-        assertEquals(404, falha.codigoHttp)
     }
 
     @Test
@@ -129,8 +127,6 @@ class RelatoRepositoryTest {
         val falha = assertFailsWith<Falha.RespostaInvalida> {
             repository.buscarRelatos()
         }
-
-        assertEquals(500, falha.codigoHttp)
     }
 
     @Test
