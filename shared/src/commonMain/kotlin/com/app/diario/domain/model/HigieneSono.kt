@@ -1,6 +1,7 @@
 package com.app.diario.domain.model
 
-data class RegistroSono(
+data class HigieneSono(
+    val id: String,
     val dataRegistro: String, // "2026-10-15"
     val horarioDormiu: String, // "HH:mm"
     val horarioAcordou: String, // "HH:mm"
@@ -24,5 +25,3 @@ enum class DisposicaoAoAcordar(val rotulo: String) {
     MEDIA("Média"),
     ALTA("Alta"),
 }
-
-

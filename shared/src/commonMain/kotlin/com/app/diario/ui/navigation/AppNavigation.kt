@@ -29,6 +29,7 @@ import com.app.diario.ui.avaliacao.CriarAvaliacaoScreen
 import com.app.diario.ui.higiene.CriarSonoScreen
 import com.app.diario.ui.higiene.HigieneSonoIndividualScreen
 import com.app.diario.ui.higiene.HigieneSonoScreen
+import com.app.diario.ui.higiene.HigieneSonoViewModel
 import com.app.diario.ui.mock.*
 import com.app.diario.ui.pensamentos.CriarPensamentoDisfuncionalScreen
 import com.app.diario.ui.pensamentos.PensamentoViewModel
@@ -297,13 +298,19 @@ fun AppNavigation() {
                 }
             }
 
-            // grafo da higiene do sono
             navigation<HigieneSonoGraphRoute>(startDestination = HigieneSonoRoute) {
-                composable<HigieneSonoRoute> {
+                composable<HigieneSonoRoute> { backStackEntry ->
+                    val parentEntry = remember(backStackEntry) {
+                        navController.getBackStackEntry<HigieneSonoGraphRoute>()
+                    }
+                    val viewModel: HigieneSonoViewModel =
+                        viewModel(parentEntry) { HigieneSonoViewModel() }
+
                     HigieneSonoScreen(
+                        viewModel = viewModel,
                         onRegistroIndividual = {
                             navController.navigate(
-                                HigieneSonoIndividualRoute(dataRegistro = it.dataRegistro),
+                                HigieneSonoIndividualRoute(id = it.id),
                             )
                         },
                         onNovoRegistroClick = { navController.navigate(CriarHigieneSonoRoute) },
@@ -311,16 +318,38 @@ fun AppNavigation() {
                     )
                 }
 
-                composable<CriarHigieneSonoRoute> {
+                composable<CriarHigieneSonoRoute> { backStackEntry ->
+                    val parentEntry = remember(backStackEntry) {
+                        navController.getBackStackEntry<HigieneSonoGraphRoute>()
+                    }
+                    val viewModel: HigieneSonoViewModel =
+                        viewModel(parentEntry) { HigieneSonoViewModel() }
+                    val hoje = Clock.System.todayIn(TimeZone.currentSystemDefault()).toString()
+                    var mensagemErroSalvar by remember { mutableStateOf<String?>(null) }
+
                     CriarSonoScreen(
-                        dataRegistro = java.text.SimpleDateFormat(
-                            "yyyy-MM-dd'T'HH:mm:ss'Z'",
-                            java.util.Locale.US
-                        )
-                            .apply { timeZone = java.util.TimeZone.getTimeZone("UTC") }
-                            .format(java.util.Date()),
+                        dataRegistro = hoje,
+                        mensagemErroSalvar = mensagemErroSalvar,
                         onVoltar = { navController.popBackStack() },
-                        onSalvar = { _, _, _, _, _, _, _ -> navController.popBackStack() },
+                        onSalvar = { horarioDormiu, horarioAcordou, qualidade, disposicao, usouCelular, tevePesadelos, comentario ->
+                            mensagemErroSalvar = null
+                            viewModel.salvar(
+                                dataRegistro = hoje,
+                                horarioDormiu = horarioDormiu,
+                                horarioAcordou = horarioAcordou,
+                                qualidade = qualidade,
+                                disposicao = disposicao,
+                                usouCelularAntesDeDormir = usouCelular,
+                                tevePesadelos = tevePesadelos,
+                                comentarioSonhos = comentario,
+                                onSucesso = {
+                                    navController.popBackStack()
+                                },
+                                onErro = { mensagem ->
+                                    mensagemErroSalvar = mensagem
+                                }
+                            )
+                        },
                     )
                 }
 
@@ -332,11 +361,16 @@ fun AppNavigation() {
                             ),
                         ),
                 ) { backStackEntry ->
+                    val parentEntry = remember(backStackEntry) {
+                        navController.getBackStackEntry<HigieneSonoGraphRoute>()
+                    }
+                    val viewModel: HigieneSonoViewModel =
+                        viewModel(parentEntry) { HigieneSonoViewModel() }
                     val route = backStackEntry.toRoute<HigieneSonoIndividualRoute>()
-                    val registro = registrosSonoMock.find { it.dataRegistro == route.dataRegistro }
 
                     HigieneSonoIndividualScreen(
-                        registroSonoMock = registro,
+                        viewModel = viewModel,
+                        id = route.id,
                         onVoltar = { navController.popBackStack() },
                     )
                 }

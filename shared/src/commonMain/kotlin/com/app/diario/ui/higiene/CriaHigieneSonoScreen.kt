@@ -30,9 +30,9 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.app.diario.domain.model.DisposicaoAoAcordar
+import com.app.diario.domain.model.QualidadeSono
 import com.app.diario.ui.components.Cabecalho
-import com.app.diario.ui.mock.DisposicaoAoAcordar
-import com.app.diario.ui.mock.QualidadeSono
 import com.app.diario.ui.util.formatarData
 
 data class CriarSonoFormState(
@@ -66,6 +66,7 @@ fun mensagemErroFormularioSono(state: CriarSonoFormState): String? {
 @Composable
 fun CriarSonoScreen(
     dataRegistro: String,
+    mensagemErroSalvar: String? = null,
     onVoltar: () -> Unit,
     onSalvar: (
         horarioDormiu: String,
@@ -220,7 +221,6 @@ fun CriarSonoScreen(
             )
         }
 
-        // Comentário sobre sonhos / observações -------------------------------
         OutlinedTextField(
             value = formState.comentarioSonhos,
             onValueChange = { novoComentario ->
@@ -237,6 +237,14 @@ fun CriarSonoScreen(
             Text(
                 text = mensagemErro,
                 color = MaterialTheme.colorScheme.error,
+            )
+        }
+
+        if (mensagemErroSalvar != null) {
+            Text(
+                text = mensagemErroSalvar,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
 

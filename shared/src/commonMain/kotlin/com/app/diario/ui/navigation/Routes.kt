@@ -58,7 +58,7 @@ data object HigieneSonoGraphRoute
 
 @Serializable
 data class HigieneSonoIndividualRoute(
-    val dataRegistro: String,
+    val id: String,
 )
 
 @Serializable
