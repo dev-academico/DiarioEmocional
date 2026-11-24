@@ -8,11 +8,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.capitalize
-
 
 @Composable
-fun LayoutVazio(onVoltar: () -> Unit, onNovoClick: () -> Unit, entidade: String, title: String, subtitle: String) {
+fun LayoutVazio(
+    onVoltar: () -> Unit,
+    onNovoClick: () -> Unit,
+    entidade: String,
+    title: String,
+    subtitle: String,
+) {
     Scaffold(
         modifier = Modifier,
         topBar = {

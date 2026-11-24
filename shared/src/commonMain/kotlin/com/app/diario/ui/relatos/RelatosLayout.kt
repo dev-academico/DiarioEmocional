@@ -1,7 +1,5 @@
 package com.app.diario.ui.relatos
 
-import com.app.diario.ui.components.CardSistema
-import com.app.diario.ui.components.EstadoVazio
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,9 +21,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.app.diario.domain.model.Relato
 import com.app.diario.ui.components.Cabecalho
+import com.app.diario.ui.components.CardSistema
+import com.app.diario.ui.components.EstadoVazio
 import com.app.diario.ui.components.FloatingAdd
 import com.app.diario.ui.components.RelatoIndividualComponent
-import com.app.diario.ui.mock.RelatoMock
 
 @Composable
 fun RelatosLayoutCelular(

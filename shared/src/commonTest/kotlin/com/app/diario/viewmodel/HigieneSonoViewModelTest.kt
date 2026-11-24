@@ -23,10 +23,17 @@ import kotlin.test.assertIs
 class RepositorioHigieneSonoFalso(
     var listar: suspend () -> List<HigieneSono> = { emptyList() },
     var criar: suspend (
-        String, String, String, QualidadeSono, DisposicaoAoAcordar, Boolean, Boolean, String
+        String,
+        String,
+        String,
+        QualidadeSono,
+        DisposicaoAoAcordar,
+        Boolean,
+        Boolean,
+        String,
     ) -> HigieneSono = { data, dormiu, acordou, qual, disp, cel, pes, com ->
         HigieneSono("1", data, dormiu, acordou, qual, disp, cel, pes, com)
-    }
+    },
 ) : HigieneSonoRepository {
     override suspend fun buscarHigieneSono(): List<HigieneSono> = listar()
 
@@ -38,22 +45,22 @@ class RepositorioHigieneSonoFalso(
         disposicao: DisposicaoAoAcordar,
         usouCelularAntesDeDormir: Boolean,
         tevePesadelos: Boolean,
-        comentarioSonhos: String
-    ): HigieneSono = criar(
-        dataRegistro,
-        horarioDormiu,
-        horarioAcordou,
-        qualidade,
-        disposicao,
-        usouCelularAntesDeDormir,
-        tevePesadelos,
-        comentarioSonhos
-    )
+        comentarioSonhos: String,
+    ): HigieneSono =
+        criar(
+            dataRegistro,
+            horarioDormiu,
+            horarioAcordou,
+            qualidade,
+            disposicao,
+            usouCelularAntesDeDormir,
+            tevePesadelos,
+            comentarioSonhos,
+        )
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class HigieneSonoViewModelTest {
-
     private val testDispatcher = StandardTestDispatcher()
 
     @BeforeTest
@@ -67,58 +74,63 @@ class HigieneSonoViewModelTest {
     }
 
     @Test
-    fun carregarPassaPorCarregandoEChegaASucesso() = runTest(testDispatcher) {
-        val registrosEsperados = listOf(
-            HigieneSono(
-                id = "1",
-                dataRegistro = "2026-10-15",
-                horarioDormiu = "23:30",
-                horarioAcordou = "06:45",
-                qualidade = QualidadeSono.BOA,
-                disposicao = DisposicaoAoAcordar.ALTA,
-                usouCelularAntesDeDormir = false,
-                tevePesadelos = false,
-                comentarioSonhos = "Dormi muito bem."
-            )
-        )
-        val repositorio = RepositorioHigieneSonoFalso(listar = { registrosEsperados })
+    fun carregarPassaPorCarregandoEChegaASucesso() =
+        runTest(testDispatcher) {
+            val registrosEsperados =
+                listOf(
+                    HigieneSono(
+                        id = "1",
+                        dataRegistro = "2026-10-15",
+                        horarioDormiu = "23:30",
+                        horarioAcordou = "06:45",
+                        qualidade = QualidadeSono.BOA,
+                        disposicao = DisposicaoAoAcordar.ALTA,
+                        usouCelularAntesDeDormir = false,
+                        tevePesadelos = false,
+                        comentarioSonhos = "Dormi muito bem.",
+                    ),
+                )
+            val repositorio = RepositorioHigieneSonoFalso(listar = { registrosEsperados })
 
-        HigieneSonoViewModel(repositorio).estado.test {
-            assertEquals(EstadoSonoTela.Carregando, awaitItem().tela)
+            HigieneSonoViewModel(repositorio).estado.test {
+                assertEquals(EstadoSonoTela.Carregando, awaitItem().tela)
 
-            val sucesso = awaitItem().tela
-            assertIs<EstadoSonoTela.Sucesso>(sucesso)
-            assertEquals(registrosEsperados, sucesso.registros)
+                val sucesso = awaitItem().tela
+                assertIs<EstadoSonoTela.Sucesso>(sucesso)
+                assertEquals(registrosEsperados, sucesso.registros)
+            }
         }
-    }
 
     @Test
-    fun carregarSemDadosPassaPorCarregandoEChegaAVazio() = runTest(testDispatcher) {
-        val repositorio = RepositorioHigieneSonoFalso(listar = { emptyList() })
+    fun carregarSemDadosPassaPorCarregandoEChegaAVazio() =
+        runTest(testDispatcher) {
+            val repositorio = RepositorioHigieneSonoFalso(listar = { emptyList() })
 
-        HigieneSonoViewModel(repositorio).estado.test {
-            assertEquals(EstadoSonoTela.Carregando, awaitItem().tela)
-            assertEquals(EstadoSonoTela.Vazio, awaitItem().tela)
+            HigieneSonoViewModel(repositorio).estado.test {
+                assertEquals(EstadoSonoTela.Carregando, awaitItem().tela)
+                assertEquals(EstadoSonoTela.Vazio, awaitItem().tela)
+            }
         }
-    }
 
     @Test
-    fun carregarSemConexaoChegaAErro() = runTest(testDispatcher) {
-        val repositorio = RepositorioHigieneSonoFalso(listar = { throw Falha.SemConexao() })
+    fun carregarSemConexaoChegaAErro() =
+        runTest(testDispatcher) {
+            val repositorio = RepositorioHigieneSonoFalso(listar = { throw Falha.SemConexao() })
 
-        HigieneSonoViewModel(repositorio).estado.test {
-            assertEquals(EstadoSonoTela.Carregando, awaitItem().tela)
-            assertIs<EstadoSonoTela.Erro>(awaitItem().tela)
+            HigieneSonoViewModel(repositorio).estado.test {
+                assertEquals(EstadoSonoTela.Carregando, awaitItem().tela)
+                assertIs<EstadoSonoTela.Erro>(awaitItem().tela)
+            }
         }
-    }
 
     @Test
-    fun carregarComRespostaInvalidaChegaAErro() = runTest(testDispatcher) {
-        val repositorio = RepositorioHigieneSonoFalso(listar = { throw Falha.RespostaInvalida("500") })
+    fun carregarComRespostaInvalidaChegaAErro() =
+        runTest(testDispatcher) {
+            val repositorio = RepositorioHigieneSonoFalso(listar = { throw Falha.RespostaInvalida("500") })
 
-        HigieneSonoViewModel(repositorio).estado.test {
-            assertEquals(EstadoSonoTela.Carregando, awaitItem().tela)
-            assertIs<EstadoSonoTela.Erro>(awaitItem().tela)
+            HigieneSonoViewModel(repositorio).estado.test {
+                assertEquals(EstadoSonoTela.Carregando, awaitItem().tela)
+                assertIs<EstadoSonoTela.Erro>(awaitItem().tela)
+            }
         }
-    }
 }

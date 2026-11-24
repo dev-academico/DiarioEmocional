@@ -4,5 +4,10 @@ import com.app.diario.domain.model.Relato
 
 interface RelatoRepository {
     suspend fun buscarRelatos(): List<Relato>
-    suspend fun criarRelato(titulo: String, dataRegistro: String, conteudo: String): Relato
+
+    suspend fun criarRelato(
+        titulo: String,
+        dataRegistro: String,
+        conteudo: String,
+    ): Relato
 }

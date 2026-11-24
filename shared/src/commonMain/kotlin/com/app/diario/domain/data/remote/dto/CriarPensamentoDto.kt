@@ -10,5 +10,5 @@ data class CriarPensamentoDto(
     @SerialName("situacao") val situacao: String,
     @SerialName("pensamentos_imagens") val pensamentosImagens: String,
     @SerialName("emocoes_sentimentos") val emocoesSentimentos: String,
-    @SerialName("comportamentos_reacoes") val comportamentosReacoes: String
+    @SerialName("comportamentos_reacoes") val comportamentosReacoes: String,
 )

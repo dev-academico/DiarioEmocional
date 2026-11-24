@@ -2,8 +2,8 @@ package com.app.diario.ui.relatos
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.diario.domain.data.repository.RelatoRepositoryImpl
 import com.app.diario.domain.data.remote.createHttpClient
+import com.app.diario.domain.data.repository.RelatoRepositoryImpl
 import com.app.diario.domain.model.Falha
 import com.app.diario.domain.model.repository.RelatoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class RelatosViewModel(
-    private val repository: RelatoRepository = RelatoRepositoryImpl(createHttpClient())
+    private val repository: RelatoRepository = RelatoRepositoryImpl(createHttpClient()),
 ) : ViewModel() {
     private val _estado = MutableStateFlow(RelatosUiState())
     val estado: StateFlow<RelatosUiState> = _estado.asStateFlow()
@@ -47,7 +47,7 @@ class RelatosViewModel(
         conteudo: String,
         dataRegistro: String,
         onSucesso: () -> Unit,
-        onErro: (String) -> Unit
+        onErro: (String) -> Unit,
     ) {
         viewModelScope.launch {
             try {
@@ -61,5 +61,4 @@ class RelatosViewModel(
             }
         }
     }
-
 }

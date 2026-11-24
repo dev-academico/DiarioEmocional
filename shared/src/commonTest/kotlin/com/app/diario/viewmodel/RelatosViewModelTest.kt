@@ -22,16 +22,19 @@ class RepositorioFalso(
     var listar: suspend () -> List<Relato> = { emptyList() },
     var criar: suspend (String, String, String) -> Relato = { titulo, data, conteudo ->
         Relato("1", titulo, data, conteudo)
-    }
+    },
 ) : RelatoRepository {
     override suspend fun buscarRelatos(): List<Relato> = listar()
-    override suspend fun criarRelato(titulo: String, dataRegistro: String, conteudo: String): Relato =
-        criar(titulo, dataRegistro, conteudo)
+
+    override suspend fun criarRelato(
+        titulo: String,
+        dataRegistro: String,
+        conteudo: String,
+    ): Relato = criar(titulo, dataRegistro, conteudo)
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class RelatosViewModelTest {
-
     private val testDispatcher = StandardTestDispatcher()
 
     @BeforeTest
@@ -45,48 +48,53 @@ class RelatosViewModelTest {
     }
 
     @Test
-    fun carregarPassaPorCarregandoEChegaASucesso() = runTest(testDispatcher) {
-        val relatosEsperados = listOf(
-            Relato(id = "1", titulo = "Dia produtivo", dataRegistro = "2026-11-21", conteudo = "Estudei bastante")
-        )
-        val repositorio = RepositorioFalso(listar = { relatosEsperados })
+    fun carregarPassaPorCarregandoEChegaASucesso() =
+        runTest(testDispatcher) {
+            val relatosEsperados =
+                listOf(
+                    Relato(id = "1", titulo = "Dia produtivo", dataRegistro = "2026-11-21", conteudo = "Estudei bastante"),
+                )
+            val repositorio = RepositorioFalso(listar = { relatosEsperados })
 
-        RelatosViewModel(repositorio).estado.test {
-            assertEquals(EstadoTela.Carregando, awaitItem().tela)
+            RelatosViewModel(repositorio).estado.test {
+                assertEquals(EstadoTela.Carregando, awaitItem().tela)
 
-            val sucesso = awaitItem().tela
-            assertIs<EstadoTela.Sucesso>(sucesso)
-            assertEquals(relatosEsperados, sucesso.relatos)
+                val sucesso = awaitItem().tela
+                assertIs<EstadoTela.Sucesso>(sucesso)
+                assertEquals(relatosEsperados, sucesso.relatos)
+            }
         }
-    }
 
     @Test
-    fun carregarSemDadosPassaPorCarregandoEChegaAVazio() = runTest(testDispatcher) {
-        val repositorio = RepositorioFalso(listar = { emptyList() })
+    fun carregarSemDadosPassaPorCarregandoEChegaAVazio() =
+        runTest(testDispatcher) {
+            val repositorio = RepositorioFalso(listar = { emptyList() })
 
-        RelatosViewModel(repositorio).estado.test {
-            assertEquals(EstadoTela.Carregando, awaitItem().tela)
-            assertEquals(EstadoTela.Vazio, awaitItem().tela)
+            RelatosViewModel(repositorio).estado.test {
+                assertEquals(EstadoTela.Carregando, awaitItem().tela)
+                assertEquals(EstadoTela.Vazio, awaitItem().tela)
+            }
         }
-    }
 
     @Test
-    fun carregarSemConexaoChegaAErro() = runTest(testDispatcher) {
-        val repositorio = RepositorioFalso(listar = { throw Falha.SemConexao() })
+    fun carregarSemConexaoChegaAErro() =
+        runTest(testDispatcher) {
+            val repositorio = RepositorioFalso(listar = { throw Falha.SemConexao() })
 
-        RelatosViewModel(repositorio).estado.test {
-            assertEquals(EstadoTela.Carregando, awaitItem().tela)
-            assertIs<EstadoTela.Erro>(awaitItem().tela)
+            RelatosViewModel(repositorio).estado.test {
+                assertEquals(EstadoTela.Carregando, awaitItem().tela)
+                assertIs<EstadoTela.Erro>(awaitItem().tela)
+            }
         }
-    }
 
     @Test
-    fun carregarComRespostaInvalidaChegaAErro() = runTest(testDispatcher) {
-        val repositorio = RepositorioFalso(listar = { throw Falha.RespostaInvalida("500") })
+    fun carregarComRespostaInvalidaChegaAErro() =
+        runTest(testDispatcher) {
+            val repositorio = RepositorioFalso(listar = { throw Falha.RespostaInvalida("500") })
 
-        RelatosViewModel(repositorio).estado.test {
-            assertEquals(EstadoTela.Carregando, awaitItem().tela)
-            assertIs<EstadoTela.Erro>(awaitItem().tela)
+            RelatosViewModel(repositorio).estado.test {
+                assertEquals(EstadoTela.Carregando, awaitItem().tela)
+                assertIs<EstadoTela.Erro>(awaitItem().tela)
+            }
         }
-    }
 }

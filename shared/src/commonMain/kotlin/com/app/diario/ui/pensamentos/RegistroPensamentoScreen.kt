@@ -1,33 +1,18 @@
 package com.app.diario.ui.pensamentos
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowSizeClass
-import androidx.window.core.layout.WindowWidthSizeClass
 import com.app.diario.domain.model.Pensamento
 import com.app.diario.ui.components.LayoutCarregando
 import com.app.diario.ui.components.LayoutError
 import com.app.diario.ui.components.LayoutVazio
-import com.app.diario.ui.mock.*
 
 @Composable
 fun RegistroPensamentoScreen(
@@ -45,21 +30,28 @@ fun RegistroPensamentoScreen(
         }
 
         EstadoTela.Vazio -> {
-            LayoutVazio(onVoltar,onNovoPensamentoClick, "pensamentos", "Pensamentos", "Escreva sobre seus pensamentos disfuncionais seguindo a tabela da psicologia")
+            LayoutVazio(
+                onVoltar,
+                onNovoPensamentoClick,
+                "pensamentos",
+                "Pensamentos",
+                "Escreva sobre seus pensamentos disfuncionais seguindo a tabela da psicologia",
+            )
         }
 
         is EstadoTela.Sucesso -> {
             val pensamentos = tela.pensamentos
             val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-            val isCompact = !windowSizeClass.isWidthAtLeastBreakpoint(
-                WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND // 600dp
-            )
-            if(isCompact) {
+            val isCompact =
+                !windowSizeClass.isWidthAtLeastBreakpoint(
+                    WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND, // 600dp
+                )
+            if (isCompact) {
                 PensamentoLayoutCelular(
                     pensamentos = pensamentos,
                     onPensamentoClick = onPensamentoIndividual,
                     onVoltar = onVoltar,
-                    onNovoPensamentoClick = onNovoPensamentoClick
+                    onNovoPensamentoClick = onNovoPensamentoClick,
                 )
             } else {
                 PensamentoLayoutLargo(
@@ -67,7 +59,7 @@ fun RegistroPensamentoScreen(
                     pensamentoSelecionado = pensamentoSelecionado,
                     onPensamentoClick = { pensamentoSelecionado = it },
                     onVoltar = onVoltar,
-                    onNovoPensamentoClick = onNovoPensamentoClick
+                    onNovoPensamentoClick = onNovoPensamentoClick,
                 )
             }
         }

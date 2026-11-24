@@ -17,7 +17,6 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
@@ -28,12 +27,10 @@ import com.app.diario.ui.avaliacao.AvaliacaoIndividualScreen
 import com.app.diario.ui.avaliacao.AvaliacaoSentimentoScreen
 import com.app.diario.ui.avaliacao.AvaliacaoViewModel
 import com.app.diario.ui.avaliacao.CriarAvaliacaoScreen
-import com.app.diario.ui.avaliacao.EstadoAvaliacaoTela
 import com.app.diario.ui.higiene.CriarSonoScreen
 import com.app.diario.ui.higiene.HigieneSonoIndividualScreen
 import com.app.diario.ui.higiene.HigieneSonoScreen
 import com.app.diario.ui.higiene.HigieneSonoViewModel
-import com.app.diario.ui.mock.*
 import com.app.diario.ui.pensamentos.CriarPensamentoDisfuncionalScreen
 import com.app.diario.ui.pensamentos.PensamentoViewModel
 import com.app.diario.ui.pensamentos.RegistroPensamentoIndividualScreen
@@ -56,9 +53,10 @@ fun AppNavigation() {
         bottomBar = {
             NavigationBar {
                 bottomNavItems.forEach { item ->
-                    val isSelected = currentDestination?.hierarchy?.any {
-                        it.route?.contains(item.route::class.simpleName ?: "") == true
-                    } == true
+                    val isSelected =
+                        currentDestination?.hierarchy?.any {
+                            it.route?.contains(item.route::class.simpleName ?: "") == true
+                        } == true
 
                     NavigationBarItem(
                         selected = isSelected,
@@ -72,16 +70,16 @@ fun AppNavigation() {
                                 launchSingleTop = true
                                 restoreState = true
                             }
-                        }
+                        },
                     )
                 }
             }
-        }
+        },
     ) { paddingValues ->
         NavHost(
             navController = navController,
             startDestination = RelatosGraphRoute,
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier.padding(paddingValues),
         ) {
             // HOME
             composable<HomeRoute> {
@@ -104,16 +102,17 @@ fun AppNavigation() {
             // grafo dos relatos
             navigation<RelatosGraphRoute>(startDestination = RelatosRoute) {
                 composable<RelatosRoute> { backStackEntry ->
-                    val parentEntry = remember(backStackEntry) {
-                        navController.getBackStackEntry<RelatosGraphRoute>()
-                    }
+                    val parentEntry =
+                        remember(backStackEntry) {
+                            navController.getBackStackEntry<RelatosGraphRoute>()
+                        }
                     val viewModel: RelatosViewModel = viewModel(parentEntry) { RelatosViewModel() }
 
                     RelatosScreen(
                         viewModel = viewModel,
                         onRelatoIndividual = { relato ->
                             navController.navigate(
-                                RelatoIndividualRoute(dataRegistro = relato.dataRegistro)
+                                RelatoIndividualRoute(dataRegistro = relato.dataRegistro),
                             )
                         },
                         onNovoRelatoClick = {
@@ -143,9 +142,10 @@ fun AppNavigation() {
                 }
 
                 composable<CriarRelatoRoute> { backStackEntry ->
-                    val parentEntry = remember(backStackEntry) {
-                        navController.getBackStackEntry<RelatosGraphRoute>()
-                    }
+                    val parentEntry =
+                        remember(backStackEntry) {
+                            navController.getBackStackEntry<RelatosGraphRoute>()
+                        }
                     val viewModel: RelatosViewModel = viewModel(parentEntry) { RelatosViewModel() }
                     val hoje = Clock.System.todayIn(TimeZone.currentSystemDefault()).toString()
                     var mensagemErroSalvar by remember { mutableStateOf<String?>(null) }
@@ -167,7 +167,7 @@ fun AppNavigation() {
                                 },
                                 onErro = { mensagemErro ->
                                     mensagemErroSalvar = mensagemErro
-                                }
+                                },
                             )
                         },
                     )
@@ -177,9 +177,10 @@ fun AppNavigation() {
             // grafo das avaliações
             navigation<AvaliacaoGraphRoute>(startDestination = AvaliacaoRoute) {
                 composable<AvaliacaoRoute> { backStackEntry ->
-                    val parentEntry = remember(backStackEntry) {
-                        navController.getBackStackEntry<AvaliacaoGraphRoute>()
-                    }
+                    val parentEntry =
+                        remember(backStackEntry) {
+                            navController.getBackStackEntry<AvaliacaoGraphRoute>()
+                        }
                     val viewModel: AvaliacaoViewModel =
                         viewModel(parentEntry) { AvaliacaoViewModel() }
 
@@ -194,9 +195,10 @@ fun AppNavigation() {
                 }
 
                 composable<CriarAvaliacaoSentimento> { backStackEntry ->
-                    val parentEntry = remember(backStackEntry) {
-                        navController.getBackStackEntry<AvaliacaoGraphRoute>()
-                    }
+                    val parentEntry =
+                        remember(backStackEntry) {
+                            navController.getBackStackEntry<AvaliacaoGraphRoute>()
+                        }
                     val viewModel: AvaliacaoViewModel =
                         viewModel(parentEntry) { AvaliacaoViewModel() }
                     val hoje = Clock.System.todayIn(TimeZone.currentSystemDefault()).toString()
@@ -232,9 +234,10 @@ fun AppNavigation() {
                             ),
                         ),
                 ) { backStackEntry ->
-                    val parentEntry = remember(backStackEntry) {
-                        navController.getBackStackEntry<AvaliacaoGraphRoute>()
-                    }
+                    val parentEntry =
+                        remember(backStackEntry) {
+                            navController.getBackStackEntry<AvaliacaoGraphRoute>()
+                        }
                     val viewModel: AvaliacaoViewModel =
                         viewModel(parentEntry) { AvaliacaoViewModel() }
                     val route = backStackEntry.toRoute<AvaliacaoIndividualRoute>()
@@ -250,9 +253,10 @@ fun AppNavigation() {
             // grafo dos pensamentos
             navigation<PensamentoGraphRoute>(startDestination = PensamentoDisfuncionalRoute) {
                 composable<PensamentoDisfuncionalRoute> { backStackEntry ->
-                    val parentEntry = remember(backStackEntry) {
-                        navController.getBackStackEntry<PensamentoGraphRoute>()
-                    }
+                    val parentEntry =
+                        remember(backStackEntry) {
+                            navController.getBackStackEntry<PensamentoGraphRoute>()
+                        }
 
                     val viewModel: PensamentoViewModel =
                         viewModel(parentEntry) { PensamentoViewModel() }
@@ -294,9 +298,10 @@ fun AppNavigation() {
                 }
 
                 composable<CriarPensamentoDisfuncionalRoute> { backStackEntry ->
-                    val parentEntry = remember(backStackEntry) {
-                        navController.getBackStackEntry<PensamentoGraphRoute>()
-                    }
+                    val parentEntry =
+                        remember(backStackEntry) {
+                            navController.getBackStackEntry<PensamentoGraphRoute>()
+                        }
 
                     val viewModel: PensamentoViewModel =
                         viewModel(parentEntry) { PensamentoViewModel() }
@@ -309,10 +314,12 @@ fun AppNavigation() {
                         onVoltar = {
                             navController.popBackStack()
                         },
-                        onSalvar = { situacao: String,
-                                     pensamentosImagens: String,
-                                     emocoesSentimentos: String,
-                                     comportamentosReacoes: String ->
+                        onSalvar = {
+                                situacao: String,
+                                pensamentosImagens: String,
+                                emocoesSentimentos: String,
+                                comportamentosReacoes: String,
+                            ->
                             viewModel.salvar(
                                 hoje,
                                 situacao,
@@ -324,7 +331,7 @@ fun AppNavigation() {
                                 },
                                 onErro = { mensagemErro ->
                                     mensagemErroSalvar = mensagemErro
-                                }
+                                },
                             )
                         },
                     )
@@ -333,9 +340,10 @@ fun AppNavigation() {
 
             navigation<HigieneSonoGraphRoute>(startDestination = HigieneSonoRoute) {
                 composable<HigieneSonoRoute> { backStackEntry ->
-                    val parentEntry = remember(backStackEntry) {
-                        navController.getBackStackEntry<HigieneSonoGraphRoute>()
-                    }
+                    val parentEntry =
+                        remember(backStackEntry) {
+                            navController.getBackStackEntry<HigieneSonoGraphRoute>()
+                        }
                     val viewModel: HigieneSonoViewModel =
                         viewModel(parentEntry) { HigieneSonoViewModel() }
 
@@ -352,9 +360,10 @@ fun AppNavigation() {
                 }
 
                 composable<CriarHigieneSonoRoute> { backStackEntry ->
-                    val parentEntry = remember(backStackEntry) {
-                        navController.getBackStackEntry<HigieneSonoGraphRoute>()
-                    }
+                    val parentEntry =
+                        remember(backStackEntry) {
+                            navController.getBackStackEntry<HigieneSonoGraphRoute>()
+                        }
                     val viewModel: HigieneSonoViewModel =
                         viewModel(parentEntry) { HigieneSonoViewModel() }
                     val hoje = Clock.System.todayIn(TimeZone.currentSystemDefault()).toString()
@@ -380,7 +389,7 @@ fun AppNavigation() {
                                 },
                                 onErro = { mensagem ->
                                     mensagemErroSalvar = mensagem
-                                }
+                                },
                             )
                         },
                     )
@@ -394,9 +403,10 @@ fun AppNavigation() {
                             ),
                         ),
                 ) { backStackEntry ->
-                    val parentEntry = remember(backStackEntry) {
-                        navController.getBackStackEntry<HigieneSonoGraphRoute>()
-                    }
+                    val parentEntry =
+                        remember(backStackEntry) {
+                            navController.getBackStackEntry<HigieneSonoGraphRoute>()
+                        }
                     val viewModel: HigieneSonoViewModel =
                         viewModel(parentEntry) { HigieneSonoViewModel() }
                     val route = backStackEntry.toRoute<HigieneSonoIndividualRoute>()

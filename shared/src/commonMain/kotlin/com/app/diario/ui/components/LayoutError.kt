@@ -12,11 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.app.diario.ui.relatos.EstadoTela
-
 
 @Composable
-fun LayoutError(onClick: () -> Unit, mensagem: String) {
+fun LayoutError(
+    onClick: () -> Unit,
+    mensagem: String,
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -22,20 +22,20 @@ class RepositorioAvaliacaoFalso(
     var listar: suspend () -> List<Avaliacao> = { emptyList() },
     var criar: suspend (String, Int, String, List<String>) -> Avaliacao = { data, intensidade, descricao, gatilhos ->
         Avaliacao("1", data, intensidade, descricao, gatilhos)
-    }
+    },
 ) : AvaliacaoRepository {
     override suspend fun buscarAvaliacoes(): List<Avaliacao> = listar()
+
     override suspend fun criarAvaliacao(
         dataRegistro: String,
         intensidade: Int,
         descricao: String,
-        gatilhos: List<String>
+        gatilhos: List<String>,
     ): Avaliacao = criar(dataRegistro, intensidade, descricao, gatilhos)
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AvaliacaoViewModelTest {
-
     private val testDispatcher = StandardTestDispatcher()
 
     @BeforeTest
@@ -49,107 +49,116 @@ class AvaliacaoViewModelTest {
     }
 
     @Test
-    fun carregarPassaPorCarregandoEChegaASucesso() = runTest(testDispatcher) {
-        val avaliacoesEsperadas = listOf(
-            Avaliacao(
-                id = "1",
-                dataRegistro = "2026-11-24",
-                intensity = 7,
-                descricao = "Dia calmo",
-                gatilhos = listOf("Trabalho")
-            )
-        )
-        val repositorio = RepositorioAvaliacaoFalso(listar = { avaliacoesEsperadas })
+    fun carregarPassaPorCarregandoEChegaASucesso() =
+        runTest(testDispatcher) {
+            val avaliacoesEsperadas =
+                listOf(
+                    Avaliacao(
+                        id = "1",
+                        dataRegistro = "2026-11-24",
+                        intensity = 7,
+                        descricao = "Dia calmo",
+                        gatilhos = listOf("Trabalho"),
+                    ),
+                )
+            val repositorio = RepositorioAvaliacaoFalso(listar = { avaliacoesEsperadas })
 
-        AvaliacaoViewModel(repositorio).estado.test {
-            assertEquals(EstadoAvaliacaoTela.Carregando, awaitItem().tela)
+            AvaliacaoViewModel(repositorio).estado.test {
+                assertEquals(EstadoAvaliacaoTela.Carregando, awaitItem().tela)
 
-            val sucesso = awaitItem().tela
-            assertIs<EstadoAvaliacaoTela.Sucesso>(sucesso)
-            assertEquals(avaliacoesEsperadas, sucesso.avaliacoes)
-        }
-    }
-
-    @Test
-    fun carregarSemDadosPassaPorCarregandoEChegaAVazio() = runTest(testDispatcher) {
-        val repositorio = RepositorioAvaliacaoFalso(listar = { emptyList() })
-
-        AvaliacaoViewModel(repositorio).estado.test {
-            assertEquals(EstadoAvaliacaoTela.Carregando, awaitItem().tela)
-            assertEquals(EstadoAvaliacaoTela.Vazio, awaitItem().tela)
-        }
-    }
-
-    @Test
-    fun carregarSemConexaoChegaAErro() = runTest(testDispatcher) {
-        val repositorio = RepositorioAvaliacaoFalso(listar = { throw Falha.SemConexao() })
-
-        AvaliacaoViewModel(repositorio).estado.test {
-            assertEquals(EstadoAvaliacaoTela.Carregando, awaitItem().tela)
-            assertIs<EstadoAvaliacaoTela.Erro>(awaitItem().tela)
-        }
-    }
-
-    @Test
-    fun carregarComRespostaInvalidaChegaAErro() = runTest(testDispatcher) {
-        val repositorio = RepositorioAvaliacaoFalso(listar = { throw Falha.RespostaInvalida("500") })
-
-        AvaliacaoViewModel(repositorio).estado.test {
-            assertEquals(EstadoAvaliacaoTela.Carregando, awaitItem().tela)
-            assertIs<EstadoAvaliacaoTela.Erro>(awaitItem().tela)
-        }
-    }
-
-    @Test
-    fun salvarComSucessoChamaCallbackSucesso() = runTest(testDispatcher) {
-        var criou = false
-        val repositorio = RepositorioAvaliacaoFalso(
-            criar = { data, intensidade, descricao, gatilhos ->
-                criou = true
-                Avaliacao("1", data, intensidade, descricao, gatilhos)
+                val sucesso = awaitItem().tela
+                assertIs<EstadoAvaliacaoTela.Sucesso>(sucesso)
+                assertEquals(avaliacoesEsperadas, sucesso.avaliacoes)
             }
-        )
-        val viewModel = AvaliacaoViewModel(repositorio)
-
-        var sucessoChamado = false
-        var erroChamado: String? = null
-
-        viewModel.salvar(
-            dataRegistro = "2026-11-24",
-            intensidade = 6,
-            descricao = "Tudo bem",
-            gatilhos = listOf("Descanso"),
-            onSucesso = { sucessoChamado = true },
-            onErro = { erroChamado = it }
-        )
-        testScheduler.advanceUntilIdle()
-
-        assertEquals(true, criou)
-        assertEquals(true, sucessoChamado)
-        assertEquals(null, erroChamado)
-    }
+        }
 
     @Test
-    fun salvarComFalhaChamaCallbackErro() = runTest(testDispatcher) {
-        val repositorio = RepositorioAvaliacaoFalso(
-            criar = { _, _, _, _ -> throw Falha.SemConexao() }
-        )
-        val viewModel = AvaliacaoViewModel(repositorio)
+    fun carregarSemDadosPassaPorCarregandoEChegaAVazio() =
+        runTest(testDispatcher) {
+            val repositorio = RepositorioAvaliacaoFalso(listar = { emptyList() })
 
-        var sucessoChamado = false
-        var erroChamado: String? = null
+            AvaliacaoViewModel(repositorio).estado.test {
+                assertEquals(EstadoAvaliacaoTela.Carregando, awaitItem().tela)
+                assertEquals(EstadoAvaliacaoTela.Vazio, awaitItem().tela)
+            }
+        }
 
-        viewModel.salvar(
-            dataRegistro = "2026-11-24",
-            intensidade = 6,
-            descricao = "Tudo bem",
-            gatilhos = listOf("Descanso"),
-            onSucesso = { sucessoChamado = true },
-            onErro = { erroChamado = it }
-        )
-        testScheduler.advanceUntilIdle()
+    @Test
+    fun carregarSemConexaoChegaAErro() =
+        runTest(testDispatcher) {
+            val repositorio = RepositorioAvaliacaoFalso(listar = { throw Falha.SemConexao() })
 
-        assertEquals(false, sucessoChamado)
-        assertEquals(true, erroChamado != null)
-    }
+            AvaliacaoViewModel(repositorio).estado.test {
+                assertEquals(EstadoAvaliacaoTela.Carregando, awaitItem().tela)
+                assertIs<EstadoAvaliacaoTela.Erro>(awaitItem().tela)
+            }
+        }
+
+    @Test
+    fun carregarComRespostaInvalidaChegaAErro() =
+        runTest(testDispatcher) {
+            val repositorio = RepositorioAvaliacaoFalso(listar = { throw Falha.RespostaInvalida("500") })
+
+            AvaliacaoViewModel(repositorio).estado.test {
+                assertEquals(EstadoAvaliacaoTela.Carregando, awaitItem().tela)
+                assertIs<EstadoAvaliacaoTela.Erro>(awaitItem().tela)
+            }
+        }
+
+    @Test
+    fun salvarComSucessoChamaCallbackSucesso() =
+        runTest(testDispatcher) {
+            var criou = false
+            val repositorio =
+                RepositorioAvaliacaoFalso(
+                    criar = { data, intensidade, descricao, gatilhos ->
+                        criou = true
+                        Avaliacao("1", data, intensidade, descricao, gatilhos)
+                    },
+                )
+            val viewModel = AvaliacaoViewModel(repositorio)
+
+            var sucessoChamado = false
+            var erroChamado: String? = null
+
+            viewModel.salvar(
+                dataRegistro = "2026-11-24",
+                intensidade = 6,
+                descricao = "Tudo bem",
+                gatilhos = listOf("Descanso"),
+                onSucesso = { sucessoChamado = true },
+                onErro = { erroChamado = it },
+            )
+            testScheduler.advanceUntilIdle()
+
+            assertEquals(true, criou)
+            assertEquals(true, sucessoChamado)
+            assertEquals(null, erroChamado)
+        }
+
+    @Test
+    fun salvarComFalhaChamaCallbackErro() =
+        runTest(testDispatcher) {
+            val repositorio =
+                RepositorioAvaliacaoFalso(
+                    criar = { _, _, _, _ -> throw Falha.SemConexao() },
+                )
+            val viewModel = AvaliacaoViewModel(repositorio)
+
+            var sucessoChamado = false
+            var erroChamado: String? = null
+
+            viewModel.salvar(
+                dataRegistro = "2026-11-24",
+                intensidade = 6,
+                descricao = "Tudo bem",
+                gatilhos = listOf("Descanso"),
+                onSucesso = { sucessoChamado = true },
+                onErro = { erroChamado = it },
+            )
+            testScheduler.advanceUntilIdle()
+
+            assertEquals(false, sucessoChamado)
+            assertEquals(true, erroChamado != null)
+        }
 }

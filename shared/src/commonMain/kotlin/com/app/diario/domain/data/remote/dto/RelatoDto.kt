@@ -9,7 +9,7 @@ data class RelatoDto(
     @SerialName("id") val id: String? = null,
     @SerialName("titulo") val titulo: String,
     @SerialName("data_registro") val dataRegistro: String,
-    @SerialName("conteudo") val conteudo: String
+    @SerialName("conteudo") val conteudo: String,
 )
 
 fun RelatoDto.paraDominio(): Relato {
@@ -17,6 +17,6 @@ fun RelatoDto.paraDominio(): Relato {
         id = id ?: "",
         titulo = titulo,
         dataRegistro = dataRegistro,
-        conteudo = conteudo
+        conteudo = conteudo,
     )
 }

@@ -12,5 +12,5 @@ data class CriarHigieneSonoDto(
     @SerialName("disposicao") val disposicao: String,
     @SerialName("usou_celular_antes_de_dormir") val usouCelularAntesDeDormir: Boolean,
     @SerialName("teve_pesadelos") val tevePesadelos: Boolean,
-    @SerialName("comentario_sonhos") val comentarioSonhos: String
+    @SerialName("comentario_sonhos") val comentarioSonhos: String,
 )

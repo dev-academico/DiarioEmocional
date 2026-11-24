@@ -125,17 +125,18 @@ private fun TagInfo(texto: String) {
 @Preview(showBackground = true)
 @Composable
 private fun SonoCardPreview() {
-    val exemplo = HigieneSono(
-        id = "1",
-        dataRegistro = "2026-10-15",
-        horarioDormiu = "23:30",
-        horarioAcordou = "06:45",
-        qualidade = com.app.diario.domain.model.QualidadeSono.REGULAR,
-        disposicao = com.app.diario.domain.model.DisposicaoAoAcordar.MEDIA,
-        usouCelularAntesDeDormir = true,
-        tevePesadelos = false,
-        comentarioSonhos = "Acordei algumas vezes durante a madrugada."
-    )
+    val exemplo =
+        HigieneSono(
+            id = "1",
+            dataRegistro = "2026-10-15",
+            horarioDormiu = "23:30",
+            horarioAcordou = "06:45",
+            qualidade = com.app.diario.domain.model.QualidadeSono.REGULAR,
+            disposicao = com.app.diario.domain.model.DisposicaoAoAcordar.MEDIA,
+            usouCelularAntesDeDormir = true,
+            tevePesadelos = false,
+            comentarioSonhos = "Acordei algumas vezes durante a madrugada.",
+        )
     MaterialTheme {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -158,17 +159,18 @@ private fun SonoCardPreview() {
 @Preview(showBackground = true, widthDp = 450, heightDp = 500)
 @Composable
 private fun SonoPreviaPreview() {
-    val exemplo = HigieneSono(
-        id = "1",
-        dataRegistro = "2026-10-15",
-        horarioDormiu = "23:30",
-        horarioAcordou = "06:45",
-        qualidade = com.app.diario.domain.model.QualidadeSono.REGULAR,
-        disposicao = com.app.diario.domain.model.DisposicaoAoAcordar.MEDIA,
-        usouCelularAntesDeDormir = true,
-        tevePesadelos = false,
-        comentarioSonhos = "Acordei algumas vezes durante a madrugada."
-    )
+    val exemplo =
+        HigieneSono(
+            id = "1",
+            dataRegistro = "2026-10-15",
+            horarioDormiu = "23:30",
+            horarioAcordou = "06:45",
+            qualidade = com.app.diario.domain.model.QualidadeSono.REGULAR,
+            disposicao = com.app.diario.domain.model.DisposicaoAoAcordar.MEDIA,
+            usouCelularAntesDeDormir = true,
+            tevePesadelos = false,
+            comentarioSonhos = "Acordei algumas vezes durante a madrugada.",
+        )
     MaterialTheme {
         SonoPrevia(
             registro = exemplo,

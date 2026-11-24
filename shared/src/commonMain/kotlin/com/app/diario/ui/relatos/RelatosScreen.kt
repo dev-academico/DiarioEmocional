@@ -32,16 +32,17 @@ fun RelatosScreen(
         is EstadoTela.Sucesso -> {
             val relatos = tela.relatos
             val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-            val isCompact = !windowSizeClass.isWidthAtLeastBreakpoint(
-                WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND // 600dp
-            )
+            val isCompact =
+                !windowSizeClass.isWidthAtLeastBreakpoint(
+                    WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND, // 600dp
+                )
 
             if (isCompact) {
                 RelatosLayoutCelular(
                     relatos = relatos,
                     onRelatoClick = onRelatoIndividual,
                     onVoltar = onVoltar,
-                    onNovoRelatoClick = onNovoRelatoClick
+                    onNovoRelatoClick = onNovoRelatoClick,
                 )
             } else {
                 RelatosLayoutLargo(
@@ -49,7 +50,7 @@ fun RelatosScreen(
                     relatoSelecionado = relatoSelecionado,
                     onRelatoClick = { relatoSelecionado = it },
                     onVoltar = onVoltar,
-                    onNovoRelatoClick = onNovoRelatoClick
+                    onNovoRelatoClick = onNovoRelatoClick,
                 )
             }
         }
@@ -58,7 +59,7 @@ fun RelatosScreen(
             LayoutVazio(onVoltar, onNovoRelatoClick, "relato", "Relatos", "Escreva acontecimentos interessantes do seu dia.")
         }
 
-        is EstadoTela.Erro-> {
+        is EstadoTela.Erro -> {
             LayoutError(onClick = { viewModel.carregar() }, tela.mensagem)
         }
     }

@@ -16,21 +16,23 @@ data class HigieneSonoDto(
     @SerialName("disposicao") val disposicao: String,
     @SerialName("usou_celular_antes_de_dormir") val usouCelularAntesDeDormir: Boolean,
     @SerialName("teve_pesadelos") val tevePesadelos: Boolean,
-    @SerialName("comentario_sonhos") val comentarioSonhos: String = ""
+    @SerialName("comentario_sonhos") val comentarioSonhos: String = "",
 )
 
 fun HigieneSonoDto.paraDominio(): HigieneSono {
-    val qualidadeEnum = try {
-        QualidadeSono.valueOf(qualidade.uppercase())
-    } catch (_: Exception) {
-        QualidadeSono.REGULAR
-    }
+    val qualidadeEnum =
+        try {
+            QualidadeSono.valueOf(qualidade.uppercase())
+        } catch (_: Exception) {
+            QualidadeSono.REGULAR
+        }
 
-    val disposicaoEnum = try {
-        DisposicaoAoAcordar.valueOf(disposicao.uppercase())
-    } catch (_: Exception) {
-        DisposicaoAoAcordar.MEDIA
-    }
+    val disposicaoEnum =
+        try {
+            DisposicaoAoAcordar.valueOf(disposicao.uppercase())
+        } catch (_: Exception) {
+            DisposicaoAoAcordar.MEDIA
+        }
 
     return HigieneSono(
         id = id ?: "",
@@ -41,6 +43,6 @@ fun HigieneSonoDto.paraDominio(): HigieneSono {
         disposicao = disposicaoEnum,
         usouCelularAntesDeDormir = usouCelularAntesDeDormir,
         tevePesadelos = tevePesadelos,
-        comentarioSonhos = comentarioSonhos
+        comentarioSonhos = comentarioSonhos,
     )
 }

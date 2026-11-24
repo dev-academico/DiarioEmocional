@@ -1,6 +1,5 @@
 package com.app.diario.ui.higiene
 
-import com.app.diario.ui.components.EstadoVazio
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.app.diario.domain.model.HigieneSono
 import com.app.diario.ui.components.Cabecalho
+import com.app.diario.ui.components.EstadoVazio
 import com.app.diario.ui.components.FloatingAdd
 import com.app.diario.ui.components.SonoCard
 import com.app.diario.ui.components.SonoPrevia

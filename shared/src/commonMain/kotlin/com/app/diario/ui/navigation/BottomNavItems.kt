@@ -5,7 +5,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Place
-
 import androidx.compose.ui.graphics.vector.ImageVector
 
 data class BottomNavItem(
@@ -14,9 +13,10 @@ data class BottomNavItem(
     val route: Any,
 )
 
-val bottomNavItems = listOf(
-    BottomNavItem("Relatos", Icons.Default.Edit, RelatosGraphRoute),
-    BottomNavItem("Pensamentos", Icons.Default.Place, PensamentoGraphRoute),
-    BottomNavItem("Avaliações", Icons.Default.Favorite, AvaliacaoGraphRoute),
-    BottomNavItem("Sono", Icons.Default.Face, HigieneSonoGraphRoute),
-)
+val bottomNavItems =
+    listOf(
+        BottomNavItem("Relatos", Icons.Default.Edit, RelatosGraphRoute),
+        BottomNavItem("Pensamentos", Icons.Default.Place, PensamentoGraphRoute),
+        BottomNavItem("Avaliações", Icons.Default.Favorite, AvaliacaoGraphRoute),
+        BottomNavItem("Sono", Icons.Default.Face, HigieneSonoGraphRoute),
+    )

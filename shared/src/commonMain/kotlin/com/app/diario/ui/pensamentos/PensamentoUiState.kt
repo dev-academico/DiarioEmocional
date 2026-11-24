@@ -1,13 +1,14 @@
 package com.app.diario.ui.pensamentos
 
 import com.app.diario.domain.model.Pensamento
-import com.app.diario.domain.model.Relato
-import com.app.diario.ui.mock.PensamentoMock
 
 sealed interface EstadoTela {
     data object Carregando : EstadoTela
+
     data object Vazio : EstadoTela
+
     data class Sucesso(val pensamentos: List<Pensamento>) : EstadoTela
+
     data class Erro(val mensagem: String) : EstadoTela
 }
 

@@ -109,17 +109,18 @@ private fun HigieneSonoIndividualContent(
 @Preview(showBackground = true)
 @Composable
 fun HigieneIndividualScreenPreview() {
-    val exemplo = HigieneSono(
-        id = "1",
-        dataRegistro = "2026-10-15",
-        horarioDormiu = "23:30",
-        horarioAcordou = "06:45",
-        qualidade = QualidadeSono.REGULAR,
-        disposicao = DisposicaoAoAcordar.MEDIA,
-        usouCelularAntesDeDormir = true,
-        tevePesadelos = false,
-        comentarioSonhos = "Acordei algumas vezes durante a madrugada."
-    )
+    val exemplo =
+        HigieneSono(
+            id = "1",
+            dataRegistro = "2026-10-15",
+            horarioDormiu = "23:30",
+            horarioAcordou = "06:45",
+            qualidade = QualidadeSono.REGULAR,
+            disposicao = DisposicaoAoAcordar.MEDIA,
+            usouCelularAntesDeDormir = true,
+            tevePesadelos = false,
+            comentarioSonhos = "Acordei algumas vezes durante a madrugada.",
+        )
     HigieneSonoIndividualContent(
         registro = exemplo,
         onVoltar = {},

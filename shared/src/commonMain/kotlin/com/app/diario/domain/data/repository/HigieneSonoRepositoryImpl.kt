@@ -20,9 +20,8 @@ import kotlinx.serialization.SerializationException
 
 class HigieneSonoRepositoryImpl(
     private val client: HttpClient,
-    private val baseUrl: String = ApiConfig.supabaseUrl
+    private val baseUrl: String = ApiConfig.supabaseUrl,
 ) : HigieneSonoRepository {
-
     override suspend fun buscarHigieneSono(): List<HigieneSono> {
         try {
             return client
@@ -46,7 +45,7 @@ class HigieneSonoRepositoryImpl(
         disposicao: DisposicaoAoAcordar,
         usouCelularAntesDeDormir: Boolean,
         tevePesadelos: Boolean,
-        comentarioSonhos: String
+        comentarioSonhos: String,
     ): HigieneSono {
         try {
             return client
@@ -61,8 +60,8 @@ class HigieneSonoRepositoryImpl(
                             disposicao = disposicao.name,
                             usouCelularAntesDeDormir = usouCelularAntesDeDormir,
                             tevePesadelos = tevePesadelos,
-                            comentarioSonhos = comentarioSonhos
-                        )
+                            comentarioSonhos = comentarioSonhos,
+                        ),
                     )
                 }
                 .body<List<HigieneSonoDto>>()

@@ -10,7 +10,7 @@ data class AvaliacaoDto(
     @SerialName("data_registro") val dataRegistro: String,
     @SerialName("intensidade") val intensidade: Int,
     @SerialName("descricao") val descricao: String,
-    @SerialName("gatilhos") val gatilhos: List<String> = emptyList()
+    @SerialName("gatilhos") val gatilhos: List<String> = emptyList(),
 )
 
 fun AvaliacaoDto.paraDominio(): Avaliacao {
@@ -19,6 +19,6 @@ fun AvaliacaoDto.paraDominio(): Avaliacao {
         dataRegistro = dataRegistro,
         intensity = intensidade,
         descricao = descricao,
-        gatilhos = gatilhos
+        gatilhos = gatilhos,
     )
 }

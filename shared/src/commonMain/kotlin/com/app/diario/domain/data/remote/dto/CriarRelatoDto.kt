@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class CriarRelatoDto(
     @SerialName("titulo") val titulo: String,
     @SerialName("data_registro") val dataRegistro: String,
-    @SerialName("conteudo") val conteudo: String
+    @SerialName("conteudo") val conteudo: String,
 )

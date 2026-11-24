@@ -18,9 +18,8 @@ import kotlinx.serialization.SerializationException
 
 class AvaliacaoRepositoryImpl(
     private val client: HttpClient,
-    private val baseUrl: String = ApiConfig.supabaseUrl
+    private val baseUrl: String = ApiConfig.supabaseUrl,
 ) : AvaliacaoRepository {
-
     override suspend fun buscarAvaliacoes(): List<Avaliacao> {
         try {
             return client
@@ -40,7 +39,7 @@ class AvaliacaoRepositoryImpl(
         dataRegistro: String,
         intensidade: Int,
         descricao: String,
-        gatilhos: List<String>
+        gatilhos: List<String>,
     ): Avaliacao {
         try {
             return client
@@ -51,8 +50,8 @@ class AvaliacaoRepositoryImpl(
                             dataRegistro = dataRegistro,
                             intensidade = intensidade,
                             descricao = descricao,
-                            gatilhos = gatilhos
-                        )
+                            gatilhos = gatilhos,
+                        ),
                     )
                 }
                 .body<List<AvaliacaoDto>>()

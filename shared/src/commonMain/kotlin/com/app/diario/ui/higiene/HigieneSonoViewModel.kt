@@ -6,7 +6,6 @@ import com.app.diario.domain.data.remote.createHttpClient
 import com.app.diario.domain.data.repository.HigieneSonoRepositoryImpl
 import com.app.diario.domain.model.DisposicaoAoAcordar
 import com.app.diario.domain.model.Falha
-import com.app.diario.domain.model.HigieneSono
 import com.app.diario.domain.model.QualidadeSono
 import com.app.diario.domain.model.repository.HigieneSonoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HigieneSonoViewModel(
-    private val repository: HigieneSonoRepository = HigieneSonoRepositoryImpl(createHttpClient())
+    private val repository: HigieneSonoRepository = HigieneSonoRepositoryImpl(createHttpClient()),
 ) : ViewModel() {
     private val _estado = MutableStateFlow(HigieneSonoUiState())
     val estado: StateFlow<HigieneSonoUiState> = _estado.asStateFlow()
@@ -55,7 +54,7 @@ class HigieneSonoViewModel(
         tevePesadelos: Boolean,
         comentarioSonhos: String,
         onSucesso: () -> Unit,
-        onErro: (String) -> Unit
+        onErro: (String) -> Unit,
     ) {
         viewModelScope.launch {
             try {
@@ -67,7 +66,7 @@ class HigieneSonoViewModel(
                     disposicao = disposicao,
                     usouCelularAntesDeDormir = usouCelularAntesDeDormir,
                     tevePesadelos = tevePesadelos,
-                    comentarioSonhos = comentarioSonhos
+                    comentarioSonhos = comentarioSonhos,
                 )
                 carregar()
                 onSucesso()

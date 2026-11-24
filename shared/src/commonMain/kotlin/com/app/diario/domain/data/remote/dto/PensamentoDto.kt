@@ -11,7 +11,7 @@ data class PensamentoDto(
     @SerialName("situacao") val situacao: String,
     @SerialName("pensamentos_imagens") val pensamentosImagens: String,
     @SerialName("emocoes_sentimentos") val emocoesSentimentos: String,
-    @SerialName("comportamentos_reacoes") val comportamentosReacoes: String
+    @SerialName("comportamentos_reacoes") val comportamentosReacoes: String,
 )
 
 fun PensamentoDto.toDomain(): Pensamento {
@@ -21,6 +21,6 @@ fun PensamentoDto.toDomain(): Pensamento {
         situacao = situacao,
         pensamentosImagens = pensamentosImagens,
         emocoesSentimentos = emocoesSentimentos,
-        comportamentosReacoes = comportamentosReacoes
+        comportamentosReacoes = comportamentosReacoes,
     )
 }

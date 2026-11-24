@@ -14,7 +14,7 @@ import kotlinx.serialization.json.Json
 fun createHttpClient(
     engine: HttpClientEngine? = null,
     baseUrl: String = ApiConfig.supabaseUrl,
-    apiKey: String = ApiConfig.supabaseAnonKey
+    apiKey: String = ApiConfig.supabaseAnonKey,
 ): HttpClient {
     val block: HttpClientConfig<*>.() -> Unit = {
         expectSuccess = true
@@ -25,7 +25,7 @@ fun createHttpClient(
                     ignoreUnknownKeys = true
                     isLenient = true
                     prettyPrint = true
-                }
+                },
             )
         }
 

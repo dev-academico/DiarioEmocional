@@ -1,11 +1,11 @@
 package com.app.diario.domain.data.repository
 
-import com.app.diario.domain.model.Relato
 import com.app.diario.domain.data.remote.ApiConfig
 import com.app.diario.domain.data.remote.dto.CriarRelatoDto
 import com.app.diario.domain.data.remote.dto.RelatoDto
 import com.app.diario.domain.data.remote.dto.paraDominio
 import com.app.diario.domain.model.Falha
+import com.app.diario.domain.model.Relato
 import com.app.diario.domain.model.repository.RelatoRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -18,7 +18,7 @@ import kotlinx.serialization.SerializationException
 
 class RelatoRepositoryImpl(
     private val client: HttpClient,
-    private val baseUrl: String = ApiConfig.supabaseUrl
+    private val baseUrl: String = ApiConfig.supabaseUrl,
 ) : RelatoRepository {
     override suspend fun buscarRelatos(): List<Relato> {
         try {
@@ -34,16 +34,23 @@ class RelatoRepositoryImpl(
             throw Falha.SemConexao()
         }
     }
-    override suspend fun criarRelato(titulo: String, dataRegistro: String, conteudo: String): Relato {
+
+    override suspend fun criarRelato(
+        titulo: String,
+        dataRegistro: String,
+        conteudo: String,
+    ): Relato {
         try {
             return client
                 .post("$baseUrl/rest/v1/relatos") {
                     header("Prefer", "return=representation")
-                    setBody(CriarRelatoDto(
-                        titulo = titulo,
-                        dataRegistro = dataRegistro,
-                        conteudo = conteudo
-                    ))
+                    setBody(
+                        CriarRelatoDto(
+                            titulo = titulo,
+                            dataRegistro = dataRegistro,
+                            conteudo = conteudo,
+                        ),
+                    )
                 }
                 .body<List<RelatoDto>>()
                 .first()
@@ -56,5 +63,4 @@ class RelatoRepositoryImpl(
             throw Falha.SemConexao()
         }
     }
-
 }

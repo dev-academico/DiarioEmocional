@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-
 @Composable
 fun LayoutCarregando(entidade: String) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

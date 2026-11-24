@@ -35,7 +35,7 @@ fun HigieneSonoScreen(
                 onNovoClick = onNovoRegistroClick,
                 entidade = "registro de sono",
                 title = "Higiene do sono",
-                subtitle = "Como foi a sua noite de sono?"
+                subtitle = "Como foi a sua noite de sono?",
             )
         }
 

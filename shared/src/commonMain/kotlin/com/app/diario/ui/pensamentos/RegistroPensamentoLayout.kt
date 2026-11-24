@@ -25,7 +25,6 @@ import com.app.diario.ui.components.CardSistema
 import com.app.diario.ui.components.EstadoVazio
 import com.app.diario.ui.components.FloatingAdd
 import com.app.diario.ui.components.PensamentoIndividualComponent
-import com.app.diario.ui.mock.PensamentoMock
 
 @Composable
 fun PensamentoLayoutCelular(

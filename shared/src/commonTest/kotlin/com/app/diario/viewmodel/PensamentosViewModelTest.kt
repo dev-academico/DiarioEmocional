@@ -23,7 +23,7 @@ class RepositorioPensamentoFalso(
     var listar: suspend () -> List<Pensamento> = { emptyList() },
     var criar: suspend (String, String, String, String, String) -> Pensamento = { data, sit, pen, emo, comp ->
         Pensamento("1", data, sit, pen, emo, comp)
-    }
+    },
 ) : PensamentoRepository {
     override suspend fun buscarPensamento(): List<Pensamento> = listar()
 
@@ -32,13 +32,12 @@ class RepositorioPensamentoFalso(
         situacao: String,
         pensamentosImagens: String,
         emocoesSentimentos: String,
-        comportamentosReacoes: String
+        comportamentosReacoes: String,
     ): Pensamento = criar(dataRegistro, situacao, pensamentosImagens, emocoesSentimentos, comportamentosReacoes)
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PensamentosViewModelTest {
-
     private val testDispatcher = StandardTestDispatcher()
 
     @BeforeTest
@@ -52,57 +51,62 @@ class PensamentosViewModelTest {
     }
 
     @Test
-    fun carregarPassaPorCarregandoEChegaASucesso() = runTest(testDispatcher) {
-        val pensamentosEsperados = listOf(
-            Pensamento(
-                id = "1",
-                dataRegistro = "2026-11-21",
-                situacao = "Reunião de trabalho",
-                pensamentosImagens = "Vão achar ruim",
-                emocoesSentimentos = "Ansiedade",
-                comportamentosReacoes = "Fiquei em silêncio"
-            )
-        )
-        val repositorio = RepositorioPensamentoFalso(listar = { pensamentosEsperados })
+    fun carregarPassaPorCarregandoEChegaASucesso() =
+        runTest(testDispatcher) {
+            val pensamentosEsperados =
+                listOf(
+                    Pensamento(
+                        id = "1",
+                        dataRegistro = "2026-11-21",
+                        situacao = "Reunião de trabalho",
+                        pensamentosImagens = "Vão achar ruim",
+                        emocoesSentimentos = "Ansiedade",
+                        comportamentosReacoes = "Fiquei em silêncio",
+                    ),
+                )
+            val repositorio = RepositorioPensamentoFalso(listar = { pensamentosEsperados })
 
-        PensamentoViewModel(repositorio).estado.test {
-            // Primeiro estado emitido ao iniciar
-            assertEquals(EstadoTela.Carregando, awaitItem().tela)
+            PensamentoViewModel(repositorio).estado.test {
+                // Primeiro estado emitido ao iniciar
+                assertEquals(EstadoTela.Carregando, awaitItem().tela)
 
-            // Segundo estado com a lista retornada com sucesso
-            val sucesso = awaitItem().tela
-            assertIs<EstadoTela.Sucesso>(sucesso)
-            assertEquals(pensamentosEsperados, sucesso.pensamentos)
+                // Segundo estado com a lista retornada com sucesso
+                val sucesso = awaitItem().tela
+                assertIs<EstadoTela.Sucesso>(sucesso)
+                assertEquals(pensamentosEsperados, sucesso.pensamentos)
+            }
         }
-    }
 
     @Test
-    fun carregarSemDadosPassaPorCarregandoEChegaAVazio() = runTest(testDispatcher) {
-        val repositorio = RepositorioPensamentoFalso(listar = { emptyList() })
+    fun carregarSemDadosPassaPorCarregandoEChegaAVazio() =
+        runTest(testDispatcher) {
+            val repositorio = RepositorioPensamentoFalso(listar = { emptyList() })
 
-        PensamentoViewModel(repositorio).estado.test {
-            assertEquals(EstadoTela.Carregando, awaitItem().tela)
-            assertEquals(EstadoTela.Vazio, awaitItem().tela)
+            PensamentoViewModel(repositorio).estado.test {
+                assertEquals(EstadoTela.Carregando, awaitItem().tela)
+                assertEquals(EstadoTela.Vazio, awaitItem().tela)
+            }
         }
-    }
 
     @Test
-    fun carregarSemConexaoChegaAErro() = runTest(testDispatcher) {
-        val repositorio = RepositorioPensamentoFalso(listar = { throw Falha.SemConexao() })
+    fun carregarSemConexaoChegaAErro() =
+        runTest(testDispatcher) {
+            val repositorio = RepositorioPensamentoFalso(listar = { throw Falha.SemConexao() })
 
-        PensamentoViewModel(repositorio).estado.test {
-            assertEquals(EstadoTela.Carregando, awaitItem().tela)
-            assertIs<EstadoTela.Erro>(awaitItem().tela)
+            PensamentoViewModel(repositorio).estado.test {
+                assertEquals(EstadoTela.Carregando, awaitItem().tela)
+                assertIs<EstadoTela.Erro>(awaitItem().tela)
+            }
         }
-    }
 
     @Test
-    fun carregarComRespostaInvalidaChegaAErro() = runTest(testDispatcher) {
-        val repositorio = RepositorioPensamentoFalso(listar = { throw Falha.RespostaInvalida("500") })
+    fun carregarComRespostaInvalidaChegaAErro() =
+        runTest(testDispatcher) {
+            val repositorio = RepositorioPensamentoFalso(listar = { throw Falha.RespostaInvalida("500") })
 
-        PensamentoViewModel(repositorio).estado.test {
-            assertEquals(EstadoTela.Carregando, awaitItem().tela)
-            assertIs<EstadoTela.Erro>(awaitItem().tela)
+            PensamentoViewModel(repositorio).estado.test {
+                assertEquals(EstadoTela.Carregando, awaitItem().tela)
+                assertIs<EstadoTela.Erro>(awaitItem().tela)
+            }
         }
-    }
 }
