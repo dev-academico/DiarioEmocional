@@ -1,29 +1,19 @@
 package com.app.diario.ui.avaliacao
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowSizeClass
 import com.app.diario.domain.model.Avaliacao
+import com.app.diario.ui.components.LayoutCarregando
+import com.app.diario.ui.components.LayoutError
+import com.app.diario.ui.components.LayoutVazio
 
 @Composable
 fun AvaliacaoSentimentoScreen(
@@ -35,29 +25,27 @@ fun AvaliacaoSentimentoScreen(
     val estado by viewModel.estado.collectAsStateWithLifecycle()
     var avaliacaoSelecionada by remember { mutableStateOf<Avaliacao?>(null) }
 
-    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-    val isCompact =
-        !windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
-
     when (val tela = estado.tela) {
         EstadoAvaliacaoTela.Carregando -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    CircularProgressIndicator()
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("Carregando avaliações...")
-                }
-            }
+            LayoutCarregando("avaliações")
         }
 
         EstadoAvaliacaoTela.Vazio -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Nenhuma avaliação registrada ainda.")
-            }
+            LayoutVazio(
+                onVoltar = onVoltar,
+                onNovoClick = onNovaAvaliacaoClick,
+                entidade = "registro de avaliação",
+                title = "Avaliação sentimento",
+                subtitle = "Como está se sentindo hoje?",
+            )
         }
 
         is EstadoAvaliacaoTela.Sucesso -> {
             val avaliacoes = tela.avaliacoes
+            val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+            val isCompact =
+                !windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
+
             if (isCompact) {
                 AvaliacaoLayoutCelular(
                     avaliacoes = avaliacoes,
@@ -77,17 +65,7 @@ fun AvaliacaoSentimentoScreen(
         }
 
         is EstadoAvaliacaoTela.Erro -> {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Text(tela.mensagem, color = MaterialTheme.colorScheme.error)
-                Spacer(modifier = Modifier.height(8.dp))
-                Button(onClick = { viewModel.carregar() }) {
-                    Text("Tentar de novo")
-                }
-            }
+            LayoutError(onClick = { viewModel.carregar() }, mensagem = tela.mensagem)
         }
     }
 }
