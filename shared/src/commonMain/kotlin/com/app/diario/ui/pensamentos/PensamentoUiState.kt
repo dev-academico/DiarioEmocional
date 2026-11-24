@@ -1,14 +1,17 @@
 package com.app.diario.ui.pensamentos
 
-import com.app.diario.ui.mock.PensamentoMock
+import com.app.diario.domain.model.Pensamento
 
-sealed interface EstadoPensamentoTela {
-    data object Carregando : EstadoPensamentoTela
-    data object Vazio : EstadoPensamentoTela
-    data class Sucesso(val pensamentos: List<PensamentoMock>) : EstadoPensamentoTela
-    data class Erro(val mensagem: String) : EstadoPensamentoTela
+sealed interface EstadoTela {
+    data object Carregando : EstadoTela
+
+    data object Vazio : EstadoTela
+
+    data class Sucesso(val pensamentos: List<Pensamento>) : EstadoTela
+
+    data class Erro(val mensagem: String) : EstadoTela
 }
 
 data class PensamentoUiState(
-    val tela: EstadoPensamentoTela = EstadoPensamentoTela.Carregando,
+    val tela: EstadoTela = EstadoTela.Carregando,
 )

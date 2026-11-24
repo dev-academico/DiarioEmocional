@@ -7,20 +7,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.diario.ui.components.Cabecalho
 import com.app.diario.ui.components.PensamentoIndividualComponent
-import com.app.diario.ui.mock.pensamentosDisfuncionaisMock
 
 @Composable
 fun RegistroPensamentoIndividualScreen(
-    dataRegistro: String,
+    viewModel: PensamentoViewModel = viewModel(),
+    id: String,
     onVoltar: () -> Unit,
 ) {
+    val estado by viewModel.estado.collectAsStateWithLifecycle()
     val pensamento =
-        pensamentosDisfuncionaisMock.find {
-            it.dataRegistro == dataRegistro
+        when (val tela = estado.tela) {
+            is EstadoTela.Sucesso -> tela.pensamentos.find { it.id == id }
+            else -> null
         }
 
     Column(

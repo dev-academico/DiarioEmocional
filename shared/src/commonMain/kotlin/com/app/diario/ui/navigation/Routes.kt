@@ -33,7 +33,7 @@ data class RelatoIndividualRoute(
 
 @Serializable
 data class PensamentoDisfuncionalIndividualRoute(
-    val dataRegistro: String,
+    val id: String,
 )
 
 @Serializable
@@ -44,7 +44,7 @@ data object AvaliacaoGraphRoute
 
 @Serializable
 data class AvaliacaoIndividualRoute(
-    val dataRegistro: String,
+    val id: String,
 )
 
 @Serializable
@@ -58,7 +58,7 @@ data object HigieneSonoGraphRoute
 
 @Serializable
 data class HigieneSonoIndividualRoute(
-    val dataRegistro: String,
+    val id: String,
 )
 
 @Serializable

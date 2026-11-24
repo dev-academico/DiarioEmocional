@@ -21,15 +21,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.app.diario.ui.mock.RegistroSonoMock
-import com.app.diario.ui.mock.registrosSonoMock
+import com.app.diario.domain.model.HigieneSono
 import com.app.diario.ui.util.calcularDuracaoFormatada
 import com.app.diario.ui.util.formatarData
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SonoCard(
-    registro: RegistroSonoMock,
+    registro: HigieneSono,
     selecionado: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -126,18 +125,30 @@ private fun TagInfo(texto: String) {
 @Preview(showBackground = true)
 @Composable
 private fun SonoCardPreview() {
+    val exemplo =
+        HigieneSono(
+            id = "1",
+            dataRegistro = "2026-10-15",
+            horarioDormiu = "23:30",
+            horarioAcordou = "06:45",
+            qualidade = com.app.diario.domain.model.QualidadeSono.REGULAR,
+            disposicao = com.app.diario.domain.model.DisposicaoAoAcordar.MEDIA,
+            usouCelularAntesDeDormir = true,
+            tevePesadelos = false,
+            comentarioSonhos = "Acordei algumas vezes durante a madrugada.",
+        )
     MaterialTheme {
         Column(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             SonoCard(
-                registro = registrosSonoMock[0],
+                registro = exemplo,
                 selecionado = false,
                 onClick = {},
             )
             SonoCard(
-                registro = registrosSonoMock[2],
+                registro = exemplo,
                 selecionado = true,
                 onClick = {},
             )
@@ -148,9 +159,21 @@ private fun SonoCardPreview() {
 @Preview(showBackground = true, widthDp = 450, heightDp = 500)
 @Composable
 private fun SonoPreviaPreview() {
+    val exemplo =
+        HigieneSono(
+            id = "1",
+            dataRegistro = "2026-10-15",
+            horarioDormiu = "23:30",
+            horarioAcordou = "06:45",
+            qualidade = com.app.diario.domain.model.QualidadeSono.REGULAR,
+            disposicao = com.app.diario.domain.model.DisposicaoAoAcordar.MEDIA,
+            usouCelularAntesDeDormir = true,
+            tevePesadelos = false,
+            comentarioSonhos = "Acordei algumas vezes durante a madrugada.",
+        )
     MaterialTheme {
         SonoPrevia(
-            registro = registrosSonoMock.first(),
+            registro = exemplo,
             modifier = Modifier.padding(16.dp),
         )
     }

@@ -52,10 +52,9 @@ fun CriarRelatoScreen(
     dataRegistro: String,
     onVoltar: () -> Unit,
     onSalvar: (String, String) -> Unit,
+    mensagemErroSalvar: String? = null,
 ) {
-    var formState by remember {
-        mutableStateOf(CriarRelatoFormState())
-    }
+    var formState by remember { mutableStateOf(CriarRelatoFormState()) }
 
     val valido = formularioRelatoValido(formState)
     val mensagemErro = mensagemErroFormulario(formState)
@@ -113,6 +112,14 @@ fun CriarRelatoScreen(
                 color = MaterialTheme.colorScheme.error,
             )
         }
+
+        if (mensagemErroSalvar != null) {
+            Text(
+                text = mensagemErroSalvar,
+                color = MaterialTheme.colorScheme.error,
+            )
+        }
+
         Button(
             onClick = {
                 onSalvar(formState.titulo, formState.conteudo)

@@ -64,6 +64,7 @@ fun CriarPensamentoDisfuncionalScreen(
     dataRegistro: String,
     onVoltar: () -> Unit,
     onSalvar: (String, String, String, String) -> Unit,
+    mensagemErroSalvar: String? = null,
 ) {
     var formState by remember {
         mutableStateOf(CriarPensamentoFormState())
@@ -149,6 +150,14 @@ fun CriarPensamentoDisfuncionalScreen(
             Text(
                 text = mensagemErro,
                 color = MaterialTheme.colorScheme.error,
+            )
+        }
+
+        if (mensagemErroSalvar != null) {
+            Text(
+                text = mensagemErroSalvar,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
 

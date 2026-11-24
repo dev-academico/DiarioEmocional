@@ -25,13 +25,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.app.diario.ui.mock.RegistroSonoMock
+import com.app.diario.domain.model.HigieneSono
 import com.app.diario.ui.util.calcularDuracaoFormatada
 import com.app.diario.ui.util.formatarData
 
 @Composable
 fun SonoPrevia(
-    registro: RegistroSonoMock?,
+    registro: HigieneSono?,
     modifier: Modifier = Modifier,
 ) {
     Card(

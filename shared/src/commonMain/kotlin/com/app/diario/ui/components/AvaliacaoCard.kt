@@ -1,6 +1,5 @@
 package com.app.diario.ui.components
 
-import com.app.diario.ui.mock.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,17 +19,18 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.app.diario.domain.model.Avaliacao
 import com.app.diario.ui.util.corIntensidade
 import com.app.diario.ui.util.formatarData
 import com.app.diario.ui.util.rotuloIntensidade
 
 @Composable
 fun AvaliacaoCard(
-    avaliacao: AvaliacaoMock,
+    avaliacao: Avaliacao,
     selecionada: Boolean,
     onClick: () -> Unit,
 ) {
-    val intensidade = avaliacao.intensity.toInt()
+    val intensidade = avaliacao.intensity
 
     Card(
         onClick = onClick,

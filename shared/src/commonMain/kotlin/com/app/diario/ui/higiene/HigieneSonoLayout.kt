@@ -1,6 +1,5 @@
 package com.app.diario.ui.higiene
 
-import com.app.diario.ui.components.EstadoVazio
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,16 +13,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.app.diario.domain.model.HigieneSono
 import com.app.diario.ui.components.Cabecalho
+import com.app.diario.ui.components.EstadoVazio
 import com.app.diario.ui.components.FloatingAdd
 import com.app.diario.ui.components.SonoCard
 import com.app.diario.ui.components.SonoPrevia
-import com.app.diario.ui.mock.RegistroSonoMock
 
 @Composable
 fun SonoLayoutCelular(
-    registros: List<RegistroSonoMock>,
-    onRegistroClick: (RegistroSonoMock) -> Unit,
+    registros: List<HigieneSono>,
+    onRegistroClick: (HigieneSono) -> Unit,
     onNovoRegistroClick: () -> Unit,
     onVoltar: () -> Unit,
 ) {
@@ -75,9 +75,9 @@ fun SonoLayoutCelular(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SonoLayoutLargo(
-    registros: List<RegistroSonoMock>,
-    registroSelecionado: RegistroSonoMock?,
-    onRegistroClick: (RegistroSonoMock) -> Unit,
+    registros: List<HigieneSono>,
+    registroSelecionado: HigieneSono?,
+    onRegistroClick: (HigieneSono) -> Unit,
     onNovoRegistroClick: () -> Unit,
     onVoltar: () -> Unit,
 ) {

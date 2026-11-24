@@ -12,17 +12,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.app.diario.domain.model.Avaliacao
 import com.app.diario.ui.components.AvaliacaoCard
 import com.app.diario.ui.components.AvaliacaoPrevia
 import com.app.diario.ui.components.Cabecalho
 import com.app.diario.ui.components.EstadoVazio
 import com.app.diario.ui.components.FloatingAdd
-import com.app.diario.ui.mock.AvaliacaoMock
 
 @Composable
 fun AvaliacaoLayoutCelular(
-    avaliacoes: List<AvaliacaoMock>,
-    onAvaliacaoClick: (AvaliacaoMock) -> Unit,
+    avaliacoes: List<Avaliacao>,
+    onAvaliacaoClick: (Avaliacao) -> Unit,
     onNovaAvaliacaoClick: () -> Unit,
     onVoltar: () -> Unit,
 ) {
@@ -67,9 +67,9 @@ fun AvaliacaoLayoutCelular(
 
 @Composable
 fun AvaliacaoLayoutLargo(
-    avaliacoes: List<AvaliacaoMock>,
-    avaliacaoSelecionada: AvaliacaoMock?,
-    onAvaliacaoClick: (AvaliacaoMock) -> Unit,
+    avaliacoes: List<Avaliacao>,
+    avaliacaoSelecionada: Avaliacao?,
+    onAvaliacaoClick: (Avaliacao) -> Unit,
     onNovaAvaliacaoClick: () -> Unit,
     onVoltar: () -> Unit,
 ) {

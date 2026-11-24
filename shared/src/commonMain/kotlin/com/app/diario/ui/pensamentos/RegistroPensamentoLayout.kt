@@ -19,19 +19,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.app.diario.domain.model.Pensamento
 import com.app.diario.ui.components.Cabecalho
 import com.app.diario.ui.components.CardSistema
 import com.app.diario.ui.components.EstadoVazio
 import com.app.diario.ui.components.FloatingAdd
 import com.app.diario.ui.components.PensamentoIndividualComponent
-import com.app.diario.ui.mock.PensamentoMock
 
 @Composable
 fun PensamentoLayoutCelular(
-    pensamentos: List<PensamentoMock>,
+    pensamentos: List<Pensamento>,
     modifier: Modifier = Modifier,
     onVoltar: () -> Unit,
-    onPensamentoClick: (PensamentoMock) -> Unit,
+    onPensamentoClick: (Pensamento) -> Unit,
     onNovoPensamentoClick: () -> Unit,
 ) {
     Scaffold(
@@ -83,9 +83,9 @@ fun PensamentoLayoutCelular(
 @Composable
 fun PensamentoLayoutLargo(
     modifier: Modifier = Modifier,
-    pensamentos: List<PensamentoMock>,
-    pensamentoSelecionado: PensamentoMock? = null,
-    onPensamentoClick: (PensamentoMock) -> Unit = {},
+    pensamentos: List<Pensamento>,
+    pensamentoSelecionado: Pensamento? = null,
+    onPensamentoClick: (Pensamento) -> Unit = {},
     onNovoPensamentoClick: () -> Unit,
     onVoltar: () -> Unit,
 ) {

@@ -2,29 +2,31 @@ package com.app.diario.ui.avaliacao
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.diario.ui.mock.AvaliacaoMock
-import com.app.diario.ui.mock.avaliacaoMock
-import kotlinx.coroutines.delay
+import com.app.diario.domain.data.remote.createHttpClient
+import com.app.diario.domain.data.repository.AvaliacaoRepositoryImpl
+import com.app.diario.domain.model.Falha
+import com.app.diario.domain.model.repository.AvaliacaoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AvaliacaoViewModel : ViewModel() {
+class AvaliacaoViewModel(
+    private val repository: AvaliacaoRepository = AvaliacaoRepositoryImpl(createHttpClient()),
+) : ViewModel() {
     private val _estado = MutableStateFlow(AvaliacaoUiState())
     val estado: StateFlow<AvaliacaoUiState> = _estado.asStateFlow()
 
     init {
-        carregarAvaliacoes()
+        carregar()
     }
 
-    fun carregarAvaliacoes() {
+    fun carregar() {
         _estado.update { it.copy(tela = EstadoAvaliacaoTela.Carregando) }
         viewModelScope.launch {
             try {
-                delay(500)
-                val lista = avaliacaoMock
+                val lista = repository.buscarAvaliacoes()
                 val novaTela =
                     if (lista.isEmpty()) {
                         EstadoAvaliacaoTela.Vazio
@@ -32,17 +34,37 @@ class AvaliacaoViewModel : ViewModel() {
                         EstadoAvaliacaoTela.Sucesso(lista)
                     }
                 _estado.update { it.copy(tela = novaTela) }
-            } catch (e: Exception) {
-                _estado.update { it.copy(tela = EstadoAvaliacaoTela.Erro("Não foi possível carregar as avaliações.")) }
+            } catch (e: Falha.SemConexao) {
+                _estado.update { it.copy(tela = EstadoAvaliacaoTela.Erro(e.message ?: "")) }
+            } catch (e: Falha.RespostaInvalida) {
+                _estado.update { it.copy(tela = EstadoAvaliacaoTela.Erro(e.message ?: "")) }
             }
         }
     }
 
-    fun adicionarAvaliacao(avaliacao: AvaliacaoMock) {
-        val atual = _estado.value.tela
-        if (atual is EstadoAvaliacaoTela.Sucesso) {
-            val novaLista = atual.avaliacoes + avaliacao
-            _estado.update { it.copy(tela = EstadoAvaliacaoTela.Sucesso(novaLista)) }
+    fun salvar(
+        dataRegistro: String,
+        intensidade: Int,
+        descricao: String,
+        gatilhos: List<String>,
+        onSucesso: () -> Unit,
+        onErro: (String) -> Unit,
+    ) {
+        viewModelScope.launch {
+            try {
+                repository.criarAvaliacao(
+                    dataRegistro = dataRegistro,
+                    intensidade = intensidade,
+                    descricao = descricao,
+                    gatilhos = gatilhos,
+                )
+                carregar()
+                onSucesso()
+            } catch (e: Falha.SemConexao) {
+                onErro("${e.message}")
+            } catch (e: Falha.RespostaInvalida) {
+                onErro("${e.message}")
+            }
         }
     }
 }
