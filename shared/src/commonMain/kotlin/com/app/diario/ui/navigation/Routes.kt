@@ -44,7 +44,7 @@ data object AvaliacaoGraphRoute
 
 @Serializable
 data class AvaliacaoIndividualRoute(
-    val dataRegistro: String,
+    val id: String,
 )
 
 @Serializable

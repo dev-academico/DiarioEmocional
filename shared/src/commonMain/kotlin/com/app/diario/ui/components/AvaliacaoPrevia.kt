@@ -1,6 +1,6 @@
 package com.app.diario.ui.components
 
-import com.app.diario.ui.mock.*
+import com.app.diario.domain.model.Avaliacao
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,7 +35,7 @@ import com.app.diario.ui.util.rotuloIntensidade
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AvaliacaoPrevia(
-    avaliacao: AvaliacaoMock?,
+    avaliacao: Avaliacao?,
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -54,7 +54,7 @@ fun AvaliacaoPrevia(
             return@Surface
         }
 
-        val intensidade = avaliacao.intensity.toInt()
+        val intensidade = avaliacao.intensity
         val cor = corIntensidade(intensidade)
 
         Column(

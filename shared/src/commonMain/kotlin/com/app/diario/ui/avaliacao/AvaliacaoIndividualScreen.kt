@@ -15,18 +15,40 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.app.diario.domain.model.Avaliacao
 import com.app.diario.ui.components.AvaliacaoPrevia
-import com.app.diario.ui.mock.AvaliacaoMock
+
+@Composable
+fun AvaliacaoIndividualScreen(
+    viewModel: AvaliacaoViewModel = viewModel { AvaliacaoViewModel() },
+    id: String,
+    onVoltar: () -> Unit,
+) {
+    val estado by viewModel.estado.collectAsStateWithLifecycle()
+    val avaliacao =
+        when (val tela = estado.tela) {
+            is EstadoAvaliacaoTela.Sucesso -> tela.avaliacoes.find { it.id == id }
+            else -> null
+        }
+
+    AvaliacaoIndividualContent(
+        avaliacao = avaliacao,
+        onVoltar = onVoltar,
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AvaliacaoIndividualScreen(
-    avaliacao: AvaliacaoMock?,
+fun AvaliacaoIndividualContent(
+    avaliacao: Avaliacao?,
     onVoltar: () -> Unit,
 ) {
     Scaffold(
@@ -81,8 +103,16 @@ fun AvaliacaoIndividualScreen(
 @Preview(showBackground = true)
 @Composable
 fun AvaliacaoIndividualScreenPreview() {
-    AvaliacaoIndividualScreen(
-        avaliacao = null,
+    val exemplo =
+        Avaliacao(
+            id = "1",
+            dataRegistro = "2026-10-15",
+            intensity = 8,
+            descricao = "Dia produtivo, mas com ansiedade antes da reunião.",
+            gatilhos = listOf("Trabalho", "Prazo apertado"),
+        )
+    AvaliacaoIndividualContent(
+        avaliacao = exemplo,
         onVoltar = {},
     )
 }
@@ -90,7 +120,7 @@ fun AvaliacaoIndividualScreenPreview() {
 @Preview(showBackground = true)
 @Composable
 fun AvaliacaoIndividualScreenNotFoundPreview() {
-    AvaliacaoIndividualScreen(
+    AvaliacaoIndividualContent(
         avaliacao = null,
         onVoltar = {},
     )

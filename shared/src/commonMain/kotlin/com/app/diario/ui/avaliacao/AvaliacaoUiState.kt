@@ -1,11 +1,11 @@
 package com.app.diario.ui.avaliacao
 
-import com.app.diario.ui.mock.AvaliacaoMock
+import com.app.diario.domain.model.Avaliacao
 
 sealed interface EstadoAvaliacaoTela {
     data object Carregando : EstadoAvaliacaoTela
     data object Vazio : EstadoAvaliacaoTela
-    data class Sucesso(val avaliacoes: List<AvaliacaoMock>) : EstadoAvaliacaoTela
+    data class Sucesso(val avaliacoes: List<Avaliacao>) : EstadoAvaliacaoTela
     data class Erro(val mensagem: String) : EstadoAvaliacaoTela
 }
 

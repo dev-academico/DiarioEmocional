@@ -1,6 +1,5 @@
 package com.app.diario.ui.avaliacao
 
-import com.app.diario.ui.mock.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,16 +23,17 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowSizeClass
+import com.app.diario.domain.model.Avaliacao
 
 @Composable
 fun AvaliacaoSentimentoScreen(
     viewModel: AvaliacaoViewModel = viewModel { AvaliacaoViewModel() },
-    onAvaliacaoIndividual: (AvaliacaoMock) -> Unit,
+    onAvaliacaoIndividual: (Avaliacao) -> Unit,
     onNovaAvaliacaoClick: () -> Unit,
     onVoltar: () -> Unit,
 ) {
     val estado by viewModel.estado.collectAsStateWithLifecycle()
-    var avaliacaoSelecionada by remember { mutableStateOf<AvaliacaoMock?>(null) }
+    var avaliacaoSelecionada by remember { mutableStateOf<Avaliacao?>(null) }
 
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val isCompact =
@@ -84,7 +84,7 @@ fun AvaliacaoSentimentoScreen(
             ) {
                 Text(tela.mensagem, color = MaterialTheme.colorScheme.error)
                 Spacer(modifier = Modifier.height(8.dp))
-                Button(onClick = { viewModel.carregarAvaliacoes() }) {
+                Button(onClick = { viewModel.carregar() }) {
                     Text("Tentar de novo")
                 }
             }

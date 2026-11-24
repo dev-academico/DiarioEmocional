@@ -103,6 +103,7 @@ fun CriarAvaliacaoScreen(
     dataRegistro: String,
     onVoltar: () -> Unit,
     onSalvar: (Int, String, List<String>) -> Unit,
+    mensagemErroSalvar: String? = null,
 ) {
     var formState by remember {
         mutableStateOf(CriarAvaliacaoFormState())
@@ -285,6 +286,13 @@ fun CriarAvaliacaoScreen(
         if (mensagemErro != null) {
             Text(
                 text = mensagemErro,
+                color = MaterialTheme.colorScheme.error,
+            )
+        }
+
+        if (mensagemErroSalvar != null) {
+            Text(
+                text = mensagemErroSalvar,
                 color = MaterialTheme.colorScheme.error,
             )
         }

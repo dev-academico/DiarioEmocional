@@ -17,6 +17,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
@@ -25,7 +26,9 @@ import androidx.navigation.toRoute
 import com.app.diario.ui.HomeScreen
 import com.app.diario.ui.avaliacao.AvaliacaoIndividualScreen
 import com.app.diario.ui.avaliacao.AvaliacaoSentimentoScreen
+import com.app.diario.ui.avaliacao.AvaliacaoViewModel
 import com.app.diario.ui.avaliacao.CriarAvaliacaoScreen
+import com.app.diario.ui.avaliacao.EstadoAvaliacaoTela
 import com.app.diario.ui.higiene.CriarSonoScreen
 import com.app.diario.ui.higiene.HigieneSonoIndividualScreen
 import com.app.diario.ui.higiene.HigieneSonoScreen
@@ -173,26 +176,51 @@ fun AppNavigation() {
 
             // grafo das avaliações
             navigation<AvaliacaoGraphRoute>(startDestination = AvaliacaoRoute) {
-                composable<AvaliacaoRoute> {
+                composable<AvaliacaoRoute> { backStackEntry ->
+                    val parentEntry = remember(backStackEntry) {
+                        navController.getBackStackEntry<AvaliacaoGraphRoute>()
+                    }
+                    val viewModel: AvaliacaoViewModel =
+                        viewModel(parentEntry) { AvaliacaoViewModel() }
+
                     AvaliacaoSentimentoScreen(
+                        viewModel = viewModel,
                         onAvaliacaoIndividual = {
-                            navController.navigate(AvaliacaoIndividualRoute(it.dataRegistro))
+                            navController.navigate(AvaliacaoIndividualRoute(id = it.id))
                         },
                         onNovaAvaliacaoClick = { navController.navigate(CriarAvaliacaoSentimento) },
                         onVoltar = { navController.popBackStack() },
                     )
                 }
 
-                composable<CriarAvaliacaoSentimento> {
+                composable<CriarAvaliacaoSentimento> { backStackEntry ->
+                    val parentEntry = remember(backStackEntry) {
+                        navController.getBackStackEntry<AvaliacaoGraphRoute>()
+                    }
+                    val viewModel: AvaliacaoViewModel =
+                        viewModel(parentEntry) { AvaliacaoViewModel() }
+                    val hoje = Clock.System.todayIn(TimeZone.currentSystemDefault()).toString()
+                    var mensagemErroSalvar by remember { mutableStateOf<String?>(null) }
+
                     CriarAvaliacaoScreen(
-                        dataRegistro = java.text.SimpleDateFormat(
-                            "yyyy-MM-dd'T'HH:mm:ss'Z'",
-                            java.util.Locale.US
-                        )
-                            .apply { timeZone = java.util.TimeZone.getTimeZone("UTC") }
-                            .format(java.util.Date()),
+                        dataRegistro = hoje,
+                        mensagemErroSalvar = mensagemErroSalvar,
                         onVoltar = { navController.popBackStack() },
-                        onSalvar = { _, _, _ -> navController.popBackStack() },
+                        onSalvar = { intensidade, descricao, gatilhos ->
+                            mensagemErroSalvar = null
+                            viewModel.salvar(
+                                dataRegistro = hoje,
+                                intensidade = intensidade,
+                                descricao = descricao,
+                                gatilhos = gatilhos,
+                                onSucesso = {
+                                    navController.popBackStack()
+                                },
+                                onErro = { erro ->
+                                    mensagemErroSalvar = erro
+                                },
+                            )
+                        },
                     )
                 }
 
@@ -204,11 +232,16 @@ fun AppNavigation() {
                             ),
                         ),
                 ) { backStackEntry ->
+                    val parentEntry = remember(backStackEntry) {
+                        navController.getBackStackEntry<AvaliacaoGraphRoute>()
+                    }
+                    val viewModel: AvaliacaoViewModel =
+                        viewModel(parentEntry) { AvaliacaoViewModel() }
                     val route = backStackEntry.toRoute<AvaliacaoIndividualRoute>()
-                    val avaliacao = avaliacaoMock.find { it.dataRegistro == route.dataRegistro }
 
                     AvaliacaoIndividualScreen(
-                        avaliacao = avaliacao,
+                        viewModel = viewModel,
+                        id = route.id,
                         onVoltar = { navController.popBackStack() },
                     )
                 }
