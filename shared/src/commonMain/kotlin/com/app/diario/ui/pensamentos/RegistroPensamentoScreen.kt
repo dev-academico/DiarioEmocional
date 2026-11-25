@@ -49,6 +49,8 @@ fun RegistroPensamentoScreen(
             if (isCompact) {
                 PensamentoLayoutCelular(
                     pensamentos = pensamentos,
+                    doCache = tela.doCache,
+                    onTentarNovamente = { viewModel.carregar() },
                     onPensamentoClick = onPensamentoIndividual,
                     onVoltar = onVoltar,
                     onNovoPensamentoClick = onNovoPensamentoClick,
@@ -56,6 +58,8 @@ fun RegistroPensamentoScreen(
             } else {
                 PensamentoLayoutLargo(
                     pensamentos = pensamentos,
+                    doCache = tela.doCache,
+                    onTentarNovamente = { viewModel.carregar() },
                     pensamentoSelecionado = pensamentoSelecionado,
                     onPensamentoClick = { pensamentoSelecionado = it },
                     onVoltar = onVoltar,

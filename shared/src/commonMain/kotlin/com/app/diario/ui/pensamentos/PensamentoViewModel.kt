@@ -26,12 +26,15 @@ class PensamentoViewModel(
         _estado.update { it.copy(tela = EstadoTela.Carregando) }
         viewModelScope.launch {
             try {
-                val pensamentos = repository.buscarPensamento()
+                val listagem = repository.buscarPensamento()
                 val tela =
-                    if (pensamentos.isEmpty()) {
+                    if (listagem.itens.isEmpty()) {
                         EstadoTela.Vazio
                     } else {
-                        EstadoTela.Sucesso(pensamentos)
+                        EstadoTela.Sucesso(
+                            pensamentos = listagem.itens,
+                            doCache = listagem.doCache,
+                        )
                     }
                 _estado.update { it.copy(tela = tela) }
             } catch (e: Falha.SemConexao) {
