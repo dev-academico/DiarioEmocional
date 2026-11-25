@@ -1,8 +1,11 @@
 package com.app.diario.domain.repository
 
+import com.app.diario.domain.data.local.CacheDePensamentos
+import com.app.diario.domain.data.local.PensamentoRepositoryComCache
 import com.app.diario.domain.data.remote.createHttpClient
 import com.app.diario.domain.data.repository.PensamentoRepositoryImpl
 import com.app.diario.domain.model.Falha
+import com.app.diario.domain.model.Pensamento
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpHeaders
@@ -14,6 +17,17 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class PensamentoRepositoryTest {
+    private fun cacheEmMemoria(inicial: List<Pensamento>? = null) =
+        object : CacheDePensamentos {
+            var dados: List<Pensamento>? = inicial
+
+            override suspend fun salvar(pensamentos: List<Pensamento>) {
+                dados = pensamentos
+            }
+
+            override suspend fun ler(): List<Pensamento>? = dados
+        }
+
     @Test
     fun testeBuscarPensamentos() =
         runTest {
@@ -47,10 +61,11 @@ class PensamentoRepositoryTest {
             val client = createHttpClient(engine = mockEngine)
             val repository = PensamentoRepositoryImpl(client = client)
 
-            val pensamentos = repository.buscarPensamento()
+            val listagem = repository.buscarPensamento()
 
-            assertEquals(1, pensamentos.size)
-            val primeiro = pensamentos.first()
+            assertEquals(false, listagem.doCache)
+            assertEquals(1, listagem.itens.size)
+            val primeiro = listagem.itens.first()
 
             assertEquals("1", primeiro.id)
             assertEquals("Apresentação de trabalho da faculdade", primeiro.situacao)
@@ -121,10 +136,9 @@ class PensamentoRepositoryTest {
             val repository = PensamentoRepositoryImpl(client = client)
 
             // testar expectSuccess = true do ktor
-            val falha =
-                assertFailsWith<Falha.RespostaInvalida> {
-                    repository.buscarPensamento()
-                }
+            assertFailsWith<Falha.RespostaInvalida> {
+                repository.buscarPensamento()
+            }
         }
 
     @Test
@@ -142,10 +156,9 @@ class PensamentoRepositoryTest {
             val repository = PensamentoRepositoryImpl(client = client)
 
             // testar expectSuccess = true do ktor
-            val falha =
-                assertFailsWith<Falha.RespostaInvalida> {
-                    repository.buscarPensamento()
-                }
+            assertFailsWith<Falha.RespostaInvalida> {
+                repository.buscarPensamento()
+            }
         }
 
     @Test
@@ -159,6 +172,58 @@ class PensamentoRepositoryTest {
 
             val client = createHttpClient(engine = mockEngine)
             val repository = PensamentoRepositoryImpl(client = client)
+
+            assertFailsWith<Falha.SemConexao> {
+                repository.buscarPensamento()
+            }
+        }
+
+    @Test
+    fun testeComConexaoGuardaNoCache() =
+        runTest {
+            val jsonMock =
+                """[{"id":"1","data_registro":"2026-11-20","situacao":"Prova","pensamentos_imagens":"Vou errar","emocoes_sentimentos":"Ansiedade","comportamentos_reacoes":"Estudei mais"}]"""
+            val mockEngine =
+                MockEngine {
+                    respond(
+                        content = jsonMock,
+                        status = HttpStatusCode.OK,
+                        headers = headersOf(HttpHeaders.ContentType, "application/json"),
+                    )
+                }
+            val cache = cacheEmMemoria()
+            val repository = PensamentoRepositoryComCache(PensamentoRepositoryImpl(createHttpClient(mockEngine)), cache)
+
+            val listagem = repository.buscarPensamento()
+
+            assertEquals(false, listagem.doCache)
+            assertEquals(1, listagem.itens.size)
+            assertEquals(listagem.itens, cache.ler())
+        }
+
+    @Test
+    fun testeSemConexaoDevolveDoCache() =
+        runTest {
+            val salvos =
+                listOf(
+                    Pensamento("1", "2026-11-20", "Prova", "Vou errar", "Ansiedade", "Estudei mais"),
+                )
+            val mockEngine = MockEngine { throw Exception("Sem internet") }
+            val cache = cacheEmMemoria(inicial = salvos)
+            val repository = PensamentoRepositoryComCache(PensamentoRepositoryImpl(createHttpClient(mockEngine)), cache)
+
+            val listagem = repository.buscarPensamento()
+
+            assertEquals(true, listagem.doCache)
+            assertEquals(salvos, listagem.itens)
+        }
+
+    @Test
+    fun testeSemConexaoESemCacheLancaErro() =
+        runTest {
+            val mockEngine = MockEngine { throw Exception("Sem internet") }
+            val cache = cacheEmMemoria(inicial = null)
+            val repository = PensamentoRepositoryComCache(PensamentoRepositoryImpl(createHttpClient(mockEngine)), cache)
 
             assertFailsWith<Falha.SemConexao> {
                 repository.buscarPensamento()
