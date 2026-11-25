@@ -40,6 +40,8 @@ fun RelatosScreen(
             if (isCompact) {
                 RelatosLayoutCelular(
                     relatos = relatos,
+                    doCache = tela.doCache,
+                    onTentarNovamente = { viewModel.carregar() },
                     onRelatoClick = onRelatoIndividual,
                     onVoltar = onVoltar,
                     onNovoRelatoClick = onNovoRelatoClick,
@@ -47,6 +49,8 @@ fun RelatosScreen(
             } else {
                 RelatosLayoutLargo(
                     relatos = relatos,
+                    doCache = tela.doCache,
+                    onTentarNovamente = { viewModel.carregar() },
                     relatoSelecionado = relatoSelecionado,
                     onRelatoClick = { relatoSelecionado = it },
                     onVoltar = onVoltar,

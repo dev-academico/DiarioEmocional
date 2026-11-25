@@ -2,10 +2,12 @@ package com.app.diario.ui.relatos
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.app.diario.domain.model.Relato
+import com.app.diario.ui.components.BannerSemConexao
 import com.app.diario.ui.components.Cabecalho
 import com.app.diario.ui.components.CardSistema
 import com.app.diario.ui.components.EstadoVazio
@@ -30,6 +33,8 @@ import com.app.diario.ui.components.RelatoIndividualComponent
 fun RelatosLayoutCelular(
     relatos: List<Relato>,
     modifier: Modifier = Modifier,
+    doCache: Boolean = false,
+    onTentarNovamente: () -> Unit = {},
     onVoltar: () -> Unit,
     onRelatoClick: (Relato) -> Unit,
     onNovoRelatoClick: () -> Unit,
@@ -50,33 +55,44 @@ fun RelatosLayoutCelular(
             )
         },
     ) { padding ->
-        if (relatos.isEmpty()) {
-            EstadoVazio(
-                modifier = Modifier.padding(padding),
-                titulo = "Nenhum relato registrado ainda.",
-                inserirNovoComponente = "Toque em “Novo relato” para escrever o primeiro.",
-            )
-        } else {
-            LazyColumn(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(padding),
-                contentPadding =
-                    PaddingValues(
-                        start = 8.dp,
-                        end = 8.dp,
-                        top = 8.dp,
-                        bottom = 96.dp,
-                    ),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                items(relatos) { relato ->
-                    CardSistema(
-                        dataRegistro = relato.dataRegistro,
-                        titulo = relato.titulo,
-                        onClick = { onRelatoClick(relato) },
-                    )
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+        ) {
+            if (doCache) {
+                BannerSemConexao(onTentarNovamente = onTentarNovamente)
+            }
+
+            if (relatos.isEmpty()) {
+                EstadoVazio(
+                    modifier = Modifier.weight(1f),
+                    titulo = "Nenhum relato registrado ainda.",
+                    inserirNovoComponente = "Toque em “Novo relato” para escrever o primeiro.",
+                )
+            } else {
+                LazyColumn(
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                    contentPadding =
+                        PaddingValues(
+                            start = 8.dp,
+                            end = 8.dp,
+                            top = 8.dp,
+                            bottom = 96.dp,
+                        ),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    items(relatos) { relato ->
+                        CardSistema(
+                            dataRegistro = relato.dataRegistro,
+                            titulo = relato.titulo,
+                            onClick = { onRelatoClick(relato) },
+                        )
+                    }
                 }
             }
         }
@@ -86,6 +102,8 @@ fun RelatosLayoutCelular(
 @Composable
 fun RelatosLayoutLargo(
     modifier: Modifier = Modifier,
+    doCache: Boolean = false,
+    onTentarNovamente: () -> Unit = {},
     relatos: List<Relato>,
     relatoSelecionado: Relato? = null,
     onRelatoClick: (Relato) -> Unit = {},
@@ -108,75 +126,86 @@ fun RelatosLayoutLargo(
             )
         },
     ) { padding ->
-        Row(
+        Column(
             modifier =
                 Modifier
                     .fillMaxSize()
                     .padding(padding),
         ) {
-            // LADO ESQUERDO
-            if (relatos.isEmpty()) {
-                EstadoVazio(
-                    modifier = Modifier.weight(1f),
-                    titulo = "Nenhum relato registrado ainda.",
-                    inserirNovoComponente = "Toque em “Novo relato” para escrever o primeiro.",
-                )
-            } else {
-                LazyColumn(
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .fillMaxHeight(),
-                    contentPadding =
-                        PaddingValues(
-                            start = 16.dp,
-                            end = 8.dp,
-                            top = 8.dp,
-                            bottom = 96.dp,
-                        ),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    items(relatos) { relato ->
-                        CardSistema(
-                            dataRegistro = relato.dataRegistro,
-                            titulo = relato.titulo,
-                            onClick = { onRelatoClick(relato) },
-                        )
-                    }
-                }
+            if (doCache) {
+                BannerSemConexao(onTentarNovamente = onTentarNovamente)
             }
 
-            // LADO DIREITO
-            if (relatoSelecionado != null) {
-                RelatoIndividualComponent(
-                    dataRegistro = relatoSelecionado.dataRegistro,
-                    titulo = relatoSelecionado.titulo,
-                    conteudo = relatoSelecionado.conteudo,
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .padding(start = 8.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
-                )
-            } else {
-                Surface(
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
-                            .padding(start = 8.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
-                    shape = RoundedCornerShape(20.dp),
-                    color = MaterialTheme.colorScheme.surfaceContainer,
-                ) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxSize(),
+            Row(
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+            ) {
+                // LADO ESQUERDO
+                if (relatos.isEmpty()) {
+                    EstadoVazio(
+                        modifier = Modifier.weight(1f),
+                        titulo = "Nenhum relato registrado ainda.",
+                        inserirNovoComponente = "Toque em “Novo relato” para escrever o primeiro.",
+                    )
+                } else {
+                    LazyColumn(
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .fillMaxHeight(),
+                        contentPadding =
+                            PaddingValues(
+                                start = 16.dp,
+                                end = 8.dp,
+                                top = 8.dp,
+                                bottom = 96.dp,
+                            ),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        Text(
-                            text = if (relatos.isEmpty()) "Crie seu primeiro relato" else "Selecione um relato",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center,
-                        )
+                        items(relatos) { relato ->
+                            CardSistema(
+                                dataRegistro = relato.dataRegistro,
+                                titulo = relato.titulo,
+                                onClick = { onRelatoClick(relato) },
+                            )
+                        }
+                    }
+                }
+
+                // LADO DIREITO
+                if (relatoSelecionado != null) {
+                    RelatoIndividualComponent(
+                        dataRegistro = relatoSelecionado.dataRegistro,
+                        titulo = relatoSelecionado.titulo,
+                        conteudo = relatoSelecionado.conteudo,
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .padding(start = 8.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
+                    )
+                } else {
+                    Surface(
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                                .padding(start = 8.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
+                        shape = RoundedCornerShape(20.dp),
+                        color = MaterialTheme.colorScheme.surfaceContainer,
+                    ) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.fillMaxSize(),
+                        ) {
+                            Text(
+                                text = if (relatos.isEmpty()) "Crie seu primeiro relato" else "Selecione um relato",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
                     }
                 }
             }
