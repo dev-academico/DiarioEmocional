@@ -22,6 +22,20 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
+import com.app.diario.domain.data.local.AvaliacaoRepositoryComCache
+import com.app.diario.domain.data.local.CacheDataStoreFactory
+import com.app.diario.domain.data.local.DataStoreCacheDeAvaliacoes
+import com.app.diario.domain.data.local.DataStoreCacheDeHigieneSono
+import com.app.diario.domain.data.local.DataStoreCacheDePensamentos
+import com.app.diario.domain.data.local.DataStoreCacheDeRelatos
+import com.app.diario.domain.data.local.HigieneSonoRepositoryComCache
+import com.app.diario.domain.data.local.PensamentoRepositoryComCache
+import com.app.diario.domain.data.local.RelatoRepositoryComCache
+import com.app.diario.domain.data.remote.createHttpClient
+import com.app.diario.domain.data.repository.AvaliacaoRepositoryImpl
+import com.app.diario.domain.data.repository.HigieneSonoRepositoryImpl
+import com.app.diario.domain.data.repository.PensamentoRepositoryImpl
+import com.app.diario.domain.data.repository.RelatoRepositoryImpl
 import com.app.diario.ui.HomeScreen
 import com.app.diario.ui.avaliacao.AvaliacaoIndividualScreen
 import com.app.diario.ui.avaliacao.AvaliacaoSentimentoScreen
@@ -44,10 +58,41 @@ import kotlinx.datetime.todayIn
 import kotlin.time.Clock
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation(pastaDados: String = "") {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+
+    val httpClient = remember { createHttpClient() }
+    val dataStore = remember(pastaDados) { CacheDataStoreFactory.obter(pastaDados) }
+    val relatoRepository =
+        remember(dataStore) {
+            RelatoRepositoryComCache(
+                remoto = RelatoRepositoryImpl(httpClient),
+                cache = DataStoreCacheDeRelatos(dataStore),
+            )
+        }
+    val avaliacaoRepository =
+        remember(dataStore) {
+            AvaliacaoRepositoryComCache(
+                remoto = AvaliacaoRepositoryImpl(httpClient),
+                cache = DataStoreCacheDeAvaliacoes(dataStore),
+            )
+        }
+    val pensamentoRepository =
+        remember(dataStore) {
+            PensamentoRepositoryComCache(
+                remoto = PensamentoRepositoryImpl(httpClient),
+                cache = DataStoreCacheDePensamentos(dataStore),
+            )
+        }
+    val higieneSonoRepository =
+        remember(dataStore) {
+            HigieneSonoRepositoryComCache(
+                remoto = HigieneSonoRepositoryImpl(httpClient),
+                cache = DataStoreCacheDeHigieneSono(dataStore),
+            )
+        }
 
     Scaffold(
         bottomBar = {
@@ -106,7 +151,7 @@ fun AppNavigation() {
                         remember(backStackEntry) {
                             navController.getBackStackEntry<RelatosGraphRoute>()
                         }
-                    val viewModel: RelatosViewModel = viewModel(parentEntry) { RelatosViewModel() }
+                    val viewModel: RelatosViewModel = viewModel(parentEntry) { RelatosViewModel(relatoRepository) }
 
                     RelatosScreen(
                         viewModel = viewModel,
@@ -132,8 +177,16 @@ fun AppNavigation() {
                             ),
                         ),
                 ) { backStackEntry ->
+                    val parentEntry =
+                        remember(backStackEntry) {
+                            navController.getBackStackEntry<RelatosGraphRoute>()
+                        }
+                    val viewModel: RelatosViewModel =
+                        viewModel(parentEntry) { RelatosViewModel(relatoRepository) }
                     val rota = backStackEntry.toRoute<RelatoIndividualRoute>()
+
                     RelatoIndividualScreen(
+                        viewModel = viewModel,
                         dataRegistro = rota.dataRegistro,
                         onVoltar = {
                             navController.popBackStack()
@@ -146,7 +199,7 @@ fun AppNavigation() {
                         remember(backStackEntry) {
                             navController.getBackStackEntry<RelatosGraphRoute>()
                         }
-                    val viewModel: RelatosViewModel = viewModel(parentEntry) { RelatosViewModel() }
+                    val viewModel: RelatosViewModel = viewModel(parentEntry) { RelatosViewModel(relatoRepository) }
                     val hoje = Clock.System.todayIn(TimeZone.currentSystemDefault()).toString()
                     var mensagemErroSalvar by remember { mutableStateOf<String?>(null) }
 
@@ -182,7 +235,7 @@ fun AppNavigation() {
                             navController.getBackStackEntry<AvaliacaoGraphRoute>()
                         }
                     val viewModel: AvaliacaoViewModel =
-                        viewModel(parentEntry) { AvaliacaoViewModel() }
+                        viewModel(parentEntry) { AvaliacaoViewModel(avaliacaoRepository) }
 
                     AvaliacaoSentimentoScreen(
                         viewModel = viewModel,
@@ -200,7 +253,7 @@ fun AppNavigation() {
                             navController.getBackStackEntry<AvaliacaoGraphRoute>()
                         }
                     val viewModel: AvaliacaoViewModel =
-                        viewModel(parentEntry) { AvaliacaoViewModel() }
+                        viewModel(parentEntry) { AvaliacaoViewModel(avaliacaoRepository) }
                     val hoje = Clock.System.todayIn(TimeZone.currentSystemDefault()).toString()
                     var mensagemErroSalvar by remember { mutableStateOf<String?>(null) }
 
@@ -239,7 +292,7 @@ fun AppNavigation() {
                             navController.getBackStackEntry<AvaliacaoGraphRoute>()
                         }
                     val viewModel: AvaliacaoViewModel =
-                        viewModel(parentEntry) { AvaliacaoViewModel() }
+                        viewModel(parentEntry) { AvaliacaoViewModel(avaliacaoRepository) }
                     val route = backStackEntry.toRoute<AvaliacaoIndividualRoute>()
 
                     AvaliacaoIndividualScreen(
@@ -259,7 +312,7 @@ fun AppNavigation() {
                         }
 
                     val viewModel: PensamentoViewModel =
-                        viewModel(parentEntry) { PensamentoViewModel() }
+                        viewModel(parentEntry) { PensamentoViewModel(pensamentoRepository) }
 
                     RegistroPensamentoScreen(
                         viewModel = viewModel,
@@ -287,9 +340,16 @@ fun AppNavigation() {
                             ),
                         ),
                 ) { backStackEntry ->
+                    val parentEntry =
+                        remember(backStackEntry) {
+                            navController.getBackStackEntry<PensamentoGraphRoute>()
+                        }
+                    val viewModel: PensamentoViewModel =
+                        viewModel(parentEntry) { PensamentoViewModel(pensamentoRepository) }
                     val rota = backStackEntry.toRoute<PensamentoDisfuncionalIndividualRoute>()
 
                     RegistroPensamentoIndividualScreen(
+                        viewModel = viewModel,
                         id = rota.id,
                         onVoltar = {
                             navController.popBackStack()
@@ -304,7 +364,7 @@ fun AppNavigation() {
                         }
 
                     val viewModel: PensamentoViewModel =
-                        viewModel(parentEntry) { PensamentoViewModel() }
+                        viewModel(parentEntry) { PensamentoViewModel(pensamentoRepository) }
                     val hoje = Clock.System.todayIn(TimeZone.currentSystemDefault()).toString()
                     var mensagemErroSalvar by remember { mutableStateOf<String?>(null) }
 
@@ -345,7 +405,7 @@ fun AppNavigation() {
                             navController.getBackStackEntry<HigieneSonoGraphRoute>()
                         }
                     val viewModel: HigieneSonoViewModel =
-                        viewModel(parentEntry) { HigieneSonoViewModel() }
+                        viewModel(parentEntry) { HigieneSonoViewModel(higieneSonoRepository) }
 
                     HigieneSonoScreen(
                         viewModel = viewModel,
@@ -365,7 +425,7 @@ fun AppNavigation() {
                             navController.getBackStackEntry<HigieneSonoGraphRoute>()
                         }
                     val viewModel: HigieneSonoViewModel =
-                        viewModel(parentEntry) { HigieneSonoViewModel() }
+                        viewModel(parentEntry) { HigieneSonoViewModel(higieneSonoRepository) }
                     val hoje = Clock.System.todayIn(TimeZone.currentSystemDefault()).toString()
                     var mensagemErroSalvar by remember { mutableStateOf<String?>(null) }
 
@@ -408,7 +468,7 @@ fun AppNavigation() {
                             navController.getBackStackEntry<HigieneSonoGraphRoute>()
                         }
                     val viewModel: HigieneSonoViewModel =
-                        viewModel(parentEntry) { HigieneSonoViewModel() }
+                        viewModel(parentEntry) { HigieneSonoViewModel(higieneSonoRepository) }
                     val route = backStackEntry.toRoute<HigieneSonoIndividualRoute>()
 
                     HigieneSonoIndividualScreen(
