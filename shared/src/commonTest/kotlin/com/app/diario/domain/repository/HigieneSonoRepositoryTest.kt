@@ -1,9 +1,12 @@
 package com.app.diario.domain.repository
 
+import com.app.diario.domain.data.local.CacheDeHigieneSono
+import com.app.diario.domain.data.local.HigieneSonoRepositoryComCache
 import com.app.diario.domain.data.remote.createHttpClient
 import com.app.diario.domain.data.repository.HigieneSonoRepositoryImpl
 import com.app.diario.domain.model.DisposicaoAoAcordar
 import com.app.diario.domain.model.Falha
+import com.app.diario.domain.model.HigieneSono
 import com.app.diario.domain.model.QualidadeSono
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -17,6 +20,17 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 
 class HigieneSonoRepositoryTest {
+    private fun cacheEmMemoria(inicial: List<HigieneSono>? = null) =
+        object : CacheDeHigieneSono {
+            var dados: List<HigieneSono>? = inicial
+
+            override suspend fun salvar(registros: List<HigieneSono>) {
+                dados = registros
+            }
+
+            override suspend fun ler(): List<HigieneSono>? = dados
+        }
+
     @Test
     fun testeBuscarHigieneSono() =
         runTest {
@@ -53,10 +67,11 @@ class HigieneSonoRepositoryTest {
             val client = createHttpClient(engine = mockEngine)
             val repository = HigieneSonoRepositoryImpl(client = client)
 
-            val registros = repository.buscarHigieneSono()
+            val listagem = repository.buscarHigieneSono()
 
-            assertEquals(1, registros.size)
-            val primeiro = registros.first()
+            assertEquals(false, listagem.doCache)
+            assertEquals(1, listagem.itens.size)
+            val primeiro = listagem.itens.first()
             assertEquals("1", primeiro.id)
             assertEquals("2026-10-15", primeiro.dataRegistro)
             assertEquals("23:30", primeiro.horarioDormiu)
@@ -172,6 +187,68 @@ class HigieneSonoRepositoryTest {
 
             val client = createHttpClient(engine = mockEngine)
             val repository = HigieneSonoRepositoryImpl(client = client)
+
+            assertFailsWith<Falha.SemConexao> {
+                repository.buscarHigieneSono()
+            }
+        }
+
+    @Test
+    fun testeComConexaoGuardaNoCache() =
+        runTest {
+            val jsonMock =
+                """[{"id":"1","data_registro":"2026-10-15","horario_dormiu":"23:30","horario_acordou":"06:45","qualidade":"BOA","disposicao":"ALTA","usou_celular_antes_de_dormir":false,"teve_pesadelos":false,"comentario_sonhos":"Dormi bem"}]"""
+            val mockEngine =
+                MockEngine {
+                    respond(
+                        content = jsonMock,
+                        status = HttpStatusCode.OK,
+                        headers = headersOf(HttpHeaders.ContentType, "application/json"),
+                    )
+                }
+            val cache = cacheEmMemoria()
+            val repository = HigieneSonoRepositoryComCache(HigieneSonoRepositoryImpl(createHttpClient(mockEngine)), cache)
+
+            val listagem = repository.buscarHigieneSono()
+
+            assertEquals(false, listagem.doCache)
+            assertEquals(1, listagem.itens.size)
+            assertEquals(listagem.itens, cache.ler())
+        }
+
+    @Test
+    fun testeSemConexaoDevolveDoCache() =
+        runTest {
+            val salvos =
+                listOf(
+                    HigieneSono(
+                        id = "1",
+                        dataRegistro = "2026-10-15",
+                        horarioDormiu = "23:30",
+                        horarioAcordou = "06:45",
+                        qualidade = QualidadeSono.BOA,
+                        disposicao = DisposicaoAoAcordar.ALTA,
+                        usouCelularAntesDeDormir = false,
+                        tevePesadelos = false,
+                        comentarioSonhos = "Dormi bem",
+                    ),
+                )
+            val mockEngine = MockEngine { throw Exception("Sem internet") }
+            val cache = cacheEmMemoria(inicial = salvos)
+            val repository = HigieneSonoRepositoryComCache(HigieneSonoRepositoryImpl(createHttpClient(mockEngine)), cache)
+
+            val listagem = repository.buscarHigieneSono()
+
+            assertEquals(true, listagem.doCache)
+            assertEquals(salvos, listagem.itens)
+        }
+
+    @Test
+    fun testeSemConexaoESemCacheLancaErro() =
+        runTest {
+            val mockEngine = MockEngine { throw Exception("Sem internet") }
+            val cache = cacheEmMemoria(inicial = null)
+            val repository = HigieneSonoRepositoryComCache(HigieneSonoRepositoryImpl(createHttpClient(mockEngine)), cache)
 
             assertFailsWith<Falha.SemConexao> {
                 repository.buscarHigieneSono()

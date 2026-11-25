@@ -1,8 +1,11 @@
 package com.app.diario.domain.repository
 
+import com.app.diario.domain.data.local.CacheDeRelatos
+import com.app.diario.domain.data.local.RelatoRepositoryComCache
 import com.app.diario.domain.data.remote.createHttpClient
 import com.app.diario.domain.data.repository.RelatoRepositoryImpl
 import com.app.diario.domain.model.Falha
+import com.app.diario.domain.model.Relato
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpHeaders
@@ -15,6 +18,17 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 
 class RelatoRepositoryTest {
+    private fun cacheEmMemoria(inicial: List<Relato>? = null) =
+        object : CacheDeRelatos {
+            var dados: List<Relato>? = inicial
+
+            override suspend fun salvar(relatos: List<Relato>) {
+                dados = relatos
+            }
+
+            override suspend fun ler(): List<Relato>? = dados
+        }
+
     @Test
     fun testeBuscarRelatos() =
         runTest {
@@ -46,10 +60,11 @@ class RelatoRepositoryTest {
             val client = createHttpClient(engine = mockEngine)
             val repository = RelatoRepositoryImpl(client = client)
 
-            val relatos = repository.buscarRelatos()
+            val listagem = repository.buscarRelatos()
 
-            assertEquals(1, relatos.size)
-            val primeiro = relatos.first()
+            assertEquals(false, listagem.doCache)
+            assertEquals(1, listagem.itens.size)
+            val primeiro = listagem.itens.first()
             assertEquals("1", primeiro.id)
             assertEquals("Dia produtivo", primeiro.titulo)
             assertEquals("2026-11-19", primeiro.dataRegistro)
@@ -114,10 +129,9 @@ class RelatoRepositoryTest {
             val repository = RelatoRepositoryImpl(client = client)
 
             // testar expectSuccess = true do ktor
-            val falha =
-                assertFailsWith<Falha.RespostaInvalida> {
-                    repository.buscarRelatos()
-                }
+            assertFailsWith<Falha.RespostaInvalida> {
+                repository.buscarRelatos()
+            }
         }
 
     @Test
@@ -135,10 +149,9 @@ class RelatoRepositoryTest {
             val repository = RelatoRepositoryImpl(client = client)
 
             // testar expectSuccess = true do ktor
-            val falha =
-                assertFailsWith<Falha.RespostaInvalida> {
-                    repository.buscarRelatos()
-                }
+            assertFailsWith<Falha.RespostaInvalida> {
+                repository.buscarRelatos()
+            }
         }
 
     @Test
@@ -152,6 +165,55 @@ class RelatoRepositoryTest {
 
             val client = createHttpClient(engine = mockEngine)
             val repository = RelatoRepositoryImpl(client = client)
+
+            assertFailsWith<Falha.SemConexao> {
+                repository.buscarRelatos()
+            }
+        }
+
+    @Test
+    fun testeComConexaoGuardaNoCache() =
+        runTest {
+            val jsonMock =
+                """[{"id":"1","titulo":"Dia bom","data_registro":"2026-11-24","conteudo":"Tudo certo"}]"""
+            val mockEngine =
+                MockEngine {
+                    respond(
+                        content = jsonMock,
+                        status = HttpStatusCode.OK,
+                        headers = headersOf(HttpHeaders.ContentType, "application/json"),
+                    )
+                }
+            val cache = cacheEmMemoria()
+            val repository = RelatoRepositoryComCache(RelatoRepositoryImpl(createHttpClient(mockEngine)), cache)
+
+            val listagem = repository.buscarRelatos()
+
+            assertEquals(false, listagem.doCache)
+            assertEquals(1, listagem.itens.size)
+            assertEquals(listagem.itens, cache.ler())
+        }
+
+    @Test
+    fun testeSemConexaoDevolveDoCache() =
+        runTest {
+            val relatosSalvos = listOf(Relato("1", "Salvo", "2026-11-24", "Guardado offline"))
+            val mockEngine = MockEngine { throw Exception("Sem internet") }
+            val cache = cacheEmMemoria(inicial = relatosSalvos)
+            val repository = RelatoRepositoryComCache(RelatoRepositoryImpl(createHttpClient(mockEngine)), cache)
+
+            val listagem = repository.buscarRelatos()
+
+            assertEquals(true, listagem.doCache)
+            assertEquals(relatosSalvos, listagem.itens)
+        }
+
+    @Test
+    fun testeSemConexaoESemCacheLancaErro() =
+        runTest {
+            val mockEngine = MockEngine { throw Exception("Sem internet") }
+            val cache = cacheEmMemoria(inicial = null)
+            val repository = RelatoRepositoryComCache(RelatoRepositoryImpl(createHttpClient(mockEngine)), cache)
 
             assertFailsWith<Falha.SemConexao> {
                 repository.buscarRelatos()

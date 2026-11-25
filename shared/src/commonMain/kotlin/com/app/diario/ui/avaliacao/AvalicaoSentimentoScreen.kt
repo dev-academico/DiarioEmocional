@@ -49,6 +49,8 @@ fun AvaliacaoSentimentoScreen(
             if (isCompact) {
                 AvaliacaoLayoutCelular(
                     avaliacoes = avaliacoes,
+                    doCache = tela.doCache,
+                    onTentarNovamente = { viewModel.carregar() },
                     onAvaliacaoClick = onAvaliacaoIndividual,
                     onNovaAvaliacaoClick = onNovaAvaliacaoClick,
                     onVoltar = onVoltar,
@@ -56,6 +58,8 @@ fun AvaliacaoSentimentoScreen(
             } else {
                 AvaliacaoLayoutLargo(
                     avaliacoes = avaliacoes,
+                    doCache = tela.doCache,
+                    onTentarNovamente = { viewModel.carregar() },
                     avaliacaoSelecionada = avaliacaoSelecionada,
                     onAvaliacaoClick = { avaliacaoSelecionada = it },
                     onNovaAvaliacaoClick = onNovaAvaliacaoClick,

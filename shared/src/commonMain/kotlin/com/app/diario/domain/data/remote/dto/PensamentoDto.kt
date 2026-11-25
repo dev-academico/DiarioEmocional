@@ -24,3 +24,13 @@ fun PensamentoDto.toDomain(): Pensamento {
         comportamentosReacoes = comportamentosReacoes,
     )
 }
+
+fun Pensamento.paraDto(): PensamentoDto =
+    PensamentoDto(
+        id = id,
+        dataRegistro = dataRegistro,
+        situacao = situacao,
+        pensamentosImagens = pensamentosImagens,
+        emocoesSentimentos = emocoesSentimentos,
+        comportamentosReacoes = comportamentosReacoes,
+    )

@@ -20,3 +20,11 @@ fun RelatoDto.paraDominio(): Relato {
         conteudo = conteudo,
     )
 }
+
+fun Relato.paraDto(): RelatoDto =
+    RelatoDto(
+        id = id,
+        titulo = titulo,
+        dataRegistro = dataRegistro,
+        conteudo = conteudo,
+    )

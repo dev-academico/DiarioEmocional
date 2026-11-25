@@ -46,3 +46,16 @@ fun HigieneSonoDto.paraDominio(): HigieneSono {
         comentarioSonhos = comentarioSonhos,
     )
 }
+
+fun HigieneSono.paraDto(): HigieneSonoDto =
+    HigieneSonoDto(
+        id = id,
+        dataRegistro = dataRegistro,
+        horarioDormiu = horarioDormiu,
+        horarioAcordou = horarioAcordou,
+        qualidade = qualidade.name,
+        disposicao = disposicao.name,
+        usouCelularAntesDeDormir = usouCelularAntesDeDormir,
+        tevePesadelos = tevePesadelos,
+        comentarioSonhos = comentarioSonhos,
+    )

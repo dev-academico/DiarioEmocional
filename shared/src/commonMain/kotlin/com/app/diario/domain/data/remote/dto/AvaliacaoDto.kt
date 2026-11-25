@@ -22,3 +22,12 @@ fun AvaliacaoDto.paraDominio(): Avaliacao {
         gatilhos = gatilhos,
     )
 }
+
+fun Avaliacao.paraDto(): AvaliacaoDto =
+    AvaliacaoDto(
+        id = id,
+        dataRegistro = dataRegistro,
+        intensidade = intensity,
+        descricao = descricao,
+        gatilhos = gatilhos,
+    )

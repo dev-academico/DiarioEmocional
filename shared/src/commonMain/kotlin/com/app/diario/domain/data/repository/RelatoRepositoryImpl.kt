@@ -5,6 +5,7 @@ import com.app.diario.domain.data.remote.dto.CriarRelatoDto
 import com.app.diario.domain.data.remote.dto.RelatoDto
 import com.app.diario.domain.data.remote.dto.paraDominio
 import com.app.diario.domain.model.Falha
+import com.app.diario.domain.model.Listagem
 import com.app.diario.domain.model.Relato
 import com.app.diario.domain.model.repository.RelatoRepository
 import io.ktor.client.HttpClient
@@ -20,12 +21,14 @@ class RelatoRepositoryImpl(
     private val client: HttpClient,
     private val baseUrl: String = ApiConfig.supabaseUrl,
 ) : RelatoRepository {
-    override suspend fun buscarRelatos(): List<Relato> {
+    override suspend fun buscarRelatos(): Listagem<Relato> {
         try {
-            return client
-                .get("$baseUrl/rest/v1/relatos?select=*")
-                .body<List<RelatoDto>>()
-                .map { it.paraDominio() }
+            val relatos =
+                client
+                    .get("$baseUrl/rest/v1/relatos?select=*")
+                    .body<List<RelatoDto>>()
+                    .map { it.paraDominio() }
+            return Listagem(relatos, doCache = false)
         } catch (e: ResponseException) {
             throw Falha.RespostaInvalida(e.response.status.value.toString())
         } catch (e: SerializationException) {

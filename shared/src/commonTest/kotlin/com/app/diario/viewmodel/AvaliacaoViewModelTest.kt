@@ -3,6 +3,7 @@ package com.app.diario.viewmodel
 import app.cash.turbine.test
 import com.app.diario.domain.model.Avaliacao
 import com.app.diario.domain.model.Falha
+import com.app.diario.domain.model.Listagem
 import com.app.diario.domain.model.repository.AvaliacaoRepository
 import com.app.diario.ui.avaliacao.AvaliacaoViewModel
 import com.app.diario.ui.avaliacao.EstadoAvaliacaoTela
@@ -19,12 +20,12 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 class RepositorioAvaliacaoFalso(
-    var listar: suspend () -> List<Avaliacao> = { emptyList() },
+    var listar: suspend () -> Listagem<Avaliacao> = { Listagem(emptyList()) },
     var criar: suspend (String, Int, String, List<String>) -> Avaliacao = { data, intensidade, descricao, gatilhos ->
         Avaliacao("1", data, intensidade, descricao, gatilhos)
     },
 ) : AvaliacaoRepository {
-    override suspend fun buscarAvaliacoes(): List<Avaliacao> = listar()
+    override suspend fun buscarAvaliacoes(): Listagem<Avaliacao> = listar()
 
     override suspend fun criarAvaliacao(
         dataRegistro: String,
@@ -61,7 +62,7 @@ class AvaliacaoViewModelTest {
                         gatilhos = listOf("Trabalho"),
                     ),
                 )
-            val repositorio = RepositorioAvaliacaoFalso(listar = { avaliacoesEsperadas })
+            val repositorio = RepositorioAvaliacaoFalso(listar = { Listagem(avaliacoesEsperadas) })
 
             AvaliacaoViewModel(repositorio).estado.test {
                 assertEquals(EstadoAvaliacaoTela.Carregando, awaitItem().tela)
@@ -69,13 +70,14 @@ class AvaliacaoViewModelTest {
                 val sucesso = awaitItem().tela
                 assertIs<EstadoAvaliacaoTela.Sucesso>(sucesso)
                 assertEquals(avaliacoesEsperadas, sucesso.avaliacoes)
+                assertEquals(false, sucesso.doCache)
             }
         }
 
     @Test
     fun carregarSemDadosPassaPorCarregandoEChegaAVazio() =
         runTest(testDispatcher) {
-            val repositorio = RepositorioAvaliacaoFalso(listar = { emptyList() })
+            val repositorio = RepositorioAvaliacaoFalso(listar = { Listagem(emptyList()) })
 
             AvaliacaoViewModel(repositorio).estado.test {
                 assertEquals(EstadoAvaliacaoTela.Carregando, awaitItem().tela)
@@ -102,6 +104,31 @@ class AvaliacaoViewModelTest {
             AvaliacaoViewModel(repositorio).estado.test {
                 assertEquals(EstadoAvaliacaoTela.Carregando, awaitItem().tela)
                 assertIs<EstadoAvaliacaoTela.Erro>(awaitItem().tela)
+            }
+        }
+
+    @Test
+    fun carregarDoCacheMarcaSucessoComoDoCache() =
+        runTest(testDispatcher) {
+            val avaliacoesEsperadas =
+                listOf(
+                    Avaliacao(
+                        id = "1",
+                        dataRegistro = "2026-11-24",
+                        intensity = 7,
+                        descricao = "Dia calmo",
+                        gatilhos = listOf("Trabalho"),
+                    ),
+                )
+            val repositorio = RepositorioAvaliacaoFalso(listar = { Listagem(avaliacoesEsperadas, doCache = true) })
+
+            AvaliacaoViewModel(repositorio).estado.test {
+                assertEquals(EstadoAvaliacaoTela.Carregando, awaitItem().tela)
+
+                val sucesso = awaitItem().tela
+                assertIs<EstadoAvaliacaoTela.Sucesso>(sucesso)
+                assertEquals(avaliacoesEsperadas, sucesso.avaliacoes)
+                assertEquals(true, sucesso.doCache)
             }
         }
 

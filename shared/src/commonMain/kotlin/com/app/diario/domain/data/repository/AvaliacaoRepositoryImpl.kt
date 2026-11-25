@@ -6,6 +6,7 @@ import com.app.diario.domain.data.remote.dto.CriarAvaliacaoDto
 import com.app.diario.domain.data.remote.dto.paraDominio
 import com.app.diario.domain.model.Avaliacao
 import com.app.diario.domain.model.Falha
+import com.app.diario.domain.model.Listagem
 import com.app.diario.domain.model.repository.AvaliacaoRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -20,12 +21,14 @@ class AvaliacaoRepositoryImpl(
     private val client: HttpClient,
     private val baseUrl: String = ApiConfig.supabaseUrl,
 ) : AvaliacaoRepository {
-    override suspend fun buscarAvaliacoes(): List<Avaliacao> {
+    override suspend fun buscarAvaliacoes(): Listagem<Avaliacao> {
         try {
-            return client
-                .get("$baseUrl/rest/v1/avaliacoes?select=*")
-                .body<List<AvaliacaoDto>>()
-                .map { it.paraDominio() }
+            val avaliacoes =
+                client
+                    .get("$baseUrl/rest/v1/avaliacoes?select=*")
+                    .body<List<AvaliacaoDto>>()
+                    .map { it.paraDominio() }
+            return Listagem(avaliacoes, doCache = false)
         } catch (e: ResponseException) {
             throw Falha.RespostaInvalida(e.response.status.value.toString())
         } catch (e: SerializationException) {

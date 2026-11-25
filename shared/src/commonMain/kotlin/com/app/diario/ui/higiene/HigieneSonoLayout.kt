@@ -1,10 +1,12 @@
 package com.app.diario.ui.higiene
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.app.diario.domain.model.HigieneSono
+import com.app.diario.ui.components.BannerSemConexao
 import com.app.diario.ui.components.Cabecalho
 import com.app.diario.ui.components.EstadoVazio
 import com.app.diario.ui.components.FloatingAdd
@@ -23,6 +26,8 @@ import com.app.diario.ui.components.SonoPrevia
 @Composable
 fun SonoLayoutCelular(
     registros: List<HigieneSono>,
+    doCache: Boolean = false,
+    onTentarNovamente: () -> Unit = {},
     onRegistroClick: (HigieneSono) -> Unit,
     onNovoRegistroClick: () -> Unit,
     onVoltar: () -> Unit,
@@ -37,33 +42,44 @@ fun SonoLayoutCelular(
         },
         floatingActionButton = { FloatingAdd(onClick = onNovoRegistroClick, "Novo registro") },
     ) { padding ->
-        if (registros.isEmpty()) {
-            EstadoVazio(
-                modifier = Modifier,
-                titulo = "Nenhum registro de sono ainda",
-                inserirNovoComponente = "Toque em “Novo registro” para anotar como foi a sua noite de sono",
-            )
-        } else {
-            LazyColumn(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(padding),
-                contentPadding =
-                    PaddingValues(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = 8.dp,
-                        bottom = 96.dp,
-                    ),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                items(registros) { registro ->
-                    SonoCard(
-                        registro = registro,
-                        selecionado = false,
-                        onClick = { onRegistroClick(registro) },
-                    )
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+        ) {
+            if (doCache) {
+                BannerSemConexao(onTentarNovamente = onTentarNovamente)
+            }
+
+            if (registros.isEmpty()) {
+                EstadoVazio(
+                    modifier = Modifier.weight(1f),
+                    titulo = "Nenhum registro de sono ainda",
+                    inserirNovoComponente = "Toque em “Novo registro” para anotar como foi a sua noite de sono",
+                )
+            } else {
+                LazyColumn(
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                    contentPadding =
+                        PaddingValues(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = 8.dp,
+                            bottom = 96.dp,
+                        ),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    items(registros) { registro ->
+                        SonoCard(
+                            registro = registro,
+                            selecionado = false,
+                            onClick = { onRegistroClick(registro) },
+                        )
+                    }
                 }
             }
         }
@@ -76,6 +92,8 @@ fun SonoLayoutCelular(
 @Composable
 fun SonoLayoutLargo(
     registros: List<HigieneSono>,
+    doCache: Boolean = false,
+    onTentarNovamente: () -> Unit = {},
     registroSelecionado: HigieneSono?,
     onRegistroClick: (HigieneSono) -> Unit,
     onNovoRegistroClick: () -> Unit,
@@ -91,50 +109,61 @@ fun SonoLayoutLargo(
         },
         floatingActionButton = { FloatingAdd(onClick = onNovoRegistroClick, "Novo registro") },
     ) { padding ->
-        Row(
+        Column(
             modifier =
                 Modifier
                     .fillMaxSize()
                     .padding(padding),
         ) {
-            if (registros.isEmpty()) {
-                EstadoVazio(
-                    modifier = Modifier,
-                    titulo = "Nenhum registro de sono ainda",
-                    inserirNovoComponente = "Toque em “Novo registro” para anotar como foi a sua noite de sono",
-                )
-            } else {
-                LazyColumn(
-                    modifier =
-                        Modifier
-                            .weight(0.45f)
-                            .fillMaxHeight(),
-                    contentPadding =
-                        PaddingValues(
-                            start = 16.dp,
-                            end = 8.dp,
-                            top = 8.dp,
-                            bottom = 96.dp,
-                        ),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    items(registros) { registro ->
-                        SonoCard(
-                            registro = registro,
-                            selecionado = registro == registroSelecionado,
-                            onClick = { onRegistroClick(registro) },
-                        )
-                    }
-                }
+            if (doCache) {
+                BannerSemConexao(onTentarNovamente = onTentarNovamente)
+            }
 
-                SonoPrevia(
-                    registro = registroSelecionado,
-                    modifier =
-                        Modifier
-                            .weight(0.55f)
-                            .fillMaxHeight()
-                            .padding(start = 8.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
-                )
+            Row(
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+            ) {
+                if (registros.isEmpty()) {
+                    EstadoVazio(
+                        modifier = Modifier.weight(1f),
+                        titulo = "Nenhum registro de sono ainda",
+                        inserirNovoComponente = "Toque em “Novo registro” para anotar como foi a sua noite de sono",
+                    )
+                } else {
+                    LazyColumn(
+                        modifier =
+                            Modifier
+                                .weight(0.45f)
+                                .fillMaxHeight(),
+                        contentPadding =
+                            PaddingValues(
+                                start = 16.dp,
+                                end = 8.dp,
+                                top = 8.dp,
+                                bottom = 96.dp,
+                            ),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        items(registros) { registro ->
+                            SonoCard(
+                                registro = registro,
+                                selecionado = registro == registroSelecionado,
+                                onClick = { onRegistroClick(registro) },
+                            )
+                        }
+                    }
+
+                    SonoPrevia(
+                        registro = registroSelecionado,
+                        modifier =
+                            Modifier
+                                .weight(0.55f)
+                                .fillMaxHeight()
+                                .padding(start = 8.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
+                    )
+                }
             }
         }
     }

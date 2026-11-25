@@ -26,12 +26,12 @@ class RelatosViewModel(
         viewModelScope.launch {
             _estado.update { it.copy(tela = EstadoTela.Carregando) }
             try {
-                val relatos = repository.buscarRelatos()
+                val listagem = repository.buscarRelatos()
                 val tela =
-                    if (relatos.isEmpty()) {
+                    if (listagem.itens.isEmpty()) {
                         EstadoTela.Vazio
                     } else {
-                        EstadoTela.Sucesso(relatos)
+                        EstadoTela.Sucesso(relatos = listagem.itens, doCache = listagem.doCache)
                     }
                 _estado.update { it.copy(tela = tela) }
             } catch (e: Falha.SemConexao) {

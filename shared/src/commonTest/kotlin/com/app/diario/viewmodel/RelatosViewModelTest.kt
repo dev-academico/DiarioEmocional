@@ -2,6 +2,7 @@ package com.app.diario.viewmodel
 
 import app.cash.turbine.test
 import com.app.diario.domain.model.Falha
+import com.app.diario.domain.model.Listagem
 import com.app.diario.domain.model.Relato
 import com.app.diario.domain.model.repository.RelatoRepository
 import com.app.diario.ui.relatos.EstadoTela
@@ -19,12 +20,12 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 class RepositorioFalso(
-    var listar: suspend () -> List<Relato> = { emptyList() },
+    var listar: suspend () -> Listagem<Relato> = { Listagem(emptyList()) },
     var criar: suspend (String, String, String) -> Relato = { titulo, data, conteudo ->
         Relato("1", titulo, data, conteudo)
     },
 ) : RelatoRepository {
-    override suspend fun buscarRelatos(): List<Relato> = listar()
+    override suspend fun buscarRelatos(): Listagem<Relato> = listar()
 
     override suspend fun criarRelato(
         titulo: String,
@@ -54,7 +55,7 @@ class RelatosViewModelTest {
                 listOf(
                     Relato(id = "1", titulo = "Dia produtivo", dataRegistro = "2026-11-21", conteudo = "Estudei bastante"),
                 )
-            val repositorio = RepositorioFalso(listar = { relatosEsperados })
+            val repositorio = RepositorioFalso(listar = { Listagem(relatosEsperados) })
 
             RelatosViewModel(repositorio).estado.test {
                 assertEquals(EstadoTela.Carregando, awaitItem().tela)
@@ -68,7 +69,7 @@ class RelatosViewModelTest {
     @Test
     fun carregarSemDadosPassaPorCarregandoEChegaAVazio() =
         runTest(testDispatcher) {
-            val repositorio = RepositorioFalso(listar = { emptyList() })
+            val repositorio = RepositorioFalso(listar = { Listagem(emptyList()) })
 
             RelatosViewModel(repositorio).estado.test {
                 assertEquals(EstadoTela.Carregando, awaitItem().tela)
@@ -95,6 +96,25 @@ class RelatosViewModelTest {
             RelatosViewModel(repositorio).estado.test {
                 assertEquals(EstadoTela.Carregando, awaitItem().tela)
                 assertIs<EstadoTela.Erro>(awaitItem().tela)
+            }
+        }
+
+    @Test
+    fun carregarDoCacheMarcaSucessoComoDoCache() =
+        runTest(testDispatcher) {
+            val relatosEsperados =
+                listOf(
+                    Relato(id = "1", titulo = "Dia produtivo", dataRegistro = "2026-11-21", conteudo = "Estudei bastante"),
+                )
+            val repositorio = RepositorioFalso(listar = { Listagem(relatosEsperados, doCache = true) })
+
+            RelatosViewModel(repositorio).estado.test {
+                assertEquals(EstadoTela.Carregando, awaitItem().tela)
+
+                val sucesso = awaitItem().tela
+                assertIs<EstadoTela.Sucesso>(sucesso)
+                assertEquals(relatosEsperados, sucesso.relatos)
+                assertEquals(true, sucesso.doCache)
             }
         }
 }

@@ -5,6 +5,7 @@ import com.app.diario.domain.data.remote.dto.CriarPensamentoDto
 import com.app.diario.domain.data.remote.dto.PensamentoDto
 import com.app.diario.domain.data.remote.dto.toDomain
 import com.app.diario.domain.model.Falha
+import com.app.diario.domain.model.Listagem
 import com.app.diario.domain.model.Pensamento
 import com.app.diario.domain.model.repository.PensamentoRepository
 import io.ktor.client.HttpClient
@@ -20,12 +21,12 @@ class PensamentoRepositoryImpl(
     private val client: HttpClient,
     private val baseUrl: String = ApiConfig.supabaseUrl,
 ) : PensamentoRepository {
-    override suspend fun buscarPensamento(): List<Pensamento> {
+    override suspend fun buscarPensamento(): Listagem<Pensamento> {
         return try {
             val response = client.get("$baseUrl/rest/v1/pensamentos?select=*")
             val dtos: List<PensamentoDto> = response.body()
 
-            dtos.map { it.toDomain() }
+            Listagem(dtos.map { it.toDomain() }, doCache = false)
         } catch (e: ResponseException) {
             throw Falha.RespostaInvalida(e.response.status.value.toString())
         } catch (e: SerializationException) {

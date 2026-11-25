@@ -7,7 +7,10 @@ sealed interface EstadoTela {
 
     data object Vazio : EstadoTela
 
-    data class Sucesso(val relatos: List<Relato>) : EstadoTela
+    data class Sucesso(
+        val relatos: List<Relato>,
+        val doCache: Boolean = false,
+    ) : EstadoTela
 
     data class Erro(val mensagem: String) : EstadoTela
 }

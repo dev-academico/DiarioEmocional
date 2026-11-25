@@ -28,12 +28,15 @@ class HigieneSonoViewModel(
         _estado.update { it.copy(tela = EstadoSonoTela.Carregando) }
         viewModelScope.launch {
             try {
-                val registros = repository.buscarHigieneSono()
+                val listagem = repository.buscarHigieneSono()
                 val novaTela =
-                    if (registros.isEmpty()) {
+                    if (listagem.itens.isEmpty()) {
                         EstadoSonoTela.Vazio
                     } else {
-                        EstadoSonoTela.Sucesso(registros)
+                        EstadoSonoTela.Sucesso(
+                            registros = listagem.itens,
+                            doCache = listagem.doCache,
+                        )
                     }
                 _estado.update { it.copy(tela = novaTela) }
             } catch (e: Falha.SemConexao) {

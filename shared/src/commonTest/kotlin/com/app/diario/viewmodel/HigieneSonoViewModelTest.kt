@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.app.diario.domain.model.DisposicaoAoAcordar
 import com.app.diario.domain.model.Falha
 import com.app.diario.domain.model.HigieneSono
+import com.app.diario.domain.model.Listagem
 import com.app.diario.domain.model.QualidadeSono
 import com.app.diario.domain.model.repository.HigieneSonoRepository
 import com.app.diario.ui.higiene.EstadoSonoTela
@@ -21,7 +22,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 class RepositorioHigieneSonoFalso(
-    var listar: suspend () -> List<HigieneSono> = { emptyList() },
+    var listar: suspend () -> Listagem<HigieneSono> = { Listagem(emptyList()) },
     var criar: suspend (
         String,
         String,
@@ -35,7 +36,7 @@ class RepositorioHigieneSonoFalso(
         HigieneSono("1", data, dormiu, acordou, qual, disp, cel, pes, com)
     },
 ) : HigieneSonoRepository {
-    override suspend fun buscarHigieneSono(): List<HigieneSono> = listar()
+    override suspend fun buscarHigieneSono(): Listagem<HigieneSono> = listar()
 
     override suspend fun criarHigieneSono(
         dataRegistro: String,
@@ -90,7 +91,7 @@ class HigieneSonoViewModelTest {
                         comentarioSonhos = "Dormi muito bem.",
                     ),
                 )
-            val repositorio = RepositorioHigieneSonoFalso(listar = { registrosEsperados })
+            val repositorio = RepositorioHigieneSonoFalso(listar = { Listagem(registrosEsperados) })
 
             HigieneSonoViewModel(repositorio).estado.test {
                 assertEquals(EstadoSonoTela.Carregando, awaitItem().tela)
@@ -98,13 +99,14 @@ class HigieneSonoViewModelTest {
                 val sucesso = awaitItem().tela
                 assertIs<EstadoSonoTela.Sucesso>(sucesso)
                 assertEquals(registrosEsperados, sucesso.registros)
+                assertEquals(false, sucesso.doCache)
             }
         }
 
     @Test
     fun carregarSemDadosPassaPorCarregandoEChegaAVazio() =
         runTest(testDispatcher) {
-            val repositorio = RepositorioHigieneSonoFalso(listar = { emptyList() })
+            val repositorio = RepositorioHigieneSonoFalso(listar = { Listagem(emptyList()) })
 
             HigieneSonoViewModel(repositorio).estado.test {
                 assertEquals(EstadoSonoTela.Carregando, awaitItem().tela)
@@ -131,6 +133,35 @@ class HigieneSonoViewModelTest {
             HigieneSonoViewModel(repositorio).estado.test {
                 assertEquals(EstadoSonoTela.Carregando, awaitItem().tela)
                 assertIs<EstadoSonoTela.Erro>(awaitItem().tela)
+            }
+        }
+
+    @Test
+    fun carregarDoCacheMarcaSucessoComoDoCache() =
+        runTest(testDispatcher) {
+            val registrosEsperados =
+                listOf(
+                    HigieneSono(
+                        id = "1",
+                        dataRegistro = "2026-10-15",
+                        horarioDormiu = "23:30",
+                        horarioAcordou = "06:45",
+                        qualidade = QualidadeSono.BOA,
+                        disposicao = DisposicaoAoAcordar.ALTA,
+                        usouCelularAntesDeDormir = false,
+                        tevePesadelos = false,
+                        comentarioSonhos = "Dormi muito bem.",
+                    ),
+                )
+            val repositorio = RepositorioHigieneSonoFalso(listar = { Listagem(registrosEsperados, doCache = true) })
+
+            HigieneSonoViewModel(repositorio).estado.test {
+                assertEquals(EstadoSonoTela.Carregando, awaitItem().tela)
+
+                val sucesso = awaitItem().tela
+                assertIs<EstadoSonoTela.Sucesso>(sucesso)
+                assertEquals(registrosEsperados, sucesso.registros)
+                assertEquals(true, sucesso.doCache)
             }
         }
 }

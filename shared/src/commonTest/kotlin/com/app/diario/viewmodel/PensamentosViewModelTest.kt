@@ -2,6 +2,7 @@ package com.app.diario.viewmodel
 
 import app.cash.turbine.test
 import com.app.diario.domain.model.Falha
+import com.app.diario.domain.model.Listagem
 import com.app.diario.domain.model.Pensamento
 import com.app.diario.domain.model.repository.PensamentoRepository
 import com.app.diario.ui.pensamentos.EstadoTela
@@ -20,12 +21,12 @@ import kotlin.test.assertIs
 
 // 1. Dublê específico para PensamentoRepository
 class RepositorioPensamentoFalso(
-    var listar: suspend () -> List<Pensamento> = { emptyList() },
+    var listar: suspend () -> Listagem<Pensamento> = { Listagem(emptyList()) },
     var criar: suspend (String, String, String, String, String) -> Pensamento = { data, sit, pen, emo, comp ->
         Pensamento("1", data, sit, pen, emo, comp)
     },
 ) : PensamentoRepository {
-    override suspend fun buscarPensamento(): List<Pensamento> = listar()
+    override suspend fun buscarPensamento(): Listagem<Pensamento> = listar()
 
     override suspend fun criarPensamento(
         dataRegistro: String,
@@ -64,7 +65,7 @@ class PensamentosViewModelTest {
                         comportamentosReacoes = "Fiquei em silêncio",
                     ),
                 )
-            val repositorio = RepositorioPensamentoFalso(listar = { pensamentosEsperados })
+            val repositorio = RepositorioPensamentoFalso(listar = { Listagem(pensamentosEsperados) })
 
             PensamentoViewModel(repositorio).estado.test {
                 // Primeiro estado emitido ao iniciar
@@ -74,13 +75,14 @@ class PensamentosViewModelTest {
                 val sucesso = awaitItem().tela
                 assertIs<EstadoTela.Sucesso>(sucesso)
                 assertEquals(pensamentosEsperados, sucesso.pensamentos)
+                assertEquals(false, sucesso.doCache)
             }
         }
 
     @Test
     fun carregarSemDadosPassaPorCarregandoEChegaAVazio() =
         runTest(testDispatcher) {
-            val repositorio = RepositorioPensamentoFalso(listar = { emptyList() })
+            val repositorio = RepositorioPensamentoFalso(listar = { Listagem(emptyList()) })
 
             PensamentoViewModel(repositorio).estado.test {
                 assertEquals(EstadoTela.Carregando, awaitItem().tela)
@@ -107,6 +109,32 @@ class PensamentosViewModelTest {
             PensamentoViewModel(repositorio).estado.test {
                 assertEquals(EstadoTela.Carregando, awaitItem().tela)
                 assertIs<EstadoTela.Erro>(awaitItem().tela)
+            }
+        }
+
+    @Test
+    fun carregarDoCacheMarcaSucessoComoDoCache() =
+        runTest(testDispatcher) {
+            val pensamentosEsperados =
+                listOf(
+                    Pensamento(
+                        id = "1",
+                        dataRegistro = "2026-11-21",
+                        situacao = "Reunião de trabalho",
+                        pensamentosImagens = "Vão achar ruim",
+                        emocoesSentimentos = "Ansiedade",
+                        comportamentosReacoes = "Fiquei em silêncio",
+                    ),
+                )
+            val repositorio = RepositorioPensamentoFalso(listar = { Listagem(pensamentosEsperados, doCache = true) })
+
+            PensamentoViewModel(repositorio).estado.test {
+                assertEquals(EstadoTela.Carregando, awaitItem().tela)
+
+                val sucesso = awaitItem().tela
+                assertIs<EstadoTela.Sucesso>(sucesso)
+                assertEquals(pensamentosEsperados, sucesso.pensamentos)
+                assertEquals(true, sucesso.doCache)
             }
         }
 }

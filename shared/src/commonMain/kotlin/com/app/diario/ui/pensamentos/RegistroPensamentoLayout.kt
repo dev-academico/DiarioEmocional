@@ -2,10 +2,12 @@ package com.app.diario.ui.pensamentos
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.app.diario.domain.model.Pensamento
+import com.app.diario.ui.components.BannerSemConexao
 import com.app.diario.ui.components.Cabecalho
 import com.app.diario.ui.components.CardSistema
 import com.app.diario.ui.components.EstadoVazio
@@ -30,6 +33,8 @@ import com.app.diario.ui.components.PensamentoIndividualComponent
 fun PensamentoLayoutCelular(
     pensamentos: List<Pensamento>,
     modifier: Modifier = Modifier,
+    doCache: Boolean = false,
+    onTentarNovamente: () -> Unit = {},
     onVoltar: () -> Unit,
     onPensamentoClick: (Pensamento) -> Unit,
     onNovoPensamentoClick: () -> Unit,
@@ -47,33 +52,44 @@ fun PensamentoLayoutCelular(
             FloatingAdd(onClick = onNovoPensamentoClick, title = "Novo pensamento")
         },
     ) { padding ->
-        if (pensamentos.isEmpty()) {
-            EstadoVazio(
-                modifier = Modifier,
-                titulo = "Nenhum registros de pensamentos disfuncionais ainda.",
-                inserirNovoComponente = "Toque em “Novo registro” para registrar um pensamento disfuncional",
-            )
-        } else {
-            LazyColumn(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(padding),
-                contentPadding =
-                    PaddingValues(
-                        start = 8.dp,
-                        end = 8.dp,
-                        top = 8.dp,
-                        bottom = 96.dp,
-                    ),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                items(pensamentos) { pensamento ->
-                    CardSistema(
-                        dataRegistro = pensamento.dataRegistro,
-                        titulo = pensamento.situacao,
-                        onClick = { onPensamentoClick(pensamento) },
-                    )
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+        ) {
+            if (doCache) {
+                BannerSemConexao(onTentarNovamente = onTentarNovamente)
+            }
+
+            if (pensamentos.isEmpty()) {
+                EstadoVazio(
+                    modifier = Modifier.weight(1f),
+                    titulo = "Nenhum registros de pensamentos disfuncionais ainda.",
+                    inserirNovoComponente = "Toque em “Novo registro” para registrar um pensamento disfuncional",
+                )
+            } else {
+                LazyColumn(
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                    contentPadding =
+                        PaddingValues(
+                            start = 8.dp,
+                            end = 8.dp,
+                            top = 8.dp,
+                            bottom = 96.dp,
+                        ),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    items(pensamentos) { pensamento ->
+                        CardSistema(
+                            dataRegistro = pensamento.dataRegistro,
+                            titulo = pensamento.situacao,
+                            onClick = { onPensamentoClick(pensamento) },
+                        )
+                    }
                 }
             }
         }
@@ -84,6 +100,8 @@ fun PensamentoLayoutCelular(
 fun PensamentoLayoutLargo(
     modifier: Modifier = Modifier,
     pensamentos: List<Pensamento>,
+    doCache: Boolean = false,
+    onTentarNovamente: () -> Unit = {},
     pensamentoSelecionado: Pensamento? = null,
     onPensamentoClick: (Pensamento) -> Unit = {},
     onNovoPensamentoClick: () -> Unit,
@@ -105,77 +123,88 @@ fun PensamentoLayoutLargo(
             )
         },
     ) { padding ->
-        Row(
+        Column(
             modifier =
                 Modifier
                     .fillMaxSize()
                     .padding(padding),
         ) {
-            // LADO ESQUERDO
-            if (pensamentos.isEmpty()) {
-                EstadoVazio(
-                    modifier = Modifier.weight(1f),
-                    titulo = "Nenhum registros de pensamentos disfuncionais ainda.",
-                    inserirNovoComponente = "Toque em “Novo registro” para registrar um pensamento disfuncional",
-                )
-            } else {
-                LazyColumn(
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .fillMaxHeight(),
-                    contentPadding =
-                        PaddingValues(
-                            start = 16.dp,
-                            end = 8.dp,
-                            top = 8.dp,
-                            bottom = 96.dp,
-                        ),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    items(pensamentos) { pensamento ->
-                        CardSistema(
-                            dataRegistro = pensamento.dataRegistro,
-                            titulo = pensamento.situacao,
-                            onClick = { onPensamentoClick(pensamento) },
-                        )
-                    }
-                }
+            if (doCache) {
+                BannerSemConexao(onTentarNovamente = onTentarNovamente)
             }
 
-            // LADO DIREITO
-            if (pensamentoSelecionado != null) {
-                PensamentoIndividualComponent(
-                    dataRegistro = pensamentoSelecionado.dataRegistro,
-                    situacao = pensamentoSelecionado.situacao,
-                    pensamentosImagens = pensamentoSelecionado.pensamentosImagens,
-                    emocoesSentimentos = pensamentoSelecionado.emocoesSentimentos,
-                    comportamentosReacoes = pensamentoSelecionado.comportamentosReacoes,
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .padding(start = 8.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
-                )
-            } else {
-                Surface(
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
-                            .padding(start = 8.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
-                    shape = RoundedCornerShape(20.dp),
-                    color = MaterialTheme.colorScheme.surfaceContainer,
-                ) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxSize(),
+            Row(
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+            ) {
+                // LADO ESQUERDO
+                if (pensamentos.isEmpty()) {
+                    EstadoVazio(
+                        modifier = Modifier.weight(1f),
+                        titulo = "Nenhum registros de pensamentos disfuncionais ainda.",
+                        inserirNovoComponente = "Toque em “Novo registro” para registrar um pensamento disfuncional",
+                    )
+                } else {
+                    LazyColumn(
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .fillMaxHeight(),
+                        contentPadding =
+                            PaddingValues(
+                                start = 16.dp,
+                                end = 8.dp,
+                                top = 8.dp,
+                                bottom = 96.dp,
+                            ),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        Text(
-                            text = if (pensamentos.isEmpty()) "Crie seu primeiro registro" else "Selecione um registro",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center,
-                        )
+                        items(pensamentos) { pensamento ->
+                            CardSistema(
+                                dataRegistro = pensamento.dataRegistro,
+                                titulo = pensamento.situacao,
+                                onClick = { onPensamentoClick(pensamento) },
+                            )
+                        }
+                    }
+                }
+
+                // LADO DIREITO
+                if (pensamentoSelecionado != null) {
+                    PensamentoIndividualComponent(
+                        dataRegistro = pensamentoSelecionado.dataRegistro,
+                        situacao = pensamentoSelecionado.situacao,
+                        pensamentosImagens = pensamentoSelecionado.pensamentosImagens,
+                        emocoesSentimentos = pensamentoSelecionado.emocoesSentimentos,
+                        comportamentosReacoes = pensamentoSelecionado.comportamentosReacoes,
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .padding(start = 8.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
+                    )
+                } else {
+                    Surface(
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                                .padding(start = 8.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
+                        shape = RoundedCornerShape(20.dp),
+                        color = MaterialTheme.colorScheme.surfaceContainer,
+                    ) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.fillMaxSize(),
+                        ) {
+                            Text(
+                                text = if (pensamentos.isEmpty()) "Crie seu primeiro registro" else "Selecione um registro",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
                     }
                 }
             }

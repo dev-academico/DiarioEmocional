@@ -1,9 +1,10 @@
 package com.app.diario.domain.model.repository
 
+import com.app.diario.domain.model.Listagem
 import com.app.diario.domain.model.Pensamento
 
 interface PensamentoRepository {
-    suspend fun buscarPensamento(): List<Pensamento>
+    suspend fun buscarPensamento(): Listagem<Pensamento>
 
     suspend fun criarPensamento(
         dataRegistro: String,

@@ -48,6 +48,8 @@ fun HigieneSonoScreen(
             if (isCompact) {
                 SonoLayoutCelular(
                     registros = registros,
+                    doCache = tela.doCache,
+                    onTentarNovamente = { viewModel.carregar() },
                     onRegistroClick = onRegistroIndividual,
                     onNovoRegistroClick = onNovoRegistroClick,
                     onVoltar = onVoltar,
@@ -55,6 +57,8 @@ fun HigieneSonoScreen(
             } else {
                 SonoLayoutLargo(
                     registros = registros,
+                    doCache = tela.doCache,
+                    onTentarNovamente = { viewModel.carregar() },
                     registroSelecionado = registroSelecionado,
                     onRegistroClick = { registroSelecionado = it },
                     onNovoRegistroClick = onNovoRegistroClick,

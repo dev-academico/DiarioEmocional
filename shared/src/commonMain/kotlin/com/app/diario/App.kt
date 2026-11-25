@@ -11,7 +11,10 @@ import com.app.diario.ui.theme.Theme
 @Suppress("ktlint:standard:function-naming")
 @Preview
 @Composable
-fun App(initialDeepLink: String? = null) {
+fun App(
+    pastaDados: String = "",
+    initialDeepLink: String? = null,
+) {
     var isDarkMode = isSystemInDarkTheme()
 
     // O componente Theme aplica automaticamente as cores claras ou escuras
@@ -20,7 +23,7 @@ fun App(initialDeepLink: String? = null) {
             color = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.onBackground,
         ) {
-            AppNavigation()
+            AppNavigation(pastaDados = pastaDados)
         }
     }
 }
