@@ -7,7 +7,10 @@ sealed interface EstadoSonoTela {
 
     data object Vazio : EstadoSonoTela
 
-    data class Sucesso(val registros: List<HigieneSono>) : EstadoSonoTela
+    data class Sucesso(
+        val registros: List<HigieneSono>,
+        val doCache: Boolean = false,
+    ) : EstadoSonoTela
 
     data class Erro(val mensagem: String) : EstadoSonoTela
 }

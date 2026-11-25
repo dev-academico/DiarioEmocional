@@ -7,6 +7,7 @@ import com.app.diario.domain.data.remote.dto.paraDominio
 import com.app.diario.domain.model.DisposicaoAoAcordar
 import com.app.diario.domain.model.Falha
 import com.app.diario.domain.model.HigieneSono
+import com.app.diario.domain.model.Listagem
 import com.app.diario.domain.model.QualidadeSono
 import com.app.diario.domain.model.repository.HigieneSonoRepository
 import io.ktor.client.HttpClient
@@ -22,12 +23,14 @@ class HigieneSonoRepositoryImpl(
     private val client: HttpClient,
     private val baseUrl: String = ApiConfig.supabaseUrl,
 ) : HigieneSonoRepository {
-    override suspend fun buscarHigieneSono(): List<HigieneSono> {
+    override suspend fun buscarHigieneSono(): Listagem<HigieneSono> {
         try {
-            return client
-                .get("$baseUrl/rest/v1/higiene_sono?select=*")
-                .body<List<HigieneSonoDto>>()
-                .map { it.paraDominio() }
+            val registros =
+                client
+                    .get("$baseUrl/rest/v1/higiene_sono?select=*")
+                    .body<List<HigieneSonoDto>>()
+                    .map { it.paraDominio() }
+            return Listagem(registros, doCache = false)
         } catch (e: ResponseException) {
             throw Falha.RespostaInvalida(e.response.status.value.toString())
         } catch (e: SerializationException) {
