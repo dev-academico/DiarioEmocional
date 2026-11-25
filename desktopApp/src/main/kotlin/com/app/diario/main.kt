@@ -8,6 +8,8 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         title = "Diario",
     ) {
-        App()
+        val pastaDados = "${System.getProperty("user.home")}/.diario-emocional"
+        java.io.File(pastaDados).mkdirs()
+        App(pastaDados = pastaDados)
     }
 }

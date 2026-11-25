@@ -19,9 +19,13 @@ navigation = "2.9.0"
 kotlinxDatetime = "0.7.1"
 ktor = "3.0.3"
 turbine = "1.2.1"
+datastore = "1.1.7"
+okio = "3.11.0"
 
 
 [libraries]
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore" }
+okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 compose-adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "composeAdaptive" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
