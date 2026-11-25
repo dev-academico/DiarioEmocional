@@ -26,12 +26,15 @@ class AvaliacaoViewModel(
         _estado.update { it.copy(tela = EstadoAvaliacaoTela.Carregando) }
         viewModelScope.launch {
             try {
-                val lista = repository.buscarAvaliacoes()
+                val listagem = repository.buscarAvaliacoes()
                 val novaTela =
-                    if (lista.isEmpty()) {
+                    if (listagem.itens.isEmpty()) {
                         EstadoAvaliacaoTela.Vazio
                     } else {
-                        EstadoAvaliacaoTela.Sucesso(lista)
+                        EstadoAvaliacaoTela.Sucesso(
+                            avaliacoes = listagem.itens,
+                            doCache = listagem.doCache,
+                        )
                     }
                 _estado.update { it.copy(tela = novaTela) }
             } catch (e: Falha.SemConexao) {
