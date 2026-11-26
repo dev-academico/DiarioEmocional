@@ -34,6 +34,7 @@ fun HomeScreen(
             text = "Diário Emocional",
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.semantics { heading() },
         )
         Text(
             text = "Registre seus dias e melhore sua saúde mental",
