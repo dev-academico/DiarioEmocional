@@ -1,4 +1,4 @@
-package com.app.diario.`interface`
+package com.app.diario.uitest
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
@@ -22,7 +22,6 @@ import kotlin.test.assertTrue
 
 @OptIn(ExperimentalTestApi::class, ExperimentalCoroutinesApi::class)
 class HomeUiTest {
-
     @BeforeTest
     fun trocarMain() = Dispatchers.setMain(UnconfinedTestDispatcher())
 
@@ -30,65 +29,69 @@ class HomeUiTest {
     fun restaurarMain() = Dispatchers.resetMain()
 
     @Test
-    fun home_exibe_tela_principal_e_cabecalho() = runComposeUiTest {
-        setContent {
-            HomeScreen(
-                onRelatosClick = {},
-                onPensamentosClick = {},
-                onAvaliacaoClick = {},
-                onHigieneClick = {},
-            )
+    fun home_exibe_tela_principal_e_cabecalho() =
+        runComposeUiTest {
+            setContent {
+                HomeScreen(
+                    onRelatosClick = {},
+                    onPensamentosClick = {},
+                    onAvaliacaoClick = {},
+                    onHigieneClick = {},
+                )
+            }
+
+            onNodeWithText("Diário Emocional").assertIsDisplayed()
+            onNodeWithText("Relatos").assertIsDisplayed()
+            onNodeWithText("Pensamentos disfuncionais").assertIsDisplayed()
+            onNodeWithText("Avaliação Sentimento").assertIsDisplayed()
+            onNodeWithText("Higiene do Sono").assertIsDisplayed()
+
+            assertEquals(1, onAllNodes(isHeading()).fetchSemanticsNodes().size)
         }
-
-        onNodeWithText("Diário Emocional").assertIsDisplayed()
-        onNodeWithText("Relatos").assertIsDisplayed()
-        onNodeWithText("Pensamentos disfuncionais").assertIsDisplayed()
-        onNodeWithText("Avaliação Sentimento").assertIsDisplayed()
-        onNodeWithText("Higiene do Sono").assertIsDisplayed()
-
-        assertEquals(1, onAllNodes(isHeading()).fetchSemanticsNodes().size)
-    }
 
     @Test
-    fun home_navega_para_relatos_ao_clicar_no_botao() = runComposeUiTest {
-        var navegou = false
-        setContent {
-            HomeScreen(
-                onRelatosClick = { navegou = true },
-                onPensamentosClick = {},
-                onAvaliacaoClick = {},
-                onHigieneClick = {},
-            )
-        }
+    fun home_navega_para_relatos_ao_clicar_no_botao() =
+        runComposeUiTest {
+            var navegou = false
+            setContent {
+                HomeScreen(
+                    onRelatosClick = { navegou = true },
+                    onPensamentosClick = {},
+                    onAvaliacaoClick = {},
+                    onHigieneClick = {},
+                )
+            }
 
-        onNodeWithText("Relatos").performClick()
-        assertTrue(navegou)
-    }
+            onNodeWithText("Relatos").performClick()
+            assertTrue(navegou)
+        }
 
     @Test
-    fun home_exibe_estado_vazio() = runComposeUiTest {
-        setContent {
-            EstadoVazio(
-                titulo = "Bem-vindo ao Diário",
-                inserirNovoComponente = "Selecione uma opção para começar",
-            )
-        }
+    fun home_exibe_estado_vazio() =
+        runComposeUiTest {
+            setContent {
+                EstadoVazio(
+                    titulo = "Bem-vindo ao Diário",
+                    inserirNovoComponente = "Selecione uma opção para começar",
+                )
+            }
 
-        onNodeWithText("Bem-vindo ao Diário").assertIsDisplayed()
-    }
+            onNodeWithText("Bem-vindo ao Diário").assertIsDisplayed()
+        }
 
     @Test
-    fun home_exibe_estado_de_erro() = runComposeUiTest {
-        var recarregou = false
-        setContent {
-            LayoutError(
-                onClick = { recarregou = true },
-                mensagem = "Erro ao carregar a tela inicial.",
-            )
-        }
+    fun home_exibe_estado_de_erro() =
+        runComposeUiTest {
+            var recarregou = false
+            setContent {
+                LayoutError(
+                    onClick = { recarregou = true },
+                    mensagem = "Erro ao carregar a tela inicial.",
+                )
+            }
 
-        onNodeWithText("Erro ao carregar a tela inicial.").assertIsDisplayed()
-        onNodeWithText("Tentar de novo").performClick()
-        assertTrue(recarregou)
-    }
+            onNodeWithText("Erro ao carregar a tela inicial.").assertIsDisplayed()
+            onNodeWithText("Tentar de novo").performClick()
+            assertTrue(recarregou)
+        }
 }
