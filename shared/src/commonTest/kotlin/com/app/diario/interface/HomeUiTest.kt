@@ -7,6 +7,8 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
 import com.app.diario.ui.HomeScreen
+import com.app.diario.ui.components.EstadoVazio
+import com.app.diario.ui.components.LayoutError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -28,7 +30,7 @@ class HomeUiTest {
     fun restaurarMain() = Dispatchers.resetMain()
 
     @Test
-    fun exibe_botoes_principais_e_cabecalho() = runComposeUiTest {
+    fun home_exibe_tela_principal_e_cabecalho() = runComposeUiTest {
         setContent {
             HomeScreen(
                 onRelatosClick = {},
@@ -48,7 +50,7 @@ class HomeUiTest {
     }
 
     @Test
-    fun navega_para_relatos_ao_clicar_no_botao() = runComposeUiTest {
+    fun home_navega_para_relatos_ao_clicar_no_botao() = runComposeUiTest {
         var navegou = false
         setContent {
             HomeScreen(
@@ -61,5 +63,32 @@ class HomeUiTest {
 
         onNodeWithText("Relatos").performClick()
         assertTrue(navegou)
+    }
+
+    @Test
+    fun home_exibe_estado_vazio() = runComposeUiTest {
+        setContent {
+            EstadoVazio(
+                titulo = "Bem-vindo ao Diário",
+                inserirNovoComponente = "Selecione uma opção para começar",
+            )
+        }
+
+        onNodeWithText("Bem-vindo ao Diário").assertIsDisplayed()
+    }
+
+    @Test
+    fun home_exibe_estado_de_erro() = runComposeUiTest {
+        var recarregou = false
+        setContent {
+            LayoutError(
+                onClick = { recarregou = true },
+                mensagem = "Erro ao carregar a tela inicial.",
+            )
+        }
+
+        onNodeWithText("Erro ao carregar a tela inicial.").assertIsDisplayed()
+        onNodeWithText("Tentar de novo").performClick()
+        assertTrue(recarregou)
     }
 }

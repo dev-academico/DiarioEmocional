@@ -12,8 +12,10 @@ import androidx.compose.ui.test.v2.runComposeUiTest
 import com.app.diario.domain.model.Listagem
 import com.app.diario.domain.model.Pensamento
 import com.app.diario.domain.model.repository.PensamentoRepository
+import com.app.diario.ui.components.EstadoVazio
 import com.app.diario.ui.components.LayoutError
 import com.app.diario.ui.pensamentos.CriarPensamentoDisfuncionalScreen
+import com.app.diario.ui.pensamentos.PensamentoLayoutCelular
 import com.app.diario.ui.pensamentos.PensamentoViewModel
 import com.app.diario.ui.pensamentos.RegistroPensamentoScreen
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +31,7 @@ import kotlin.test.assertTrue
 
 class FakePensamentoRepo(
     var pensamentos: List<Pensamento> = listOf(
-        Pensamento("1", "2026-11-25", "Situação", "Pensamento", "Emoção", "Reação")
+        Pensamento("1", "2026-11-25", "Situação de teste", "Pensamento", "Emoção", "Reação")
     ),
     var deveFalhar: Boolean = false,
 ) : PensamentoRepository {
@@ -57,28 +59,7 @@ class PensamentosUiTest {
     fun restaurarMain() = Dispatchers.resetMain()
 
     @Test
-    fun adiciona_pensamento_pelo_formulario() = runComposeUiTest {
-        var salvou = false
-        setContent {
-            CriarPensamentoDisfuncionalScreen(
-                dataRegistro = "2026-11-25",
-                onVoltar = {},
-                onSalvar = { _, _, _, _ -> salvou = true },
-            )
-        }
-
-        onNodeWithText("Salvar").assertIsNotEnabled()
-        onNodeWithText("Situação").performTextInput("Provas")
-        onNodeWithText("Pensamentos / imagens").performTextInput("Vou ir mal")
-        onNodeWithText("Emoções / sentimentos").performTextInput("Ansiedade")
-        onNodeWithText("Comportamentos / reações").performTextInput("Estudar mais")
-        onNodeWithText("Salvar").assertIsEnabled()
-        onNodeWithText("Salvar").performClick()
-        assertTrue(salvou)
-    }
-
-    @Test
-    fun exibe_lista_e_cabecalho() = runComposeUiTest {
+    fun pensamentos_exibe_tela_principal_e_cabecalho() = runComposeUiTest {
         val vm = PensamentoViewModel(FakePensamentoRepo())
         setContent {
             RegistroPensamentoScreen(
@@ -94,7 +75,69 @@ class PensamentosUiTest {
     }
 
     @Test
-    fun erro_mostra_mensagem_e_botao_de_tentar_de_novo() = runComposeUiTest {
+    fun pensamentos_formulario_invalido_mantem_botao_desabilitado() = runComposeUiTest {
+        setContent {
+            CriarPensamentoDisfuncionalScreen(
+                dataRegistro = "2026-11-25",
+                onVoltar = {},
+                onSalvar = { _, _, _, _ -> },
+            )
+        }
+
+        onNodeWithText("Salvar").assertIsNotEnabled()
+    }
+
+    @Test
+    fun pensamentos_formulario_valido_habilita_botao_salvar() = runComposeUiTest {
+        var salvou = false
+        setContent {
+            CriarPensamentoDisfuncionalScreen(
+                dataRegistro = "2026-11-25",
+                onVoltar = {},
+                onSalvar = { _, _, _, _ -> salvou = true },
+            )
+        }
+
+        onNodeWithText("Situação").performTextInput("Provas")
+        onNodeWithText("Pensamentos / imagens").performTextInput("Vou ir mal")
+        onNodeWithText("Emoções / sentimentos").performTextInput("Ansiedade")
+        onNodeWithText("Comportamentos / reações").performTextInput("Estudar mais")
+        onNodeWithText("Salvar").assertIsEnabled()
+        onNodeWithText("Salvar").performClick()
+        assertTrue(salvou)
+    }
+
+    @Test
+    fun pensamentos_navega_ao_clicar_no_item() = runComposeUiTest {
+        var selecionado = false
+        val pensamento = Pensamento("1", "2026-11-25", "Situação de teste", "Pensamento", "Emoção", "Reação")
+        setContent {
+            PensamentoLayoutCelular(
+                pensamentos = listOf(pensamento),
+                onPensamentoClick = { selecionado = true },
+                onVoltar = {},
+                onNovoPensamentoClick = {},
+            )
+        }
+
+        onNodeWithText("Situação de teste").performClick()
+        assertTrue(selecionado)
+    }
+
+    @Test
+    fun pensamentos_exibe_estado_vazio() = runComposeUiTest {
+        setContent {
+            EstadoVazio(
+                titulo = "Nenhum pensamento registrado",
+                inserirNovoComponente = "Adicione um novo pensamento",
+            )
+        }
+
+        onNodeWithText("Nenhum pensamento registrado").assertIsDisplayed()
+    }
+
+    @Test
+    fun pensamentos_exibe_estado_de_erro_e_recarrega() = runComposeUiTest {
         var recarregou = false
         setContent {
             LayoutError(

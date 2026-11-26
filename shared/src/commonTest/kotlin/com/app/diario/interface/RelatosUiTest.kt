@@ -15,6 +15,7 @@ import com.app.diario.domain.model.repository.RelatoRepository
 import com.app.diario.ui.components.EstadoVazio
 import com.app.diario.ui.components.LayoutError
 import com.app.diario.ui.relatos.CriarRelatoScreen
+import com.app.diario.ui.relatos.RelatosLayoutCelular
 import com.app.diario.ui.relatos.RelatosScreen
 import com.app.diario.ui.relatos.RelatosViewModel
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +30,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class FakeRelatoRepo(
-    var relatos: List<Relato> = emptyList(),
+    var relatos: List<Relato> = listOf(
+        Relato("1", "Dia bom", "2026-11-25", "Conteúdo do dia")
+    ),
     var deveFalhar: Boolean = false,
 ) : RelatoRepository {
     override suspend fun buscarRelatos(): Listagem<Relato> {
@@ -54,7 +57,36 @@ class RelatosUiTest {
     fun restaurarMain() = Dispatchers.resetMain()
 
     @Test
-    fun adiciona_relato_pelo_formulario() = runComposeUiTest {
+    fun relatos_exibe_tela_principal_e_cabecalho() = runComposeUiTest {
+        val vm = RelatosViewModel(FakeRelatoRepo())
+        setContent {
+            RelatosScreen(
+                viewModel = vm,
+                onRelatoIndividual = {},
+                onNovoRelatoClick = {},
+                onVoltar = {},
+            )
+        }
+        mainClock.advanceTimeBy(1000)
+        onNodeWithText("Relatos").assertIsDisplayed()
+        assertEquals(1, onAllNodes(isHeading()).fetchSemanticsNodes().size)
+    }
+
+    @Test
+    fun relatos_formulario_invalido_mantem_botao_desabilitado() = runComposeUiTest {
+        setContent {
+            CriarRelatoScreen(
+                dataRegistro = "2026-11-25",
+                onVoltar = {},
+                onSalvar = { _, _ -> },
+            )
+        }
+
+        onNodeWithText("Salvar").assertIsNotEnabled()
+    }
+
+    @Test
+    fun relatos_formulario_valido_habilita_botao_salvar() = runComposeUiTest {
         var salvou = false
         setContent {
             CriarRelatoScreen(
@@ -64,7 +96,6 @@ class RelatosUiTest {
             )
         }
 
-        onNodeWithText("Salvar").assertIsNotEnabled()
         onNodeWithText("Título").performTextInput("Escrever testes")
         onNodeWithText("Conteúdo").performTextInput("Conteúdo do relato")
         onNodeWithText("Salvar").assertIsEnabled()
@@ -73,27 +104,36 @@ class RelatosUiTest {
     }
 
     @Test
-    fun exibe_lista_e_cabecalho() = runComposeUiTest {
-        val repo = FakeRelatoRepo(
-            listOf(Relato("1", "Dia bom", "2026-11-25", "Conteúdo do dia"))
-        )
-        val vm = RelatosViewModel(repo)
-
+    fun relatos_navega_ao_clicar_no_item() = runComposeUiTest {
+        var selecionado = false
+        val relato = Relato("1", "Dia bom", "2026-11-25", "Conteúdo do dia")
         setContent {
-            RelatosScreen(
-                viewModel = vm,
-                onRelatoIndividual = {},
-                onNovoRelatoClick = {},
+            RelatosLayoutCelular(
+                relatos = listOf(relato),
+                onRelatoClick = { selecionado = true },
                 onVoltar = {},
+                onNovoRelatoClick = {},
             )
         }
 
-        onNodeWithText("Relatos").assertIsDisplayed()
-        assertEquals(1, onAllNodes(isHeading()).fetchSemanticsNodes().size)
+        onNodeWithText("Dia bom").performClick()
+        assertTrue(selecionado)
     }
 
     @Test
-    fun erro_mostra_mensagem_e_botao_de_tentar_de_novo() = runComposeUiTest {
+    fun relatos_exibe_estado_vazio() = runComposeUiTest {
+        setContent {
+            EstadoVazio(
+                titulo = "Nenhum relato ainda",
+                inserirNovoComponente = "Escreva o primeiro relato",
+            )
+        }
+
+        onNodeWithText("Nenhum relato ainda").assertIsDisplayed()
+    }
+
+    @Test
+    fun relatos_exibe_estado_de_erro_e_recarrega() = runComposeUiTest {
         var recarregou = false
         setContent {
             LayoutError(
@@ -105,17 +145,5 @@ class RelatosUiTest {
         onNodeWithText("Sem conexão com o servidor. Confira a rede e tente de novo.").assertIsDisplayed()
         onNodeWithText("Tentar de novo").performClick()
         assertTrue(recarregou)
-    }
-
-    @Test
-    fun lista_vazia_exibe_estado_vazio() = runComposeUiTest {
-        setContent {
-            EstadoVazio(
-                titulo = "Nenhum relato ainda",
-                inserirNovoComponente = "Escreva o primeiro relato",
-            )
-        }
-
-        onNodeWithText("Nenhum relato ainda").assertIsDisplayed()
     }
 }

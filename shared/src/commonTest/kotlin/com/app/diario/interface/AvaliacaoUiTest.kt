@@ -2,15 +2,21 @@ package com.app.diario.`interface`
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.isHeading
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.v2.runComposeUiTest
 import com.app.diario.domain.model.Avaliacao
 import com.app.diario.domain.model.Listagem
 import com.app.diario.domain.model.repository.AvaliacaoRepository
+import com.app.diario.ui.avaliacao.AvaliacaoLayoutCelular
 import com.app.diario.ui.avaliacao.AvaliacaoSentimentoScreen
 import com.app.diario.ui.avaliacao.AvaliacaoViewModel
+import com.app.diario.ui.avaliacao.CriarAvaliacaoScreen
+import com.app.diario.ui.components.EstadoVazio
 import com.app.diario.ui.components.LayoutError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -52,7 +58,7 @@ class AvaliacaoUiTest {
     fun restaurarMain() = Dispatchers.resetMain()
 
     @Test
-    fun exibe_lista_e_cabecalho() = runComposeUiTest {
+    fun avaliacao_exibe_tela_principal_e_cabecalho() = runComposeUiTest {
         val vm = AvaliacaoViewModel(FakeAvaliacaoRepo())
         setContent {
             AvaliacaoSentimentoScreen(
@@ -68,7 +74,67 @@ class AvaliacaoUiTest {
     }
 
     @Test
-    fun erro_mostra_mensagem_e_botao_de_tentar_de_novo() = runComposeUiTest {
+    fun avaliacao_formulario_invalido_mantem_botao_desabilitado() = runComposeUiTest {
+        setContent {
+            CriarAvaliacaoScreen(
+                dataRegistro = "2026-11-25",
+                onVoltar = {},
+                onSalvar = { _, _, _ -> },
+            )
+        }
+
+        onNodeWithText("Salvar").assertIsNotEnabled()
+    }
+
+    @Test
+    fun avaliacao_formulario_valido_habilita_botao_salvar() = runComposeUiTest {
+        var salvou = false
+        setContent {
+            CriarAvaliacaoScreen(
+                dataRegistro = "2026-11-25",
+                onVoltar = {},
+                onSalvar = { _, _, _ -> salvou = true },
+            )
+        }
+
+        onNodeWithText("Descrição").performTextInput("Dia calmo e produtivo")
+        onNodeWithText("Trabalho").performClick()
+        onNodeWithText("Salvar").assertIsEnabled()
+        onNodeWithText("Salvar").performClick()
+        assertTrue(salvou)
+    }
+
+    @Test
+    fun avaliacao_navega_ao_clicar_no_item() = runComposeUiTest {
+        var selecionado = false
+        val avaliacao = Avaliacao("1", "2026-11-25", 5, "Tranquilo", listOf("Sono"))
+        setContent {
+            AvaliacaoLayoutCelular(
+                avaliacoes = listOf(avaliacao),
+                onAvaliacaoClick = { selecionado = true },
+                onVoltar = {},
+                onNovaAvaliacaoClick = {},
+            )
+        }
+
+        onNodeWithText("Tranquilo").performClick()
+        assertTrue(selecionado)
+    }
+
+    @Test
+    fun avaliacao_exibe_estado_vazio() = runComposeUiTest {
+        setContent {
+            EstadoVazio(
+                titulo = "Nenhuma avaliação registrada",
+                inserirNovoComponente = "Adicione a primeira avaliação",
+            )
+        }
+
+        onNodeWithText("Nenhuma avaliação registrada").assertIsDisplayed()
+    }
+
+    @Test
+    fun avaliacao_exibe_estado_de_erro_e_recarrega() = runComposeUiTest {
         var recarregou = false
         setContent {
             LayoutError(
