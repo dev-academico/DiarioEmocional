@@ -23,6 +23,12 @@ jobs:
 
       - name: Gradle setup
         uses: ./.github/actions/gradle-setup
+        
+      - name: Compose Interface Tests
+        run: sudo apt-get update && sudo apt-get install -y libgl1 libegl1 libfontconfig1
+
+      - name: Run Compose Interface tests
+        run: ./gradlew :shared:desktopTest
 
       - name: Run unit tests
         run: ./gradlew test
